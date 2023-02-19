@@ -1,0 +1,22 @@
+@import '../index.scss';
+
+.homeContainer{
+    background-color: $primary;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .sidebar{
+        flex: 1;
+        height: 90vh;
+        background-color: $mainLight;
+    }
+
+    .chatContainer{
+        flex: 2;
+        height: 90vh;
+        background-color: black;
+        color: $mainLight;
+    }
+}
