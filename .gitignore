@@ -13,6 +13,7 @@
 
 #environments
 /environments
+.firebase.js
 
 # misc
 .DS_Store
