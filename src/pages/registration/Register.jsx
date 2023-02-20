@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import AddImg from '../../imgs/addAvatar.png';
 import { auth } from '../../firebase';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import './Register.scss';
+import '../InputPages.scss';
 
 const Register = () => {
     const [err, setErr] = useState('')
@@ -40,13 +40,13 @@ const Register = () => {
 
 
     return (
-        <div className="registerContainer">
-            <div className="registerWrap">
+        <div className="formContainer">
+            <div className="formWrap">
                 <span className="title">Register</span>
-                <form className="registerForm" onSubmit={handleSubmit}>
-                    <input className="registerInput" type="text" placeholder='display name' />
-                    <input className="registerInput" type="email" placeholder='email' />
-                    <input className="registerInput" type="password" placeholder='password' />
+                <form className="form" onSubmit={handleSubmit}>
+                    <input className="formInput" type="text" placeholder='display name' />
+                    <input className="formInput" type="email" placeholder='email' />
+                    <input className="formInput" type="password" placeholder='password' />
                     <label id="avatarInput">
                         <img id="avatarImage" src={AddImg} alt="Chose avatar placeholder" />
                         <span>Chose avatar</span>
@@ -54,7 +54,7 @@ const Register = () => {
                         label with desired output content */}
                         <input type="file" hidden="true" />
                     </label>
-                    <button id="registerSubmit" type="submit">Sign up</button>
+                    <button id="formSubmit" type="submit">Sign up</button>
                 </form>
                 {err && <span>An error occured: {err}</span>}
                 {/* for the react router `Link to` is used instead of `a href="#"` */}
