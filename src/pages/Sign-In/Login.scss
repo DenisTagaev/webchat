@@ -17,11 +17,7 @@
             gap: 12px;
 
             .loginInput {
-                height: 18px;
-                padding: 15px;
-                border: none;
-                width: 86%;
-                border-bottom: 1px solid $primary;
+                @include initial-inputs;
             }
 
             #loginSubmit {

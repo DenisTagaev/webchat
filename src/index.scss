@@ -3,6 +3,19 @@ $primary: rgb(14, 117, 169);
 $mainLight: #fff;
 
 // consider adding mixins for flex display and common form styling
+@mixin flex-centered{
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+}
+@mixin initial-inputs{
+  height: 18px;
+  padding: 15px;
+  border: none;
+  // width: 86%;
+  border-bottom: 1px solid $primary;
+  outline: none;
+}
 
 body {
   margin: 0;
