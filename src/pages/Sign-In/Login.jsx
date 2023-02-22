@@ -39,6 +39,7 @@ const Login = () => {
                 </form>
             {/* for the react router `Link to` is used instead of `a href="#"` */}
             <p>Don't have an account?<Link to="/register">Register</Link></p>
+            <p>Forgot password?<Link to="/passReset">Restore password</Link></p>
             </div>
         </div>
     )

@@ -1,6 +1,8 @@
 //main app colors
-$primary: rgb(14, 117, 169);
-$mainLight: #fff;
+$primary: #189ab4;
+$mainDark: #05445E;
+$secondary: #75E6DA;
+$mainLight: #D4F1F4;
 
 // consider adding mixins for flex display and common form styling
 @mixin flex-centered{
