@@ -6,7 +6,8 @@ import './Login.scss';
 
 const Login = () => {
     // we will need navigation when the firebase will be connected
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const email = e.target[0].value;
@@ -17,6 +18,7 @@ const Login = () => {
                 // Signed in 
                 const user = userCredential.user;
                 console.log(user)
+                navigate('/');
                 // ...
             })
             .catch((error) => {

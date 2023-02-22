@@ -86,7 +86,20 @@
                 -ms-border-radius: 50%;
                 -o-border-radius: 50%;
                 object-fit: cover;
-}
+            }
+
+            .userChatInfo {
+                span {
+                    font-size: 18px;
+                    font-weight: 500;
+                }
+
+                p {
+                    font-size: 14px;
+                    color: grey;
+                    margin: 3%;
+                }
+            }
         }
     }
 
@@ -95,5 +108,29 @@
         height: 90vh;
         background-color: black;
         color: $mainLight;
+
+        .chatInfo{
+            height: 5%;
+            background-color: darkgrey;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chatIcons{
+            display: flex;
+            gap: 10px;
+
+            img{
+                height: 24px;
+                cursor: pointer;
+            }
+        }
+    }
+    .messageInputContainer{
+        input {
+            width: 100%;
+            outline: none;
+            padding: 10px;
+        }
     }
 }

@@ -2,7 +2,14 @@ import React from 'react'
 
 export const Input = () => {
   return (
-    <div>Input</div>
+    <div className="messageInputContainer">
+      <input 
+        type="text"
+        name="" 
+        id=""
+        placeholder='Enter your message'
+      />
+    </div>
   )
 }
 
