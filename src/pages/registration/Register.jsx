@@ -61,12 +61,9 @@ const Register = () => {
                     const user = userCredential.user;
                     navigator('/');
 
-                    // firestore doc addition, 
-
-                    console.log(userCredential)
-                    console.log(user.displayName)
+                    // firestore doc addition
+                    // image file ref creeation
                     const storageRef = ref(storage, `files/${selectedFile.name}`);
-                    // const usersRef = db.collection("users");
 
                     const uploadTask = uploadBytesResumable(storageRef, selectedFile);
 
