@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../../environments/firebase';
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore"
+import { auth, db, storage } from '../../environments/firebase';
 import AddImg from '../../imgs/addAvatar.png';
 import './Register.scss';
 
@@ -14,6 +16,10 @@ const Register = () => {
         password: '',
         repeatPassword: '',
     });
+
+    // avatar file container
+    const [selectedFile, setSelectedFile] = useState(null);
+
     // setting an object to contain current form errors 
     const [errors, setErrors] = useState({});
 
@@ -36,6 +42,10 @@ const Register = () => {
         });
     };
 
+    //  function for avatar set
+    const handleAvatar = (event) => {
+        setSelectedFile(event.target.files[0])
+    }
     //check if there are any errors in the form and if none trigger
     // registration in the firebase  
     const handleSubmit = (event) => {
@@ -50,8 +60,50 @@ const Register = () => {
                     // Signed in 
                     const user = userCredential.user;
                     navigator('/');
-                    // console.log(user)
-                    // ...
+
+                    // firestore doc addition, 
+                    // !!! need someones look
+
+                    const storageRef = ref(storage, user.displayName);
+                    const usersRef = db.collection("users");
+
+                    const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+
+                    uploadTask.on('state_changed',
+
+                        (error) => {
+                            //  file size and format validation
+                        },
+                        () => {
+
+                            getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                                console.log('File available at', downloadURL);
+                                await updateProfile(user, {
+                                    displayName: user.displayName,
+                                    photoURL: downloadURL
+                                });
+                                // await setDoc(doc(db, "users", user.uid), {
+                                //     uid: user.uid,
+                                //     displayName: user.displayName,
+                                //     email: user.email,
+                                //     photoURL: downloadURL,
+                                // uid: "test",
+                                // displayName: "test",
+                                // email: "test@gmail.com",
+                                // photoURL: "test",
+
+                                await usersRef.add({
+                                    uid: user.uid,
+                                    displayName: user.displayName,
+                                    email: user.email,
+                                    photoURL: downloadURL,
+
+                                })
+                            });
+                        }
+                    );
+
+
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -172,7 +224,13 @@ const Register = () => {
                         <span>Chose avatar</span>
                         {/* to customize standard input look we hide the input element and wrap it in a
                         label with desired output content */}
-                        <input type="file" hidden={true} />
+                        {/*  passing useState value property */}
+                        <input
+                            type="file"
+                            hidden={true}
+                            name="avatarInput"
+                            onChange={handleAvatar}
+                        />
                     </label>
                     <button id="registerSubmit" type="submit">Sign up</button>
                 </form>

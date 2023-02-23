@@ -15,10 +15,6 @@
 # production
 /build
 
-#environments
-/environments
-.firebase.js
-
 # misc
 .DS_Store
 .env.local
@@ -29,4 +25,3 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
