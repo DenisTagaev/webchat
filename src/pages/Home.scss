@@ -3,14 +3,104 @@
 .homeContainer{
     background-color: $primary;
     height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include flex-centered;
 
     .sidebar{
         flex: 1;
         height: 90vh;
         background-color: $mainLight;
+        
+        .navbarContainer{
+            @include flex-centered;
+            justify-content: space-between;
+            background-color: #eee;
+            height: 5vh;
+            padding: 10px;
+
+            .logo{
+                font-weight: bold;
+            }
+
+            .userContainer{
+                @include flex-centered;
+                gap: 2%;
+
+                img{
+                    background-color: $primary;
+                    height: 25px;
+                    width: 25px;
+                    border-radius: 50%;                
+                    -webkit-border-radius: 50%;
+                    -moz-border-radius: 50%;
+                    -ms-border-radius: 50%;
+                    -o-border-radius: 50%;
+                    object-fit: cover;
+                }
+
+                button{
+                    background-color: $primary;
+                    color: $mainLight;
+                    font-size: 1em;
+                    border: none;
+                    cursor: pointer;
+                }
+            }
+            
+        }
+        .searchContainer{
+            border-bottom: 1px solid #000;
+
+            .searchForm{
+                padding: 10px;
+
+                input{
+                    // background-color: #ccc;
+                    border: none;
+                    outline: none;
+
+                    &::placeholder{
+                        color: #000;
+                    }
+                }
+            }
+        }
+
+        .userChat{
+            padding: 10px;
+            @include flex-centered;
+            justify-content: flex-start;
+            gap: 10px;
+            color: #000;
+            cursor: pointer;
+
+            &:hover{
+                background-color: #ccc;
+            }
+
+            img{
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                -webkit-border-radius: 50%;
+                -moz-border-radius: 50%;
+                -ms-border-radius: 50%;
+                -o-border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .userChatInfo {
+                span {
+                    font-size: 18px;
+                    font-weight: 500;
+                }
+
+                p {
+                    font-size: 14px;
+                    color: grey;
+                    margin: 3%;
+                }
+            }
+        }
     }
 
     .chatContainer{
@@ -18,5 +108,29 @@
         height: 90vh;
         background-color: black;
         color: $mainLight;
+
+        .chatInfo{
+            height: 5%;
+            background-color: darkgrey;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chatIcons{
+            display: flex;
+            gap: 10px;
+
+            img{
+                height: 24px;
+                cursor: pointer;
+            }
+        }
+    }
+    .messageInputContainer{
+        input {
+            width: 100%;
+            outline: none;
+            padding: 10px;
+        }
     }
 }

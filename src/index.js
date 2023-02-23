@@ -8,6 +8,10 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <App />
+    <footer>
+      <h3>D&D design 2023</h3>
+      <p>© All rights reserved</p>
+    </footer>
   </React.StrictMode>
 );
 

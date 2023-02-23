@@ -1,0 +1,34 @@
+@import '../../index.scss';
+
+.loginContainer {
+    background-color: $primary;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .loginWrap {
+        background-color: $mainLight;
+        padding: 1.8% 5.4%;
+
+        .loginForm {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            .loginInput {
+                @include initial-inputs;
+            }
+
+            #loginSubmit {
+                background-color: $mainLight;
+                color: $primary;
+                border: 1px solid $primary !important;
+                padding: 10px;
+                font-weight: bold;
+                border: none;
+                cursor: pointer;
+            }
+        }
+    }
+}

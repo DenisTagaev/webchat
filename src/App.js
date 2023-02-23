@@ -1,6 +1,6 @@
 import Register from './pages/registration/Register';
 import Login from './pages/Sign-In/Login';
-import Reset from './pages/reset-pass/Reset';
+import PassReset from './pages/forgot-pass/PassReset';
 import Home from './pages/Home';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -17,7 +17,7 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
-          <Route path="reset" element={<Reset />} />
+          <Route path="passReset" element={<PassReset />} />
         </Route>
       </Routes>
     </BrowserRouter>
