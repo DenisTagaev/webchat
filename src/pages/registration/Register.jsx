@@ -62,47 +62,39 @@ const Register = () => {
                     navigator('/');
 
                     // firestore doc addition, 
-                    // !!! need someones look
 
-                    const storageRef = ref(storage, user.displayName);
-                    const usersRef = db.collection("users");
+                    console.log(userCredential)
+                    console.log(user.displayName)
+                    const storageRef = ref(storage, `files/${selectedFile.name}`);
+                    // const usersRef = db.collection("users");
 
                     const uploadTask = uploadBytesResumable(storageRef, selectedFile);
 
-                    uploadTask.on('state_changed',
+                    uploadTask.on(
 
                         (error) => {
                             //  file size and format validation
+                            console.log(error)
                         },
                         () => {
 
                             getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
                                 console.log('File available at', downloadURL);
                                 await updateProfile(user, {
-                                    displayName: user.displayName,
+                                    displayName: formData.nickname,
                                     photoURL: downloadURL
                                 });
-                                // await setDoc(doc(db, "users", user.uid), {
-                                //     uid: user.uid,
-                                //     displayName: user.displayName,
-                                //     email: user.email,
-                                //     photoURL: downloadURL,
-                                // uid: "test",
-                                // displayName: "test",
-                                // email: "test@gmail.com",
-                                // photoURL: "test",
 
-                                await usersRef.add({
+                                // function setDoc creates a new user doc instance, with unique uid
+                                await setDoc(doc(db, "users", user.uid), {
                                     uid: user.uid,
                                     displayName: user.displayName,
                                     email: user.email,
                                     photoURL: downloadURL,
-
                                 })
                             });
                         }
                     );
-
 
                 })
                 .catch((error) => {
