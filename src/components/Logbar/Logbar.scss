@@ -1,0 +1,41 @@
+@import '../../index.scss';
+
+.logBarMainContainer {
+  display: flex;
+  flex-direction: column;
+  // position: relative;
+  // padding-left: 30px;
+  // margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  // user-select: none;
+
+  input {
+    position: absolute;
+    cursor: pointer;
+
+    &:checked + .checkmark {
+      background-color: $mainDark;
+      color: #fff;
+    }
+    &:not(:checked) + .checkmark {
+      color: #000;
+    }
+
+  }
+
+  .checkmark {
+    background: #fff;
+    border-right: 1px solid #dcdcdc;
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    font-size: 18px;
+    padding: 50px 20px;
+    position: relative;
+
+    .logIcons {
+      @include logIcons;
+    }
+  }
+}

@@ -5,12 +5,13 @@ $secondary: #75E6DA;
 $mainLight: #D4F1F4;
 
 // consider adding mixins for flex display and common form styling
-@mixin flex-centered{
+@mixin flex-centered {
   display: flex;
   align-items: center;
-  justify-content: center;  
+  justify-content: center;
 }
-@mixin initial-inputs{
+
+@mixin initial-inputs {
   height: 18px;
   padding: 15px;
   border: none;
@@ -29,13 +30,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-footer{
+footer {
   display: flex;
   width: 100%;
   flex-direction: column;
   align-items: center;
 
-  h3, p {
+  h3,
+  p {
     margin: 0.5%;
   }
+}
+
+@mixin logIcons {
+  display: block;
+  font-size: 28px;
+  margin: 0 auto;
 }
