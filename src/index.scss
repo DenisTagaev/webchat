@@ -12,12 +12,29 @@ $mainLight: #D4F1F4;
 }
 
 @mixin initial-inputs {
+  color: #fff;
+  font-size: large;
   height: 18px;
   padding: 15px;
   border: none;
   // width: 86%;
-  border-bottom: 1px solid $primary;
+  // border-bottom: 1px solid $primary;
   outline: none;
+  background-color: $primary;
+}
+
+@mixin logIcons {
+  display: block;
+  font-size: 28px;
+  margin: 0 auto;
+}
+
+@mixin inputBox {
+  background-color: #fff;
+  padding: 72px 30px;
+  width: 450px;
+  text-align: center;
+  column-gap: 30px;
 }
 
 body {
@@ -42,8 +59,3 @@ footer {
   }
 }
 
-@mixin logIcons {
-  display: block;
-  font-size: 28px;
-  margin: 0 auto;
-}

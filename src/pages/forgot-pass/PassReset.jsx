@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { sendPasswordResetEmail } from 'firebase/auth';
+import Logbar from '../../components/Logbar/Logbar';
 
 const PassReset = () => {
     const [email, setEmail] = useState('');
@@ -46,6 +47,7 @@ const PassReset = () => {
 
     return (
         <div className="loginContainer">
+            <Logbar />
             <div className="loginWrap">
                 <span className="title">Reset Password</span>
                 <form className="loginForm" onSubmit={handleSubmit}>

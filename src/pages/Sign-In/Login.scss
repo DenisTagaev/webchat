@@ -6,10 +6,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 2%;
 
     .loginWrap {
-        background-color: $mainLight;
-        padding: 1.8% 5.4%;
+        @include inputBox;
+
+        .title {
+            display: block;
+            padding-bottom: 30px;
+            font-size: 26px;
+        }
 
         .loginForm {
             display: flex;
@@ -18,16 +24,28 @@
 
             .loginInput {
                 @include initial-inputs;
+
+                &::placeholder {
+                    color: #fff;
+                }
             }
 
             #loginSubmit {
-                background-color: $mainLight;
-                color: $primary;
-                border: 1px solid $primary !important;
+                background-color: $mainDark;
+                color: #fff;
                 padding: 10px;
+                font-size: 16px;
+                letter-spacing: 3px;
                 font-weight: bold;
                 border: none;
                 cursor: pointer;
+                opacity: 1;
+                transition: 0.5s;
+
+                &:hover {
+                    opacity: 0.8;
+                    transition: 0.5s;
+                }
             }
         }
     }
