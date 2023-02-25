@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore"
 import { auth, db, storage } from '../../environments/firebase';
@@ -54,12 +54,17 @@ const Register = () => {
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
+
             // call submit function
             createUserWithEmailAndPassword(auth, formData.email, formData.password)
-                .then((userCredential) => {
+                .then(async (userCredential) => {
                     // Signed in 
+
                     const user = userCredential.user;
                     navigator('/');
+
+                    // Email verfification
+                    await sendEmailVerification(auth.currentUser)
 
                     // firestore doc addition
                     // image file ref creeation
@@ -76,7 +81,6 @@ const Register = () => {
                         () => {
 
                             getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                                console.log('File available at', downloadURL);
                                 await updateProfile(user, {
                                     displayName: formData.nickname,
                                     photoURL: downloadURL
@@ -89,6 +93,8 @@ const Register = () => {
                                     email: user.email,
                                     photoURL: downloadURL,
                                 })
+
+                                await setDoc(doc(db, "userChats", user.uid), {})
                             });
                         }
                     );
