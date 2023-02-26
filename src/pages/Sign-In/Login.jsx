@@ -1,10 +1,9 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../environments/firebase';
 import Logbar from '../../components/Logbar/Logbar';
-import { HiOutlineMail } from 'react-icons/hi';
-import { HiKey } from 'react-icons/hi';
+
 
 import './Login.scss';
 
@@ -36,7 +35,7 @@ const Login = () => {
         <div className="loginContainer">
             <Logbar />
             <div className="loginWrap">
-                <span className="title">Login Here</span>
+                <span className="title">WebChat Login</span>
                 <form className="loginForm" onSubmit={handleSubmit}>
                     {/* <span className="loginIcon"><HiOutlineMail /></span> */}
                     <input className="loginInput" type="email" placeholder='Email'/>
@@ -44,9 +43,6 @@ const Login = () => {
                     <input className="loginInput" type="password" placeholder='Password'/>
                     <button id="loginSubmit" type="submit">Login</button>
                 </form>
-            {/* for the react router `Link to` is used instead of `a href="#"` */}
-            <p>Don't have an account? <Link to="/register">Register</Link></p>
-            <p>Forgot password? <Link to="/passReset">Restore password</Link></p>
             </div>
         </div>
     )

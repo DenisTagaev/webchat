@@ -3,36 +3,33 @@
 .logBarMainContainer {
   display: flex;
   flex-direction: column;
-  // position: relative;
-  // padding-left: 30px;
-  // margin-bottom: 12px;
   cursor: pointer;
-  font-size: 16px;
-  // user-select: none;
-
+  height: 400px;
+  
   input {
     position: absolute;
     cursor: pointer;
-
-    &:checked + .checkmark {
+    
+    &:checked + .logCheckmark {
       background-color: $mainDark;
       color: #fff;
     }
-    &:not(:checked) + .checkmark {
+    &:not(:checked) + .logCheckmark {
       color: #000;
     }
 
   }
 
-  .checkmark {
+  .logCheckmark {
     background: #fff;
-    border-right: 1px solid #dcdcdc;
     cursor: pointer;
     display: block;
     text-align: center;
-    font-size: 18px;
-    padding: 50px 20px;
+    font-size: 1.2rem;
+    padding: 40px 10px;
     position: relative;
+    border: none;
+    
 
     .logIcons {
       @include logIcons;

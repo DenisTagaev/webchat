@@ -11,16 +11,43 @@ $mainLight: #D4F1F4;
   justify-content: center;
 }
 
+@mixin mainScreenContainer {
+  @include flex-centered;
+  background-color: $primary;
+  height: 100vh;
+  gap: 2%;
+}
+
+@mixin inputBox {
+  background-color: #fff;
+  padding: 70px 30px;
+  height: 260px;
+  width: 450px;
+  position: relative;
+  // text-align: center;
+  // column-gap: 30px;
+}
+
 @mixin initial-inputs {
   color: #fff;
-  font-size: large;
   height: 18px;
   padding: 15px;
   border: none;
-  // width: 86%;
-  // border-bottom: 1px solid $primary;
   outline: none;
   background-color: $primary;
+
+  &::placeholder {
+    color: #fff;
+}
+}
+
+@mixin mainScreenTitles {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 26px;
+  font-weight: 500;
 }
 
 @mixin logIcons {
@@ -29,12 +56,23 @@ $mainLight: #D4F1F4;
   margin: 0 auto;
 }
 
-@mixin inputBox {
-  background-color: #fff;
-  padding: 72px 30px;
-  width: 450px;
-  text-align: center;
-  column-gap: 30px;
+@mixin mainButtonForSubmission {
+  background-color: $mainDark;
+  color: #fff;
+  padding: 10px;
+  font-size: 16px;
+  letter-spacing: 3px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  opacity: 1;
+  transition: 0.5s;
+  margin-bottom: -40.1px;
+  // margin-top: 5%;
+
+  &:hover {
+    background-color: darken($color: $mainDark, $amount: 5);
+  }
 }
 
 body {
@@ -58,4 +96,3 @@ footer {
     margin: 0.5%;
   }
 }
-

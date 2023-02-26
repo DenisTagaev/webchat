@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../environments/firebase";
 import AddImg from "../../imgs/addAvatar.png";
@@ -120,16 +120,16 @@ const Register = () => {
 
   return (
     <div className="registerContainer">
-        <Logbar />
+      <Logbar />
       <div className="registerWrap">
-        <span className="title">Register</span>
+        <span className="title">WebChat Register</span>
         <form className="registerForm" onSubmit={handleSubmit}>
           <input
             className="registerInput"
             type="text"
             name="nickname"
             value={formData.nickname}
-            placeholder="display name"
+            placeholder="Display name"
             onChange={handleChange}
           />
           {errors.nickname && (
@@ -140,7 +140,7 @@ const Register = () => {
             type="email"
             name="email"
             value={formData.email}
-            placeholder="email"
+            placeholder="Email"
             onChange={handleChange}
           />
           {errors.email && <span className="formError">{errors.email}</span>}
@@ -149,7 +149,7 @@ const Register = () => {
             type="password"
             name="password"
             value={formData.password}
-            placeholder="password"
+            placeholder="Password"
             onChange={handleChange}
           />
           {errors.password && (
@@ -160,7 +160,7 @@ const Register = () => {
             type="password"
             name="repeatPassword"
             value={formData.repeatPassword}
-            placeholder="password"
+            placeholder="Repeat password"
             onChange={handleChange}
           />
           {errors.repeatPassword && (
@@ -177,10 +177,6 @@ const Register = () => {
             Sign up
           </button>
         </form>
-        {/* for the react router `Link to` is used instead of `a href="#"` */}
-        <p>
-          Already have an account?<Link to="/login">Login</Link>
-        </p>
       </div>
     </div>
   );
