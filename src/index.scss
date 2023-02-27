@@ -14,7 +14,7 @@ $mainLight: #D4F1F4;
 @mixin mainScreenContainer {
   @include flex-centered;
   background-color: $primary;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 75px);
   min-width: 500px;
   gap: 2%;
 }
@@ -125,12 +125,13 @@ footer {
   align-items: center;
   justify-content: center;
   border-top: 2px solid black;
+  border-bottom: 2px solid black;
   max-height: 70px;
   min-height: 70px;
   min-width: 500px;
 
-  h3,
-  p {
-    margin: 0.5%;
+  h3,p {
+    margin: 0 auto;
   }
+  
 }
