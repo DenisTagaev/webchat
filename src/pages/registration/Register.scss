@@ -3,19 +3,36 @@
 .registerContainer {
     @include mainScreenContainer;
 
+    @include tableScreen {
+        @include tableScreenMainContainer;
+    }
+
     .registerWrap {
         @include inputBox;
         height: fit-content;
         max-height: 400px;
 
+        @include tableScreen {
+            @include tableScreenWrap;
+            height: fit-content;
+        }
+
         .title {
             @include mainScreenTitles;
+
+            @include tableScreen {
+                @include tableScreenTitle;
+            }
         }
 
         .registerForm {
             display: flex;
             flex-direction: column;
             gap: 5px;
+
+            @include tableScreen {
+                width: 90%;
+            }
 
             .registerInput {
                 @include initial-inputs;
@@ -33,6 +50,11 @@
                 // gap: 5%;
                 font-size: 1em;
                 color: $primary;
+
+                @include tableScreen {
+                    justify-content: center;
+                    width: 90%;
+                }
             }
 
             #avatarImage {

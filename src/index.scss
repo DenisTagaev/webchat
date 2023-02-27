@@ -15,6 +15,7 @@ $mainLight: #D4F1F4;
   @include flex-centered;
   background-color: $primary;
   height: 100vh;
+  min-width: 500px;
   gap: 2%;
 }
 
@@ -24,8 +25,6 @@ $mainLight: #D4F1F4;
   height: 260px;
   width: 450px;
   position: relative;
-  // text-align: center;
-  // column-gap: 30px;
 }
 
 @mixin initial-inputs {
@@ -38,7 +37,7 @@ $mainLight: #D4F1F4;
 
   &::placeholder {
     color: #fff;
-}
+  }
 }
 
 @mixin mainScreenTitles {
@@ -75,6 +74,40 @@ $mainLight: #D4F1F4;
   }
 }
 
+//Media queries mixins
+
+@mixin tableScreen {
+  @media only screen and (max-width: 768px) {
+    @content;
+  }
+}
+
+//mixins to include for media
+@mixin tableScreenMainContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: min-content;
+}
+
+@mixin tableScreenWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 240px;
+  margin-top: -140px;
+  margin-bottom: 50px;
+}
+
+@mixin tableScreenTitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+}
+
 body {
   margin: 0;
   box-sizing: border-box;
@@ -87,9 +120,11 @@ body {
 
 footer {
   display: flex;
-  width: 100%;
   flex-direction: column;
   align-items: center;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  min-width: 500px;
 
   h3,
   p {

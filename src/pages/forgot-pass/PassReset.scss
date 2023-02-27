@@ -3,11 +3,23 @@
 .resetContainer {
   @include mainScreenContainer;
 
+  @include tableScreen {
+    @include tableScreenMainContainer;
+  }
+
   .resetWrap {
     @include inputBox;
 
+    @include tableScreen {
+      @include tableScreenWrap;
+    }
+
     .title {
       @include mainScreenTitles;
+
+      @include tableScreen {
+        @include tableScreenTitle;
+      }
     }
 
     .resetForm {
@@ -16,6 +28,11 @@
       flex-direction: column;
       position: relative;
       gap: 30px;
+
+      @include tableScreen {
+        margin-top: -30px;
+        width: 90%;
+      }
 
       .resetInput {
         @include initial-inputs;
@@ -30,7 +47,7 @@
         // max-width: 170px;
         font-size: 0.85em;
         color: rgb(187, 1, 1);
-    }
+      }
     }
   }
 

@@ -3,11 +3,23 @@
 .loginContainer {
     @include mainScreenContainer;
 
+    @include tableScreen {
+        @include tableScreenMainContainer;
+    }
+
     .loginWrap {
         @include inputBox;
 
+        @include tableScreen {
+           @include tableScreenWrap;
+        }
+
         .title {
             @include mainScreenTitles;
+
+            @include tableScreen {
+                @include tableScreenTitle;
+            }
         }
 
         .loginForm {
@@ -16,6 +28,10 @@
             flex-direction: column;
             position: relative;
             gap: 30px;
+
+            @include tableScreen {
+                width: 90%;
+            }
 
             .loginInput {
                 @include initial-inputs;
