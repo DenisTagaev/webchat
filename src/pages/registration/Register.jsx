@@ -48,7 +48,7 @@ const Register = () => {
       createUserWithEmailAndPassword(auth, formData.email, formData.password)
         .then((userCredential) => {
           // Signed in
-          const user = userCredential.user;
+        //   const user = userCredential.user;
           navigator("/");
           // console.log(user)
           // ...
@@ -57,7 +57,7 @@ const Register = () => {
           const errorCode = error.code;
           const errorMessage = error.message;
 
-          // Error conctat string to output
+          // Error concat string to output
           console.log(errorCode + "\n " + errorMessage);
         });
     }
