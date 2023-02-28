@@ -1,33 +1,44 @@
 @import '../../index.scss';
 
 .loginContainer {
-    background-color: $primary;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include mainScreenContainer;
+
+    @include tableScreen {
+        @include tableScreenMainContainer;
+    }
 
     .loginWrap {
-        background-color: $mainLight;
-        padding: 1.8% 5.4%;
+        @include inputBox;
+
+        @include tableScreen {
+            @include tableScreenWrap;
+        }
+
+        .title {
+            @include mainScreenTitles;
+
+            @include tableScreen {
+                @include tableScreenTitle;
+            }
+        }
 
         .loginForm {
+            margin-top: 10%;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            position: relative;
+            gap: 30px;
+
+            @include tableScreen {
+                width: 90%;
+            }
 
             .loginInput {
                 @include initial-inputs;
             }
 
             #loginSubmit {
-                background-color: $mainLight;
-                color: $primary;
-                border: 1px solid $primary !important;
-                padding: 10px;
-                font-weight: bold;
-                border: none;
-                cursor: pointer;
+                @include mainButtonForSubmission;
             }
         }
     }

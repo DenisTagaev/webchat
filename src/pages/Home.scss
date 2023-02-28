@@ -1,35 +1,35 @@
 @import '../index.scss';
 
-.homeContainer{
+.homeContainer {
     background-color: $primary;
     height: 100vh;
     @include flex-centered;
 
-    .sidebar{
+    .sidebar {
         flex: 1;
         height: 90vh;
         background-color: $mainLight;
-        
-        .navbarContainer{
+
+        .navbarContainer {
             @include flex-centered;
             justify-content: space-between;
             background-color: #eee;
             height: 5vh;
             padding: 10px;
 
-            .logo{
+            .logo {
                 font-weight: bold;
             }
 
-            .userContainer{
+            .userContainer {
                 @include flex-centered;
                 gap: 2%;
 
-                img{
+                img {
                     background-color: $primary;
                     height: 25px;
                     width: 25px;
-                    border-radius: 50%;                
+                    border-radius: 50%;
                     -webkit-border-radius: 50%;
                     -moz-border-radius: 50%;
                     -ms-border-radius: 50%;
@@ -37,7 +37,7 @@
                     object-fit: cover;
                 }
 
-                button{
+                button {
                     background-color: $primary;
                     color: $mainLight;
                     font-size: 1em;
@@ -45,27 +45,28 @@
                     cursor: pointer;
                 }
             }
-            
+
         }
-        .searchContainer{
+
+        .searchContainer {
             border-bottom: 1px solid #000;
 
-            .searchForm{
+            .searchForm {
                 padding: 10px;
 
-                input{
+                input {
                     // background-color: #ccc;
                     border: none;
                     outline: none;
 
-                    &::placeholder{
+                    &::placeholder {
                         color: #000;
                     }
                 }
             }
         }
 
-        .userChat{
+        .userChat {
             padding: 10px;
             @include flex-centered;
             justify-content: flex-start;
@@ -73,11 +74,11 @@
             color: #000;
             cursor: pointer;
 
-            &:hover{
+            &:hover {
                 background-color: #ccc;
             }
 
-            img{
+            img {
                 width: 50px;
                 height: 50px;
                 border-radius: 50%;
@@ -103,30 +104,32 @@
         }
     }
 
-    .chatContainer{
+    .chatContainer {
         flex: 2;
         height: 90vh;
         background-color: black;
         color: $mainLight;
 
-        .chatInfo{
+        .chatInfo {
             height: 5%;
             background-color: darkgrey;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .chatIcons{
+
+        .chatIcons {
             display: flex;
             gap: 10px;
 
-            img{
+            img {
                 height: 24px;
                 cursor: pointer;
             }
         }
     }
-    .messageInputContainer{
+
+    .messageInputContainer {
         input {
             width: 100%;
             outline: none;
