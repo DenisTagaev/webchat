@@ -1,6 +1,6 @@
 import React from 'react'
-import Sidebar from '../components/Sidebar';
-import Chat from '../components/Chat';
+import Sidebar from '../components/Sidebar/Sidebar';
+import Chat from '../components/Chats/Chat/Chat';
 
 import './Home.scss';
 

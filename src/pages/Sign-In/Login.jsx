@@ -1,7 +1,10 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../environments/firebase';
+import Logbar from '../../components/Logbar/Logbar';
+
+
 import './Login.scss';
 
 const Login = () => {
@@ -30,16 +33,16 @@ const Login = () => {
 
     return (
         <div className="loginContainer">
+            <Logbar />
             <div className="loginWrap">
-                <span className="title">Login</span>
+                <span className="title">WebChat Login</span>
                 <form className="loginForm" onSubmit={handleSubmit}>
-                    <input className="loginInput" type="email" placeholder='email'/>
-                    <input className="loginInput" type="password" placeholder='password'/>
-                    <button id="loginSubmit" type="submit">Sign in</button>
+                    {/* <span className="loginIcon"><HiOutlineMail /></span> */}
+                    <input className="loginInput" type="email" placeholder='Email'/>
+                    {/* <span className="loginIcon"><HiKey /></span> */}
+                    <input className="loginInput" type="password" placeholder='Password'/>
+                    <button id="loginSubmit" type="submit">Login</button>
                 </form>
-            {/* for the react router `Link to` is used instead of `a href="#"` */}
-            <p>Don't have an account?<Link to="/register">Register</Link></p>
-            <p>Forgot password?<Link to="/passReset">Restore password</Link></p>
             </div>
         </div>
     )

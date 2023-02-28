@@ -1,7 +1,7 @@
 import React from 'react'
-import { Navbar } from './Navbar';
-import { Search } from './Search';
-import { Chats } from './Chats';
+import Navbar  from '../Navbar/Navbar';
+import Search from '../Search/Search';
+import Chats from '../Chats/Chats';
 
 export const Sidebar = () => {
   return (

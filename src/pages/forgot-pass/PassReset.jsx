@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { sendPasswordResetEmail } from 'firebase/auth';
+import Logbar from '../../components/Logbar/Logbar';
+
+import './PassReset.scss';
 
 const PassReset = () => {
     const [email, setEmail] = useState('');
@@ -45,22 +48,21 @@ const PassReset = () => {
     }
 
     return (
-        <div className="loginContainer">
-            <div className="loginWrap">
+        <div className="resetContainer">
+            <Logbar />
+            <div className="resetWrap">
                 <span className="title">Reset Password</span>
-                <form className="loginForm" onSubmit={handleSubmit}>
+                <form className="resetForm" onSubmit={handleSubmit}>
                     <input 
                         className="resetInput"
                         type="email"
-                        placeholder='email'
+                        placeholder='Email'
                         onChange={handleChange}
                     />
                     {error && 
                         <span className="formError">{error}</span>}        
                     <button id="resetSubmit" type="submit">Send Link</button>
                 </form>
-            {/* for the react router `Link to` is used instead of `a href="#"` */}
-            <p>Back to the login<Link to="/login">Login</Link></p>
             </div>
         </div>
     )
