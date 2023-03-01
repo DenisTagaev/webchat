@@ -1,68 +1,136 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../environments/firebase';
+import Logbar from '../../components/Logbar/Logbar';
+
 import './Login.scss';
 
 const Login = () => {
-    // we will need navigation when the firebase will be connected
-    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
+    const [errors, setErrors] = useState({});
+    // we need navigation to switch between pages
+    const navigator = useNavigate();
 
-    const [email, setEmail] = useState(null);
-    const [error, setError] = useState("");
+    // function looks for the input field when the user starts typing
+    // and changes the corresponding data inside the formData
+    const handleChange = (event) => {
+        const { name, value } = event.target;
 
-    const validateField = (value) => {
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+        //after user input validate that field matches the requirements
+        const newErrors = validateField(name, value);
 
-        if (!value.trim()) {
-            return 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(value)) {
-            return 'Email is invalid';
-        }
-        return '';
+        setErrors({
+            ...errors,
+            [name]: newErrors[name],
+        });
     };
 
-    const handleEmail = (e) => {
-        const value = e.target.value
-        setEmail(value);
-        setError(validateField(value));
-    }
+    //check for the errors in selected input and update the error state
+    const validateField = (name, value) => {
+        const errors = {};
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const email = e.target[0].value;
-        const password = e.target[1].value;
+        if (name === "email") {
+            if (!value.trim()) {
+                errors.email = "Email is required";
+            } else if (!/\S+@\S+\.\S+/.test(value)) {
+                errors.email = "Email is invalid";
+            }
+        } else if (name === "password") {
+            if (!value.trim()) {
+                errors.password = "Password is required";
+            } else if (value.length < 6) {
+                errors.password = "Password must be at least 6 characters";
+            }
+        }
+        return errors;
+    };
 
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                console.log(user)
-                navigate('/');
-                // ...
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorCode, errorMessage);
-            });
-    }
+    //used on form submit, double checks that all fields are matching the requirements
+    const validateFormData = (data) => {
+        const errors = {};
+
+        if (!data.email.trim()) {
+            errors.email = "Email is required";
+        } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+            errors.email = "Email is invalid";
+        }
+
+        if (!data.password.trim()) {
+            errors.password = "Password is required";
+        } else if (data.password.length < 6) {
+            errors.password = "Password must be at least 6 characters";
+        }
+
+        return errors;
+    };
+
+    //check if there are any errors in the form and if none trigger
+    //login to the firebase
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const newErrors = validateFormData(formData);
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length === 0) {
+            // call login function
+            signInWithEmailAndPassword(auth, formData.email, formData.password)
+                .then((userCredential) => {
+                    // Signed in
+                    const user = userCredential.user;
+                    console.log(user);
+                    navigator("/");
+                    // ...
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(errorCode, errorMessage);
+                });
+        }
+    };
 
     return (
         <div className="loginContainer">
+            <Logbar />
             <div className="loginWrap">
-                <span className="title">Login</span>
+                <span className="title">WebChat Login</span>
                 <form className="loginForm" onSubmit={handleSubmit}>
-                    <input className="loginInput" type="email" placeholder='email' onChange={handleEmail} value={email} />
-                    <input className="loginInput" type="password" placeholder='password' />
-                    {error &&
-                        <span className="loginError">{error}</span>}
-                    <button id="loginSubmit" type="submit">Sign in</button>
+                    {/* <span className="loginIcon"><HiOutlineMail /></span> */}
+                    <input
+                        className="loginInput"
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        placeholder="Email"
+                        onChange={handleChange}
+                    />
+                    {errors.email && <span className="formError">{errors.email}</span>}
+                    {/* <span className="loginIcon"><HiKey /></span> */}
+                    <input
+                        className="loginInput"
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        placeholder="Password"
+                        onChange={handleChange}
+                    />
+                    {errors.password && (
+                        <span className="formError">{errors.password}</span>
+                    )}
+                    <button id="loginSubmit" type="submit">
+                        Login
+                    </button>
                 </form>
-                {/* for the react router `Link to` is used instead of `a href="#"` */}
-                <p>Don't have an account?<Link to="/register">Register</Link></p>
-                <p>Forgot password?<Link to="/passReset">Reset password</Link></p>
             </div>
         </div>
-    )
+    );
 }
 export default Login;

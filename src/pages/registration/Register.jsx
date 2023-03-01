@@ -1,33 +1,31 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { doc, setDoc } from "firebase/firestore"
-import { auth, db, storage } from '../../environments/firebase';
-import AddImg from '../../imgs/addAvatar.png';
-import './Register.scss';
-
+import { doc, setDoc } from "firebase/firestore";
+import { auth, storage, db } from "../../environments/firebase";
+import AddImg from "../../imgs/addAvatar.png";
+import Logbar from "../../components/Logbar/Logbar";
+import "./Register.scss";
 
 const Register = () => {
-    // setting an object to contain current form values 
+    // setting an object to contain current form values
     const [formData, setFormData] = useState({
-        nickname: '',
-        email: '',
-        password: '',
-        repeatPassword: '',
+        nickname: "",
+        email: "",
+        password: "",
+        repeatPassword: "",
     });
-
-    // avatar file container
-    const [selectedFile, setSelectedFile] = useState(null);
-
-    // setting an object to contain current form errors 
+    // setting an object to contain current form errors
     const [errors, setErrors] = useState({});
+    //state to contain img uploading errors
+    const [imgError, setImgError] = useState();
 
     // we will need navigation when the firebase will be connected
     const navigator = useNavigate();
 
-    // function looks for the input field when the user starts typing 
-    // and changes the corresponding data inside the formData 
+    // function looks for the input field when the user starts typing
+    // and changes the corresponding data inside the formData
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData({
@@ -42,72 +40,62 @@ const Register = () => {
         });
     };
 
-    //  function for avatar set
-    const handleAvatar = (event) => {
-        setSelectedFile(event.target.files[0])
-    }
     //check if there are any errors in the form and if none trigger
-    // registration in the firebase  
-    const handleSubmit = (event) => {
+    // registration in the firebase
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        //get the uploaded picture reference
+        const avatar = event.target[4].files[0];
+        //before proceeding check for errors
         const newErrors = validateFormData(formData);
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
+            // call function to create user in the firebase
+            await createUserWithEmailAndPassword(auth, formData.email, formData.password)
 
-            // call submit function
-            createUserWithEmailAndPassword(auth, formData.email, formData.password)
-                .then(async (userCredential) => {
-                    // Signed in 
-
+                .then((userCredential) => {
+                    //get reference to the newly created user
                     const user = userCredential.user;
-
-                    // image file ref creeation
-                    const storageRef = ref(storage, `files/${selectedFile.name}`);
-
-                    const uploadTask = uploadBytesResumable(storageRef, selectedFile);
-
-                    // Email verfification
-                    await sendEmailVerification(auth.currentUser).then(() => {
-                        navigator('/');
-                    }
-                    );
-
+                    //create reference between the user and picture storage
+                    const storageRef = ref(storage, formData.nickname);
+                    //upload picture to the cloud storage and get it's url
+                    const uploadTask = uploadBytesResumable(storageRef, avatar);
                     uploadTask.on(
-
                         (error) => {
-                            //  file size and format validation
-                            console.log(error)
+                            // Handle unsuccessful uploads
+                            setImgError(error);
                         },
                         () => {
-
                             getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                                //on successful image upload get the link to the cloudstore
+                                //and link it to the user's profile along with the nickname
                                 await updateProfile(user, {
                                     displayName: formData.nickname,
-                                    photoURL: downloadURL
+                                    photoURL: downloadURL,
                                 });
-
-                                // firestore doc addition
-                                // function setDoc creates a new user doc instance, with unique uid
+                                //create a copy of user data to firestorage to allow 
+                                //interactions with another users
                                 await setDoc(doc(db, "users", user.uid), {
                                     uid: user.uid,
-                                    displayName: user.displayName,
+                                    nickname: user.displayName,
                                     email: user.email,
-                                    photoURL: downloadURL,
-                                })
-
-                                await setDoc(doc(db, "userChats", user.uid), {})
+                                    photoURL: downloadURL
+                                });
+                                //create a collection of chats for the user
+                                await setDoc(doc(db, "userChats", user.uid), {});
                             });
                         }
                     );
 
+                    //redirect user to the home page after successful registration
+                    navigator("/");
+                    // console.log(user)
+                    // ...
                 })
                 .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-
-                    // Error conctat string to output
-                    console.log(errorCode + '\n ' + errorMessage)
+                    // Error concat string to output
+                    console.log(`${error.code}: ${error.message}`);
                 });
         }
     };
@@ -116,25 +104,25 @@ const Register = () => {
     const validateField = (name, value) => {
         const errors = {};
 
-        if (name === 'nickname') {
+        if (name === "nickname") {
             if (!value.trim()) {
-                errors.nickname = 'Nickname is required';
+                errors.nickname = "Nickname is required";
             }
-        } else if (name === 'email') {
+        } else if (name === "email") {
             if (!value.trim()) {
-                errors.email = 'Email is required';
+                errors.email = "Email is required";
             } else if (!/\S+@\S+\.\S+/.test(value)) {
-                errors.email = 'Email is invalid';
+                errors.email = "Email is invalid";
             }
-        } else if (name === 'password') {
+        } else if (name === "password") {
             if (!value.trim()) {
-                errors.password = 'Password is required';
+                errors.password = "Password is required";
             } else if (value.length < 6) {
-                errors.password = 'Password must be at least 6 characters';
+                errors.password = "Password must be at least 6 characters";
             }
-        } else if (name === 'repeatPassword') {
+        } else if (name === "repeatPassword") {
             if (value !== formData.password) {
-                errors.repeatPassword = 'Passwords do not match';
+                errors.repeatPassword = "Passwords do not match";
             }
         }
         return errors;
@@ -145,23 +133,23 @@ const Register = () => {
         const errors = {};
 
         if (!data.nickname.trim()) {
-            errors.nickname = 'Nickname is required';
+            errors.nickname = "Nickname is required";
         }
 
         if (!data.email.trim()) {
-            errors.email = 'Email is required';
+            errors.email = "Email is required";
         } else if (!/\S+@\S+\.\S+/.test(data.email)) {
-            errors.email = 'Email is invalid';
+            errors.email = "Email is invalid";
         }
 
         if (!data.password.trim()) {
-            errors.password = 'Password is required';
+            errors.password = "Password is required";
         } else if (data.password.length < 6) {
-            errors.password = 'Password must be at least 6 characters';
+            errors.password = "Password must be at least 6 characters";
         }
 
         if (data.password !== data.repeatPassword) {
-            errors.repeatPassword = 'Passwords do not match';
+            errors.repeatPassword = "Passwords do not match";
         }
 
         return errors;
@@ -169,72 +157,68 @@ const Register = () => {
 
     return (
         <div className="registerContainer">
+            <Logbar />
             <div className="registerWrap">
-                <span className="title">Register</span>
+                <span className="title">WebChat Register</span>
                 <form className="registerForm" onSubmit={handleSubmit}>
                     <input
                         className="registerInput"
                         type="text"
                         name="nickname"
                         value={formData.nickname}
-                        placeholder="display name"
+                        placeholder="Display name"
                         onChange={handleChange}
                     />
-                    {errors.nickname &&
-                        <span className="formError">{errors.nickname}</span>}
+                    {errors.nickname && (
+                        <span className="formError">{errors.nickname}</span>
+                    )}
                     <input
                         className="registerInput"
                         type="email"
                         name="email"
                         value={formData.email}
-                        placeholder="email"
+                        placeholder="Email"
                         onChange={handleChange}
                     />
-                    {errors.email &&
-                        <span className="formError">{errors.email}</span>}
+                    {errors.email && <span className="formError">{errors.email}</span>}
                     <input
                         className="registerInput"
                         type="password"
                         name="password"
                         value={formData.password}
-                        placeholder="password"
+                        placeholder="Password"
                         onChange={handleChange}
                     />
-                    {errors.password &&
-                        <span className="formError">{errors.password}</span>}
+                    {errors.password && (
+                        <span className="formError">{errors.password}</span>
+                    )}
                     <input
                         className="registerInput"
                         type="password"
                         name="repeatPassword"
                         value={formData.repeatPassword}
-                        placeholder="password"
+                        placeholder="Repeat password"
                         onChange={handleChange}
                     />
-                    {errors.repeatPassword &&
-                        <span className="formError">{errors.repeatPassword}</span>}
+                    {errors.repeatPassword && (
+                        <span className="formError">{errors.repeatPassword}</span>
+                    )}
                     <label id="avatarInput">
-                        <img
-                            id="avatarImage"
-                            src={AddImg}
-                            alt="Chose avatar placeholder"
-                        />
+                        <img id="avatarImage" src={AddImg} alt="Chose avatar placeholder" />
                         <span>Chose avatar</span>
                         {/* to customize standard input look we hide the input element and wrap it in a
                         label with desired output content */}
-                        {/*  passing useState value property */}
-                        <input
-                            type="file"
-                            hidden={true}
-                            name="avatarInput"
-                            onChange={handleAvatar}
-                        />
+                        <input type="file" hidden={true} />
                     </label>
-                    <button id="registerSubmit" type="submit">Sign up</button>
+                    {imgError && (
+                        <span className="formError">{imgError}</span>
+                    )}
+                    <button id="registerSubmit" type="submit">
+                        Sign up
+                    </button>
                 </form>
-                {/* for the react router `Link to` is used instead of `a href="#"` */}
-                <p>Already have an account?<Link to="/login">Login</Link></p>
             </div>
         </div>
-    )
-}
+    );
+};
 export default Register;
