@@ -3,7 +3,7 @@ import Login from './pages/Sign-In/Login';
 import PassReset from './pages/forgot-pass/PassReset';
 import Home from './pages/Home';
 import Profile from './pages/profile/Profile';
-import { AuthContext } from './context/AuthContext';
+import { AuthContext } from './components/context/AuthContext';
 import { useContext } from 'react';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';

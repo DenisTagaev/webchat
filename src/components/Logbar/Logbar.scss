@@ -1,0 +1,61 @@
+@import '../../index.scss';
+
+.logBarMainContainer {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    height: 400px;
+
+    @include tableScreen {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        font-weight: 500;
+    }
+
+    input {
+        position: absolute;
+        cursor: pointer;
+
+        &:checked+.logCheckmark {
+            background-color: $mainDark;
+            color: #fff;
+        }
+
+        &:not(:checked)+.logCheckmark {
+            color: #000;
+        }
+
+    }
+
+    .logCheckmark {
+        background: #fff;
+        cursor: pointer;
+        display: block;
+        text-align: center;
+        font-size: 1.2rem;
+        padding: 40px 10px;
+        position: relative;
+        border: none;
+
+        @include tableScreen {
+            display: flex;
+            height: 100px;
+            width: 100px;
+            justify-content: center;
+            align-items: center;
+            padding: 0px 10px;
+            font-size: 12px;
+
+        }
+
+        .logIcons {
+            @include logIcons;
+
+            @include tableScreen {
+                display: none;
+            }
+        }
+    }
+}
