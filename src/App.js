@@ -1,20 +1,39 @@
+import { useContext } from 'react';
+import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
+import { AuthContext } from './components/context/AuthContext';
+
 import Register from './pages/registration/Register';
 import Login from './pages/Sign-In/Login';
 import PassReset  from './pages/forgot-pass/PassReset';
 import Home from './pages/Home';
 
-import { BrowserRouter, Routes, Route} from 'react-router-dom';
-
 import './index.scss';
 
 export default function App() {
+  //getting the data about the user from the firebase
+  const { currentUser } = useContext(AuthContext);
+  
+  //if the user is not logged in or does not exist return him to login
+  const GuardRoute = ({children}) => {
+    if(!currentUser) {
+      return <Navigate to="/login"/>
+    }
+    //if the user exists - allow him to view any protected route
+    return children;
+  }
+
   return (
     <BrowserRouter>
       {/* creating basic routing */}
       <Routes>
         <Route path="/">
           {/* basic path '/' should render home component, all nested routes shouldn't contain '/' */}
-          <Route index element={<Home />} />
+          <Route index element={
+            //protecting user page from being viewed if not a user
+            <GuardRoute>
+              <Home />
+            </GuardRoute>
+          } />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="passReset" element={<PassReset />} />

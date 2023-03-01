@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../environments/firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, storage, db } from "../../environments/firebase";
 import AddImg from "../../imgs/addAvatar.png";
 import Logbar from "../../components/Logbar/Logbar";
 import "./Register.scss";
@@ -16,6 +18,8 @@ const Register = () => {
   });
   // setting an object to contain current form errors
   const [errors, setErrors] = useState({});
+  //state to contain img uploading errors
+  const [imgError, setImgError] = useState();
 
   // we will need navigation when the firebase will be connected
   const navigator = useNavigate();
@@ -38,27 +42,60 @@ const Register = () => {
 
   //check if there are any errors in the form and if none trigger
   // registration in the firebase
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    //get the uploaded picture reference
+    const avatar = event.target[4].files[0];
+    //before proceeding check for errors
     const newErrors = validateFormData(formData);
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      // call submit function
-      createUserWithEmailAndPassword(auth, formData.email, formData.password)
-        .then((userCredential) => {
-          // Signed in
-        //   const user = userCredential.user;
+      // call function to create user in the firebase
+      await createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      
+      .then((userCredential) => {
+        //get reference to the newly created user
+          const user = userCredential.user;
+          //create reference between the user and picture storage
+          const storageRef = ref(storage, formData.nickname);
+          //upload picture to the cloud storage and get it's url
+          const uploadTask = uploadBytesResumable(storageRef, avatar);
+          uploadTask.on(
+            (error) => {
+              // Handle unsuccessful uploads
+              setImgError(error);
+            }, 
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then( async(downloadURL) => {
+                //on successful image upload get the link to the cloudstore
+                //and link it to the user's profile along with the nickname
+                await updateProfile(user, {
+                  displayName: formData.nickname,
+                  photoURL: downloadURL,
+                });
+                //create a copy of user data to firestorage to allow 
+                //interactions with another users
+                await setDoc(doc(db, "users", user.uid), {
+                  uid: user.uid,
+                  nickname: user.displayName,
+                  email: user.email,
+                  photoURL: downloadURL
+                });
+                //create a collection of chats for the user
+                await setDoc(doc(db, "userChats", user.uid), {});
+              });
+            }
+          );
+
+          //redirect user to the home page after successful registration
           navigator("/");
           // console.log(user)
           // ...
         })
         .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-
           // Error concat string to output
-          console.log(errorCode + "\n " + errorMessage);
+          console.log(`${error.code}: ${error.message}`);
         });
     }
   };
@@ -173,6 +210,9 @@ const Register = () => {
                         label with desired output content */}
             <input type="file" hidden={true} />
           </label>
+          {imgError && (
+            <span className="formError">{imgError}</span>
+          )}
           <button id="registerSubmit" type="submit">
             Sign up
           </button>
