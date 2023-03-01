@@ -62,6 +62,7 @@ const Register = () => {
 
                     const user = userCredential.user;
 
+                    // image file ref creeation
                     const storageRef = ref(storage, `files/${selectedFile.name}`);
 
                     const uploadTask = uploadBytesResumable(storageRef, selectedFile);
@@ -71,40 +72,34 @@ const Register = () => {
                         navigator('/');
                     }
                     );
-                    if (auth.currentUser.emailVerified) {
 
-                        uploadTask.on(
+                    uploadTask.on(
 
-                            (error) => {
-                                //  file size and format validation
-                                console.log(error)
-                            },
-                            () => {
+                        (error) => {
+                            //  file size and format validation
+                            console.log(error)
+                        },
+                        () => {
 
-                                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                                    await updateProfile(user, {
-                                        displayName: formData.nickname,
-                                        photoURL: downloadURL
-                                    });
-
-                                    // function setDoc creates a new user doc instance, with unique uid
-                                    await setDoc(doc(db, "users", user.uid), {
-                                        uid: user.uid,
-                                        displayName: user.displayName,
-                                        email: user.email,
-                                        photoURL: downloadURL,
-                                    })
-                                    // image file ref creeation
-
-                                    await setDoc(doc(db, "userChats", user.uid), {})
+                            getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                                await updateProfile(user, {
+                                    displayName: formData.nickname,
+                                    photoURL: downloadURL
                                 });
-                            }
-                        );
 
-                    }
+                                // firestore doc addition
+                                // function setDoc creates a new user doc instance, with unique uid
+                                await setDoc(doc(db, "users", user.uid), {
+                                    uid: user.uid,
+                                    displayName: user.displayName,
+                                    email: user.email,
+                                    photoURL: downloadURL,
+                                })
 
-                    // firestore doc addition
-
+                                await setDoc(doc(db, "userChats", user.uid), {})
+                            });
+                        }
+                    );
 
                 })
                 .catch((error) => {

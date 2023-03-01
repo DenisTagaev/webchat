@@ -2,6 +2,7 @@ import Register from './pages/registration/Register';
 import Login from './pages/Sign-In/Login';
 import PassReset from './pages/forgot-pass/PassReset';
 import Home from './pages/Home';
+import Profile from './pages/profile/Profile';
 import { AuthContext } from './context/AuthContext';
 import { useContext } from 'react';
 
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="passReset" element={<PassReset />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
     </BrowserRouter>
