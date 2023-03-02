@@ -4,6 +4,9 @@ import { storage } from '../../environments/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import './Profile.scss';
 
+// react icon 
+import { AiFillEdit } from 'react-icons/ai';
+
 import AddImg from '../../imgs/addAvatar.png'
 import { updateProfile } from 'firebase/auth';
 
@@ -103,53 +106,60 @@ const Profile = () => {
     };
 
     // states for changing name and email
-    const [nameChange, setNameChange] = useState(false);
+    const [formAccess, setFormAccess] = useState(false);
     const [fileChange, setFileChange] = useState(false);
 
-    const handleNameInputAccess = () => {
-        setNameChange(!nameChange);
+    const handleFormAccess = () => {
+        setFormAccess(true);
+    }
+
+    const handleFormSubmit = () => {
+        setFormAccess(false);
     }
 
     const handleFileInputAccess = () => {
         setFileChange(!fileChange);
     }
 
-
-
+    // yet need to decide the way how it will be better displayed
     // console.log(currentUser);
     return (
         <div className="profileContainer">
             <div className="profileWrap">
-                <div className="profilePicture">
-                    <img src={currentUser.photoURL} alt="avatar" onClick={handleFileInputAccess} />
-                    <img id="avatarImage" src={AddImg} alt="Chose avatar placeholder"></img>
-                    {fileChange && <input type="file" hidden={true} />}
+                {!formAccess &&
+                    <div>
+                        <div>
+                            <img id="profileImage" className='profileImage' src={currentUser.photoURL} alt="Chose avatar placeholder" onClick={handleFormAccess} />
+                        </div>
+                        <div className="profileDescription">
+                            <div className="profileName" onClick={handleFormAccess}><span>{currentUser.displayName}</span></div>
+                            <div className="profileEmail" onClick={handleFormAccess}><span>{currentUser.email}</span></div>
+                        </div>
+                    </div>
+                }
+                {/*  Form is being only after state change  */}
+                {formAccess && <form className="editForm" onSubmit={handleSubmit}>
+                    <label id="profileInput">
+                        <img id="profileImage" className='profileImage' src={AddImg} alt="Chose avatar placeholder" />
+                        {/* to customize standard input look we hide the input element and wrap it in a
+                        label with desired output content */}
+                        <input type="file" hidden={true} />
+                    </label>
                     {imgError && (
                         <span className="formError">{imgError}</span>
                     )}
-                </div>
-                <div className="profileDesc">
-                    <div className="profileDisplayName">
-                        {/*  When change button pressed, state is value is inverted and input field is accessible  */}
-                        <span>{currentUser.displayName}<button onClick={handleNameInputAccess}>Change</button></span>
-                        {nameChange &&
-                            <input
-                                className="registerInput"
-                                type="text"
-                                name="name"
-                                value={userInfo.name}
-                                placeholder="name"
-                                onChange={handleChange}
-                            />
-                        }
-                        {errors.nickname &&
-                            <span className="formError">{errors.nickname}</span>}
-                    </div>
-                    <div className="profileFilel">
-                        <span>{currentUser.email}</span>
-                        {fileChange | nameChange && <button onClick={handleSubmit}>Edit</button>}
-                    </div>
-                </div>
+                    <input
+                        className="registerInput"
+                        type="text"
+                        name="name"
+                        value={userInfo.name}
+                        placeholder={currentUser.displayName}
+                        onChange={handleChange}
+                    />
+                    {errors.nickname &&
+                        <span className="formError">{errors.nickname}</span>}
+                    <button id='profileSubmit' type='submit'><AiFillEdit /></button>
+                </form>}
             </div>
         </div>
     )
