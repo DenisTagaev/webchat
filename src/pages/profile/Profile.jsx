@@ -1,6 +1,11 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../components/context/AuthContext';
+import { storage } from '../../environments/firebase';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import './Profile.scss';
+
+import AddImg from '../../imgs/addAvatar.png'
+import { updateProfile } from 'firebase/auth';
 
 const Profile = () => {
     // User context
@@ -29,6 +34,7 @@ const Profile = () => {
 
     // Code reusage
     const [errors, setErrors] = useState({});
+    const [imgError, setImgError] = useState();
 
     const validateField = (name, value) => {
         const errors = {};
@@ -48,12 +54,38 @@ const Profile = () => {
     };
 
     // handle submission, yet to be done
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const newErrors = validateFormData(userInfo);
         setErrors(newErrors);
         console.log(newErrors);
+
+        const avatar = event.target[0].files[0];
+
+        const storageRef = ref(storage, userInfo.name);
+
+        const uploadTask = uploadBytesResumable(storageRef, avatar);
+
+        uploadTask.on(
+            (error) => {
+                // Handle unsuccessful uploads
+                setImgError(error);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                    await updateProfile(currentUser, {
+                        displayName: userInfo.name,
+                        photoURL: downloadURL,
+                    });
+                })
+            })
     }
+
+
+
+    // if (Object.keys(newErrors).length === 0 && avatar) {
+    //     await updateProfile(currentUser, {
+
 
     const validateFormData = (data) => {
         const errors = {};
@@ -72,22 +104,29 @@ const Profile = () => {
 
     // states for changing name and email
     const [nameChange, setNameChange] = useState(false);
-    const [emailChange, setEmailChange] = useState(false);
+    const [fileChange, setFileChange] = useState(false);
 
     const handleNameInputAccess = () => {
         setNameChange(!nameChange);
     }
 
-    const handleEmailInputAccess = () => {
-        setEmailChange(!emailChange);
+    const handleFileInputAccess = () => {
+        setFileChange(!fileChange);
     }
+
+
 
     // console.log(currentUser);
     return (
         <div className="profileContainer">
             <div className="profileWrap">
                 <div className="profilePicture">
-                    <img src={currentUser.photoURL} alt="avatar" />
+                    <img src={currentUser.photoURL} alt="avatar" onClick={handleFileInputAccess} />
+                    <img id="avatarImage" src={AddImg} alt="Chose avatar placeholder"></img>
+                    {fileChange && <input type="file" hidden={true} />}
+                    {imgError && (
+                        <span className="formError">{imgError}</span>
+                    )}
                 </div>
                 <div className="profileDesc">
                     <div className="profileDisplayName">
@@ -106,20 +145,9 @@ const Profile = () => {
                         {errors.nickname &&
                             <span className="formError">{errors.nickname}</span>}
                     </div>
-                    <div className="profileEmail">
-                        <span>{currentUser.email}<button onClick={handleEmailInputAccess}>Change</button></span>
-                        {emailChange &&
-                            <input
-                                className="registerInput"
-                                type="email"
-                                name="email"
-                                value={userInfo.email}
-                                placeholder="email"
-                                onChange={handleChange}
-                            />}
-                        {errors.email &&
-                            <span className="formError">{errors.email}</span>}
-                        {emailChange | nameChange && <button onClick={handleSubmit}>Edit</button>}
+                    <div className="profileFilel">
+                        <span>{currentUser.email}</span>
+                        {fileChange | nameChange && <button onClick={handleSubmit}>Edit</button>}
                     </div>
                 </div>
             </div>
