@@ -74,14 +74,14 @@ const Login = () => {
 
   //check if there are any errors in the form and if none trigger
   //login to the firebase
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
     const newErrors = validateFormData(formData);
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
       // call login function
-      signInWithEmailAndPassword(auth, formData.email, formData.password)
+      await signInWithEmailAndPassword(auth, formData.email, formData.password)
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
