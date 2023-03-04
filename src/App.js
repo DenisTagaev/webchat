@@ -8,8 +8,8 @@ import Home from './pages/Home';
 import PassReset from './pages/forgot-pass/PassReset';
 import Profile from './pages/profile/Profile';
 
-
-
+// react bootstrap styling 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './index.scss';
 

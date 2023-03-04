@@ -1,165 +1,213 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+
+// auth 
 import { AuthContext } from '../../components/context/AuthContext';
-import { storage } from '../../environments/firebase';
+import { updateProfile, sendPasswordResetEmail } from 'firebase/auth';
+
+// storage
+import { auth, storage } from '../../environments/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
+// styles
+// external page styles
 import './Profile.scss';
 
-// react icon 
-import { AiFillEdit } from 'react-icons/ai';
+// Reac- bootstrap components 
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 
-import AddImg from '../../imgs/addAvatar.png'
-import { updateProfile } from 'firebase/auth';
+// react icons
+import { AiFillEdit } from 'react-icons/ai';
+import { MdFileUpload } from 'react-icons/md';
+
+import AddImg from '../../imgs/addAvatar.png';
+
+// image upload function
+// in second sprint a good idea would be to trasfer all firebase funtionality every file to firebase.js
 
 const Profile = () => {
+
     // User context
     const { currentUser } = useContext(AuthContext);
 
-    // Local user  info for change
-    const [userInfo, setUserInfo] = useState({
-        photoURL: currentUser.photoURL,
-        name: currentUser.displayName,
-        email: currentUser.email
+    /*
+    User profile functionality
+  */
+
+    // default avatar png       
+    const [avatarUrl, setAvatarUrl] = useState(AddImg);
+    const [photoBinary, setPhotoBinary] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    // username state
+    const [userName, setUserName] = useState(currentUser.displayName);
+
+    const [changeData, setChangeData] = useState({
+        nickname: ""
+        //  changed data object
     })
 
-    const handleChange = (event) => {
+    useEffect(() => {
+
+        if (currentUser?.photoURL) {
+            setAvatarUrl(currentUser.photoURL);
+        }
+        setUserName(currentUser.displayName);
+
+    }, [currentUser.photoURL, currentUser.displayName])
+
+
+    const handleChange = (e) => {
+        if (e.target.files[0]) {
+            setPhotoBinary(e.target.files[0]);
+        }
+    }
+
+    const handleUpload = () => {
+        handleAvatarUpload(photoBinary);
+        setPhotoBinary();
+    }
+
+    const handleAvatarUpload = async (file) => {
+        const fileRef = ref(storage, currentUser.uid + ".png");
+        setLoading(true);
+
+        const snapshot = uploadBytesResumable(fileRef, file)
+
+        // accessing the url of the photo
+        const photoURL = await getDownloadURL(fileRef)
+
+        updateProfile(currentUser, { photoURL });
+
+        setLoading(false);
+        alert("File was uploaded");
+
+    }
+
+    // nickname input functionality
+    const handleNameChange = (event) => {
         const { name, value } = event.target;
-        setUserInfo({
-            ...userInfo,
+
+        setChangeData({
+            ...changeData,
             [name]: value,
-        });
-        //after user input validate that field matches the requirements
-        const newErrors = validateField(name, value);
-        setErrors({
-            ...errors,
-            [name]: newErrors[name],
-        });
-    };
+        })
+        console.log(changeData.nickname)
+        // Still to add error validation
+    }
 
-    // Code reusage
-    const [errors, setErrors] = useState({});
-    const [imgError, setImgError] = useState();
+    //Need to review the rerender of the name
 
-    const validateField = (name, value) => {
-        const errors = {};
-
-        if (name === 'nickname') {
-            if (!value.trim()) {
-                errors.nickname = 'Nickname is required';
-            }
-        } else if (name === 'email') {
-            if (!value.trim()) {
-                errors.email = 'Email is required';
-            } else if (!/\S+@\S+\.\S+/.test(value)) {
-                errors.email = 'Email is invalid';
-            }
-        }
-        return errors;
-    };
-
-    // handle submission, yet to be done
-    const handleSubmit = async (event) => {
+    const handleNameChangeSubmit = (event) => {
         event.preventDefault();
-        const newErrors = validateFormData(userInfo);
-        setErrors(newErrors);
-        console.log(newErrors);
-
-        const avatar = event.target[0].files[0];
-
-        const storageRef = ref(storage, userInfo.name);
-
-        const uploadTask = uploadBytesResumable(storageRef, avatar);
-
-        uploadTask.on(
-            (error) => {
-                // Handle unsuccessful uploads
-                setImgError(error);
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                    await updateProfile(currentUser, {
-                        displayName: userInfo.name,
-                        photoURL: downloadURL,
-                    });
-                })
-            })
+        updateProfile(currentUser, { displayName: changeData.nickname });
+        if (event.target[0].value) {
+            event.target[0].value = '';
+        }
+        console.log(currentUser)
     }
 
+    /*
+    User auth functionality
+    */
 
+    const [emailAuth, setEmailAuth] = useState('');
+    const [errorEmailAuth, setErrorEmailAuth] = useState('');
 
-    // if (Object.keys(newErrors).length === 0 && avatar) {
-    //     await updateProfile(currentUser, {
+    const validateEmailField = (value) => {
 
-
-    const validateFormData = (data) => {
-        const errors = {};
-
-        if (!data.nickname.trim()) {
-            errors.nickname = 'Nickname is required';
+        if (!value.trim()) {
+            return 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(value)) {
+            return 'Email is invalid';
         }
-
-        if (!data.email.trim()) {
-            errors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(data.email)) {
-            errors.email = 'Email is invalid';
-        }
-        return errors;
+        return '';
     };
 
-    // states for changing name and email
-    const [formAccess, setFormAccess] = useState(false);
-    const [fileChange, setFileChange] = useState(false);
 
-    const handleFormAccess = () => {
-        setFormAccess(true);
+    const handleEmailAuthChange = (event) => {
+        const value = event.target.value;
+        setEmailAuth(value);
+        //after user input validate that field matches the requirements
+
+        setErrorEmailAuth(validateEmailField(value));
+    };
+
+
+    const handlePassResetSubmit = (event) => {
+        event.preventDefault();
+        const newError = validateEmailField(emailAuth);
+
+        setErrorEmailAuth(newError);
+
+        if (newError.length === 0) {
+            // call submit function
+            sendPasswordResetEmail(auth, emailAuth)
+                .then(() => {
+                    alert('Restore Letter has been send');
+                    navigator('/login');
+                },
+                    err => alert(err.message))
+                .catch(err => console.log(err));
+        }
     }
-
-    const handleFormSubmit = () => {
-        setFormAccess(false);
-    }
-
-    const handleFileInputAccess = () => {
-        setFileChange(!fileChange);
-    }
-
-    // yet need to decide the way how it will be better displayed
-    // console.log(currentUser);
     return (
         <div className="profileContainer">
             <div className="profileWrap">
-                {!formAccess &&
-                    <div>
-                        <div>
-                            <img id="profileImage" className='profileImage' src={currentUser.photoURL} alt="Chose avatar placeholder" onClick={handleFormAccess} />
-                        </div>
-                        <div className="profileDescription">
-                            <div className="profileName" onClick={handleFormAccess}><span>{currentUser.displayName}</span></div>
-                            <div className="profileEmail" onClick={handleFormAccess}><span>{currentUser.email}</span></div>
-                        </div>
-                    </div>
-                }
-                {/*  Form is being only after state change  */}
-                {formAccess && <form className="editForm" onSubmit={handleSubmit}>
-                    <label id="profileInput">
-                        <img id="profileImage" className='profileImage' src={AddImg} alt="Chose avatar placeholder" />
-                        {/* to customize standard input look we hide the input element and wrap it in a
-                        label with desired output content */}
-                        <input type="file" hidden={true} />
-                    </label>
-                    {imgError && (
-                        <span className="formError">{imgError}</span>
-                    )}
-                    <input
-                        className="registerInput"
-                        type="text"
-                        name="name"
-                        value={userInfo.name}
-                        placeholder={currentUser.displayName}
-                        onChange={handleChange}
-                    />
-                    {errors.nickname &&
-                        <span className="formError">{errors.nickname}</span>}
-                    <button id='profileSubmit' type='submit'><AiFillEdit /></button>
-                </form>}
+                <div className="profileBody">
+                    <Tabs
+                        defaultActiveKey="desc"
+                        id="uncontrolled-tab-example"
+                        className="mb-3"
+                        justify
+                    >
+                        <Tab eventKey="desc" title="Profile">
+                            <div className="profileAvatar">
+                                <label id='avatarInput'>
+                                    <img src={avatarUrl} alt="avatar" id='avatarImage' />
+                                    <input type="file" hidden={true} onChange={handleChange} />
+                                </label>
+                                {photoBinary && <button onClick={handleUpload}><MdFileUpload /></button>}
+                            </div>
+                            <div className="profileName">
+                                <span>{currentUser.displayName}</span>
+                                {<form className="resetForm" onSubmit={handleNameChangeSubmit}>
+                                    <input
+                                        className="registerInput"
+                                        type="text"
+                                        name="nickname"
+                                        value={changeData.nickname}
+                                        placeholder="Display name"
+                                        onChange={handleNameChange}
+                                    />
+                                    <button id="resetSubmit" type="submit"><AiFillEdit /></button>
+                                </form>}
+                            </div>
+                            <div className="profileDesc">
+                                <span>
+                                    {/*  Add description part to document write functionality  */}
+                                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum praesentium reprehenderit earum molestiae adipisci, a consectetur expedita quos id inventore enim dolores cumque nihil, veritatis delectus laboriosam eligendi at architecto?</p>
+                                </span>
+                            </div>
+                        </Tab>
+                        <Tab eventKey="auth" title="Authentication">
+                            <form className="resetForm" onSubmit={handlePassResetSubmit}>
+                                <input
+                                    className="resetInput"
+                                    type="email"
+                                    placeholder='Email'
+                                    onChange={handleEmailAuthChange}
+                                />
+                                <button id="resetSubmit" type="submit">Send Link</button>
+                                {errorEmailAuth &&
+                                    <span className="formError">{errorEmailAuth}</span>}
+                            </form>
+                        </Tab>
+                        <Tab eventKey="chats" title="Chats">
+                            {/*  Chats managing  */}
+                        </Tab>
+                    </Tabs>
+                </div>
             </div>
         </div>
     )
