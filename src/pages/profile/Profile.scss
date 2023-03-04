@@ -1,0 +1,71 @@
+@import '../../index.scss';
+
+.profileContainer {
+    @include mainScreenContainer;
+
+    @include tableScreen {
+        @include tableScreenMainContainer;
+    }
+
+    .profileWrap {
+        @include inputBox;
+        height: fit-content;
+        max-height: 400px;
+
+        @include tableScreen {
+            @include tableScreenWrap;
+            height: fit-content;
+        }
+
+        .title {
+            @include mainScreenTitles;
+
+            @include tableScreen {
+                @include tableScreenTitle;
+            }
+        }
+
+
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        @include tableScreen {
+            width: 90%;
+        }
+
+        .profileInput {
+            @include initial-inputs;
+        }
+
+        #registerSubmit {
+            @include mainButtonForSubmission;
+            // margin-top: -5px;
+            // margin-bottom: -50px;
+        }
+
+        #avatarInput {
+            display: flex;
+            align-items: center;
+            // gap: 5%;
+            font-size: 1em;
+            color: $primary;
+            width: 20%;
+
+            @include tableScreen {
+                justify-content: center;
+                width: 90%;
+            }
+        }
+
+        #avatarImage {
+            width: 100%;
+        }
+
+        .formError {
+            padding: 0 15px;
+            font-size: 0.85em;
+            color: rgb(187, 1, 1);
+        }
+    }
+}
