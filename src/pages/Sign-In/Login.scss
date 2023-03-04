@@ -10,10 +10,9 @@
     .loginWrap {
         @include inputBox;
         min-height: 260px;
-        height: fit-content;
 
         @include tableScreen {
-           @include tableScreenWrap;
+            @include tableScreenWrap;
         }
 
         .title {
@@ -28,7 +27,7 @@
             margin-top: 10%;
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 5px;
 
             @include tableScreen {
                 width: 90%;
@@ -43,9 +42,7 @@
             }
 
             .formError {
-                padding: 0 15px;
-                font-size: 0.85em;
-                color: rgb(187, 1, 1);
+                @include errorsForm;
             }
         }
     }

@@ -9,8 +9,7 @@
 
     .registerWrap {
         @include inputBox;
-        height: fit-content;
-        max-height: 400px;
+        min-height: 260px;
 
         @include tableScreen {
             @include tableScreenWrap;
@@ -40,16 +39,20 @@
 
             #registerSubmit {
                 @include mainButtonForSubmission;
-                // margin-top: -5px;
-                // margin-bottom: -50px;
+                margin-bottom: -15%;
+                margin-top: 0;
             }
 
             #avatarInput {
                 display: flex;
                 align-items: center;
-                // gap: 5%;
+                gap: 2%;
                 font-size: 1em;
                 color: $primary;
+
+                .regImg {
+                    font-size: 2em;
+                }
 
                 @include tableScreen {
                     justify-content: center;
@@ -62,9 +65,7 @@
             }
 
             .formError {
-                padding: 0 15px;
-                font-size: 0.85em;
-                color: rgb(187, 1, 1);
+                @include errorsForm;
             }
         }
     }
