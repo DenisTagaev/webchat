@@ -13,8 +13,9 @@ export const Navbar = () => {
     <div className="navbarContainer">
       <span className="logo">A&DD Chat</span>
       <div className="userContainer">
-        <img src={currentUser.photoURL} alt="user's avatar" onClick={() => { navigator('/profile') }} />
+        <img src={currentUser.photoURL} alt="user's avatar" />
         <span>{currentUser.displayName}</span>
+        <button onClick={() => navigator('/profile')}>Profile</button>
         <button onClick={() => signOut(auth)}>Logout</button>
       </div>
     </div>

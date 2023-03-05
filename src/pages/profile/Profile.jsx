@@ -2,10 +2,10 @@ import React, { useContext, useState, useEffect } from 'react';
 
 // auth 
 import { AuthContext } from '../../components/context/AuthContext';
-import { updateProfile, sendPasswordResetEmail } from 'firebase/auth';
+import { reauthenticateWithCredential, updateProfile, updatePassword } from 'firebase/auth';
 
 // storage
-import { auth, storage } from '../../environments/firebase';
+import { storage } from '../../environments/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 // styles
@@ -19,60 +19,70 @@ import Tabs from 'react-bootstrap/Tabs';
 // react icons
 import { AiFillEdit } from 'react-icons/ai';
 import { MdFileUpload } from 'react-icons/md';
+// import { GrReturn } from 'react-icons/gr';
 
 import AddImg from '../../imgs/addAvatar.png';
 
-// image upload function
-// in second sprint a good idea would be to trasfer all firebase funtionality every file to firebase.js
-
 const Profile = () => {
 
-    // User context
+    // User context for current user
     const { currentUser } = useContext(AuthContext);
 
     /*
-    User profile functionality
-  */
+        UseStates profile changes
+    */
 
     // default avatar png       
     const [avatarUrl, setAvatarUrl] = useState(AddImg);
-    const [photoBinary, setPhotoBinary] = useState(null);
-    const [loading, setLoading] = useState(false);
 
-    // username state
+    // States for data changing
+    const [photo, setPhoto] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [userName, setUserName] = useState(currentUser.displayName);
 
-    const [changeData, setChangeData] = useState({
-        nickname: ""
-        //  changed data object
-    })
+    const [passwordChangeLoginAccess, setPasswordChangeLoginAccess] = useState(false);
+    const [passwordChangeAccess, setPasswordChangeAccess] = useState(false);
+
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
+    const [newPassword, setNewPassword] = useState({
+        password: "",
+        repeatPassword: ""
+    });
+    const [newPasswordError, setNewPasswordError] = useState({});
+    const [formErrors, setFormErrors] = useState({});
 
     useEffect(() => {
-
-        if (currentUser?.photoURL) {
+        if (currentUser.photoURL) {
             setAvatarUrl(currentUser.photoURL);
         }
-        setUserName(currentUser.displayName);
+        if (currentUser.displayName) {
+            setUserName(currentUser.displayName);
+        }
 
-    }, [currentUser.photoURL, currentUser.displayName])
+    }, [currentUser])
 
 
-    const handleChange = (e) => {
+    const handleAvatarChange = (e) => {
         if (e.target.files[0]) {
-            setPhotoBinary(e.target.files[0]);
+            setPhoto(e.target.files[0]);
         }
     }
 
     const handleUpload = () => {
-        handleAvatarUpload(photoBinary);
-        setPhotoBinary();
+        handleAvatarUpload(photo);
+        setPhoto();
     }
 
     const handleAvatarUpload = async (file) => {
         const fileRef = ref(storage, currentUser.uid + ".png");
+
+        // Loading state for image upload
         setLoading(true);
 
-        const snapshot = uploadBytesResumable(fileRef, file)
+        uploadBytesResumable(fileRef, file)
 
         // accessing the url of the photo
         const photoURL = await getDownloadURL(fileRef)
@@ -80,30 +90,21 @@ const Profile = () => {
         updateProfile(currentUser, { photoURL });
 
         setLoading(false);
-        alert("File was uploaded");
-
+        if (loading === false) {
+            alert("File was uploaded")
+        };
     }
 
     // nickname input functionality
     const handleNameChange = (event) => {
-        const { name, value } = event.target;
-
-        setChangeData({
-            ...changeData,
-            [name]: value,
-        })
-        console.log(changeData.nickname)
+        setUserName(event.target.value)
+        console.log(userName)
         // Still to add error validation
     }
 
-    //Need to review the rerender of the name
-
-    const handleNameChangeSubmit = (event) => {
+    const handleNameChangeSubmit = async (event) => {
         event.preventDefault();
-        updateProfile(currentUser, { displayName: changeData.nickname });
-        if (event.target[0].value) {
-            event.target[0].value = '';
-        }
+        await updateProfile(currentUser, { displayName: userName });
         console.log(currentUser)
     }
 
@@ -111,49 +112,116 @@ const Profile = () => {
     User auth functionality
     */
 
-    const [emailAuth, setEmailAuth] = useState('');
-    const [errorEmailAuth, setErrorEmailAuth] = useState('');
+    const handleFormChange = (event) => {
+        const { name, value } = event.target;
 
-    const validateEmailField = (value) => {
-
-        if (!value.trim()) {
-            return 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(value)) {
-            return 'Email is invalid';
-        }
-        return '';
-    };
-
-
-    const handleEmailAuthChange = (event) => {
-        const value = event.target.value;
-        setEmailAuth(value);
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
         //after user input validate that field matches the requirements
+        const newErrors = validateFormField(name, value);
 
-        setErrorEmailAuth(validateEmailField(value));
+        setFormErrors({
+            ...formErrors,
+            [name]: newErrors[name],
+        });
     };
 
+    const handlePasswordInput = (event) => {
+        const { name, value } = event.target;
+        setNewPassword({
+            ...newPassword,
+            [name]: value,
+        });
 
-    const handlePassResetSubmit = (event) => {
-        event.preventDefault();
-        const newError = validateEmailField(emailAuth);
-
-        setErrorEmailAuth(newError);
-
-        if (newError.length === 0) {
-            // call submit function
-            sendPasswordResetEmail(auth, emailAuth)
-                .then(() => {
-                    alert('Restore Letter has been send');
-                    navigator('/login');
-                },
-                    err => alert(err.message))
-                .catch(err => console.log(err));
-        }
+        const newErrors = validatePasswordField(name, value);
+        setNewPasswordError({
+            ...newPasswordError,
+            [name]: newErrors[name],
+        });
     }
+
+    const handleNewPasswordSubmit = () => {
+        // updatePassword(currentUser, newPassword.password)
+
+    }
+
+    const validateFormField = (name, value) => {
+        const errors = {};
+
+        if (name === "email") {
+            if (!value.trim()) {
+                errors.email = "Email is required";
+            } else if (!/\S+@\S+\.\S+/.test(value)) {
+                errors.email = "Email is invalid";
+            }
+        } else if (name === "password") {
+            if (!value.trim()) {
+                errors.password = "Password is required";
+            } else if (value.length < 6) {
+                errors.password = "Password must be at least 6 characters";
+            }
+        }
+        return errors;
+    };
+
+    const validatePasswordField = (name, value) => {
+        const errors = {};
+        if (name === "newPassword") {
+            if (!value.trim()) {
+                errors.password = "Password is required";
+            } else if (value.length < 6) {
+                errors.password = "Password must be at least 6 characters";
+            }
+        } else if (name === "repeatNewPassword") {
+            if (value !== newPassword.password) {
+                errors.repeatPassword = "Passwords do not match";
+            }
+        }
+        return errors;
+    };
+    // const validateEmailField = (value) => {
+
+    //     if (!value.trim()) {
+    //         return 'Email is required';
+    //     } else if (!/\S+@\S+\.\S+/.test(value)) {
+    //         return 'Email is invalid';
+    //     }
+    //     return '';
+    // };
+
+
+    // const handleEmailAuthChange = (event) => {
+    //     const value = event.target.value;
+    //     setEmailAuth(value);
+    //     //after user input validate that field matches the requirements
+
+    //     setErrorEmailAuth(validateEmailField(value));
+    // };
+
+
+    // const handlePassResetSubmit = (event) => {
+    //     event.preventDefault();
+    //     const newError = validateEmailField(emailAuth);
+
+    //     setErrorEmailAuth(newError);
+
+    //     if (newError.length === 0) {
+    //         // call submit function
+    //         sendPasswordResetEmail(auth, emailAuth)
+    //             .then(() => {
+    //                 alert('Restore Letter has been send');
+    //                 navigator('/login');
+    //             },
+    //                 err => alert(err.message))
+    //             .catch(err => console.log(err));
+    //     }
+    // }
     return (
         <div className="profileContainer">
             <div className="profileWrap">
+
                 <div className="profileBody">
                     <Tabs
                         defaultActiveKey="desc"
@@ -163,11 +231,11 @@ const Profile = () => {
                     >
                         <Tab eventKey="desc" title="Profile">
                             <div className="profileAvatar">
-                                <label id='avatarInput'>
+                                <div id="avatarInput">
                                     <img src={avatarUrl} alt="avatar" id='avatarImage' />
-                                    <input type="file" hidden={true} onChange={handleChange} />
-                                </label>
-                                {photoBinary && <button onClick={handleUpload}><MdFileUpload /></button>}
+                                    <input type="file" id='avatarInput' onChange={handleAvatarChange} />
+                                    {photo && <button onClick={handleUpload}><MdFileUpload /></button>}
+                                </div>
                             </div>
                             <div className="profileName">
                                 <span>{currentUser.displayName}</span>
@@ -176,11 +244,11 @@ const Profile = () => {
                                         className="registerInput"
                                         type="text"
                                         name="nickname"
-                                        value={changeData.nickname}
+                                        value={userName}
                                         placeholder="Display name"
                                         onChange={handleNameChange}
                                     />
-                                    <button id="resetSubmit" type="submit"><AiFillEdit /></button>
+                                    <button id="nameSubmit" type="submit"><AiFillEdit /></button>
                                 </form>}
                             </div>
                             <div className="profileDesc">
@@ -191,17 +259,53 @@ const Profile = () => {
                             </div>
                         </Tab>
                         <Tab eventKey="auth" title="Authentication">
-                            <form className="resetForm" onSubmit={handlePassResetSubmit}>
-                                <input
-                                    className="resetInput"
-                                    type="email"
-                                    placeholder='Email'
-                                    onChange={handleEmailAuthChange}
-                                />
-                                <button id="resetSubmit" type="submit">Send Link</button>
-                                {errorEmailAuth &&
-                                    <span className="formError">{errorEmailAuth}</span>}
-                            </form>
+                            <div className="passwordChange">
+                                {!passwordChangeLoginAccess & !passwordChangeAccess &&
+                                    <button id='changePasswordBtn' onClick={() => {
+                                        setPasswordChangeLoginAccess(true);
+                                        alert("Please, login first to change your password");
+                                    }}>Change Password</button>
+                                }
+                                {passwordChangeLoginAccess &&
+                                    <form>
+                                        <input
+                                            className="loginInput"
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            placeholder="Email"
+                                            onChange={handleFormChange}
+                                        />
+                                        <input
+                                            className="loginInput"
+                                            type="password"
+                                            name="password"
+                                            value={formData.password}
+                                            placeholder="Password"
+                                            onChange={handleFormChange}
+                                        />
+                                    </form>
+                                }
+                                {passwordChangeAccess && <form className="resetForm" onSubmit={handleNewPasswordSubmit}>
+                                    <input
+                                        className="resetInput"
+                                        type="password"
+                                        name='newPassword'
+                                        value={newPassword.password}
+                                        placeholder='Password'
+                                        onChange={handlePasswordInput}
+                                    />
+                                    <input
+                                        className="resetInput"
+                                        type="password"
+                                        name='repeatNewPassword'
+                                        value={newPassword.repeatPassword}
+                                        placeholder='Repeat'
+                                        onChange={handlePasswordInput}
+                                    />
+                                    <button id="changePasswordBtn" type="submit">Change Password</button>
+                                </form>}
+                            </div>
                         </Tab>
                         <Tab eventKey="chats" title="Chats">
                             {/*  Chats managing  */}

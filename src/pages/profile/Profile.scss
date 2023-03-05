@@ -38,19 +38,13 @@
             @include initial-inputs;
         }
 
-        #registerSubmit {
-            @include mainButtonForSubmission;
-            // margin-top: -5px;
-            // margin-bottom: -50px;
-        }
-
         #avatarInput {
             display: flex;
             align-items: center;
             // gap: 5%;
             font-size: 1em;
             color: $primary;
-            width: 20%;
+            width: fit-content;
 
             @include tableScreen {
                 justify-content: center;
@@ -59,7 +53,7 @@
         }
 
         #avatarImage {
-            width: 100%;
+            width: 20%;
         }
 
         .formError {
