@@ -9,6 +9,7 @@
 
   .resetWrap {
     @include inputBox;
+    min-height: 260px;
 
     @include tableScreen {
       @include tableScreenWrap;
@@ -27,7 +28,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      gap: 30px;
+      gap: 5px;
 
       @include tableScreen {
         margin-top: -30px;
@@ -43,10 +44,7 @@
       }
 
       .formError {
-        padding: 0 15px;
-        // max-width: 170px;
-        font-size: 0.85em;
-        color: rgb(187, 1, 1);
+        @include errorsForm;
       }
     }
   }
