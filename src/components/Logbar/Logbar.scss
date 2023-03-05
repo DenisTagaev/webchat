@@ -38,6 +38,7 @@
     padding: 40px 10px;
     position: relative;
     border: none;
+    overflow: hidden;
 
     @include tableScreen {
       display: flex;
