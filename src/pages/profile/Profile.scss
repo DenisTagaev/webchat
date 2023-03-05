@@ -8,14 +8,93 @@
     }
 
     .profileWrap {
-        @include inputBox;
-        height: fit-content;
-        max-height: 400px;
+        background-color: #fff;
+        padding: 70px 30px;
+        min-height: fit-content;
+        width: 550px;
+        position: relative;
 
         @include tableScreen {
             @include tableScreenWrap;
             height: fit-content;
         }
+
+        .profileBody {
+
+            .profileAvatar {
+
+                #avatarContainer {
+                    display: flex;
+
+                    #iconBtn {
+                        align-self: flex-end;
+                    }
+
+                    #avatarImage {
+                        image-rendering: optimizeQuality;
+                        width: 100px;
+                        height: 85px;
+                        border: 1px solid $mainDark;
+                        border-radius: 20%;
+                        margin: 10px;
+                        box-shadow: 0 0 15px $mainDark;
+                    }
+
+                    #avatarInputContainer {
+                        @include tableScreenTitle;
+                        flex-direction: column;
+                        margin-left: auto;
+
+                        .profileTitle {
+                            font-weight: 600;
+                            font-size: 1.2em;
+                            margin: 10px 0;
+                        }
+
+                        #avatarInput {
+                            padding: 10px;
+                            border: none;
+                            outline: none;
+                            background-color: $primary;
+                            min-height: 50px;
+                        }
+
+                    }
+                }
+            }
+
+
+            .profileName {
+                .profileTitle {
+                    font-weight: 600;
+                    font-size: 1.2em;
+                    margin: 10px 0;
+                }
+            }
+
+            .profileDesc {}
+
+            .passwordChange {
+                #submitBtn {
+                    margin-bottom: 20px;
+                }
+
+                .passwordForm {
+                    display: flex;
+                    flex-direction: column;
+
+                    .profileInput {
+                        padding: 20px 10px;
+                    }
+
+                    #iconBtn {
+                        align-self: flex-start;
+                        margin: 5px
+                    }
+                }
+            }
+        }
+
 
         .title {
             @include mainScreenTitles;
@@ -38,28 +117,33 @@
             @include initial-inputs;
         }
 
-        #avatarInput {
-            display: flex;
-            align-items: center;
-            // gap: 5%;
-            font-size: 1em;
-            color: $primary;
-            width: fit-content;
-
-            @include tableScreen {
-                justify-content: center;
-                width: 90%;
-            }
+        @include tableScreen {
+            justify-content: center;
+            width: 90%;
         }
+    }
 
-        #avatarImage {
-            width: 20%;
-        }
+    #iconBtn {
+        border: none;
+        outline: none;
+        font-size: 20px;
+        color: $primary;
+        background-color: #fff;
+        transition: ease .3s;
+    }
 
-        .formError {
-            padding: 0 15px;
-            font-size: 0.85em;
-            color: rgb(187, 1, 1);
-        }
+    #iconBtn:hover {
+        color: $secondary;
+    }
+
+    #submitBtn {
+        margin-bottom: -5%;
+        margin-top: 0;
+
+        @include mainButtonForSubmission;
+    }
+
+    .formError {
+        @include errorsForm
     }
 }

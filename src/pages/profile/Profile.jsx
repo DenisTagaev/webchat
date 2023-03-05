@@ -8,6 +8,10 @@ import { reauthenticateWithCredential, updateProfile, updatePassword, EmailAuthP
 import { storage } from '../../environments/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
+// firestore
+import { db } from '../../environments/firebase';
+import { doc, updateDoc } from "firebase/firestore";
+
 // styles
 // external file styles
 import './Profile.scss';
@@ -120,10 +124,16 @@ const Profile = () => {
 
     const handleNameChangeSubmit = async (event) => {
         event.preventDefault();
-        await updateProfile(currentUser, { displayName: userName });
-        console.log(currentUser)
-        setUserName('');
-        setChangeNameAccess(!changeNameAccess);
+        validateDataField(userName);
+        const newErrors = validateDataField(userName);
+        setFormErrors(newErrors);
+
+        if (Object.keys(newErrors).length === 0) {
+            await updateProfile(currentUser, { displayName: userName });
+            console.log(currentUser)
+            setUserName('');
+            setChangeNameAccess(!changeNameAccess);
+        }
     }
 
     const handleFormLoginChange = (event) => {
@@ -184,7 +194,7 @@ const Profile = () => {
     const handleNewPasswordSubmit = () => {
         console.log(newPassword)
         updatePassword(currentUser, newPassword.newPassword).then(() => {
-            // Update successful.
+            alert("Password updated, please log in.")
         }).catch((error) => {
             // An error ocurred
             console.log(error)
@@ -225,6 +235,18 @@ const Profile = () => {
         }
         return errors;
     };
+
+    const validateDataField = (data) => {
+        const errors = {};
+
+        if (data) {
+            if (!data.trim()) {
+                errors.nickname = "Nickname is required";
+            }
+            return errors
+        }
+    }
+
     return (
         <div className="profileContainer">
             <div className="profileWrap">
@@ -238,16 +260,19 @@ const Profile = () => {
                     >
                         <Tab eventKey="desc" title="Profile">
                             <div className="profileAvatar">
-                                <div id="avatarInput">
+                                <div id="avatarContainer">
                                     <img src={avatarUrl} alt="avatar" id='avatarImage' />
-                                    <input type="file" id='avatarInput' onChange={handleAvatarChange} />
-                                    {photo && <button disabled={loading} onClick={handleUpload}><MdFileUpload /></button>}
+                                    <div id='avatarInputContainer'>
+                                        <span className='profileTitle'>Change Avatar Picture</span>
+                                        <input type="file" id='avatarInput' onChange={handleAvatarChange} className="profileInput" />
+                                        <button disabled={loading || !photo} onClick={handleUpload} id='iconBtn'><MdFileUpload /></button>
+                                    </div>
                                 </div>
                             </div>
                             <div className="profileName">
                                 {!changeNameAccess && <div>
-                                    <span>{currentUser.displayName}</span>
-                                    <button id='changeBtn' onClick={() => { setChangeNameAccess(!changeNameAccess) }} ><AiFillEdit /></button>
+                                    <span className='profileTitle'>{currentUser.displayName}</span>
+                                    <button id='iconBtn' onClick={() => { setChangeNameAccess(!changeNameAccess) }} ><AiFillEdit /></button>
                                 </div>}
                                 {formErrors.nickname && (
                                     <span className="formError">{formErrors.nickname}</span>
@@ -255,14 +280,14 @@ const Profile = () => {
                                 {changeNameAccess &&
                                     <form className="resetForm" onSubmit={handleNameChangeSubmit}>
                                         <input
-                                            className="registerInput"
+                                            className="profileInput"
                                             type="text"
                                             name="nickname"
                                             value={userName}
                                             placeholder="Display name"
                                             onChange={handleNameChange}
                                         />
-                                        <button id="nameSubmit" type="submit" disabled={formErrors.nickname}><AiFillEdit /></button>
+                                        <button id='iconBtn' type="submit" disabled={formErrors.nickname || !userName}><AiFillEdit /></button>
                                     </form>}
                             </div>
                             <div className="profileDesc">
@@ -274,13 +299,14 @@ const Profile = () => {
                         </Tab>
                         <Tab eventKey="auth" title="Authentication">
                             <div className="passwordChange">
-                                {!passwordChangeLoginAccess & !passwordChangeAccess &&
-                                    <button id='changeBtn' onClick={() => { setPasswordChangeLoginAccess(true); }}>Change Password</button>
+                                <h3>Password change</h3>
+                                {!passwordChangeLoginAccess | !passwordChangeAccess &&
+                                    <button id='submitBtn' onClick={() => { setPasswordChangeLoginAccess(!passwordChangeLoginAccess); }} disabled={passwordChangeAccess}>Open form</button>
                                 }
                                 {passwordChangeLoginAccess &&
-                                    <form className="resetForm" onSubmit={handleFormLoginSubmit}>
+                                    <form className="passwordForm" onSubmit={handleFormLoginSubmit}>
                                         <input
-                                            className="loginInput"
+                                            className="profileInput"
                                             type="email"
                                             name="email"
                                             value={formData.email}
@@ -289,7 +315,7 @@ const Profile = () => {
                                         />
                                         {formErrors.email && <span className="formError">{formErrors.email}</span>}
                                         <input
-                                            className="loginInput"
+                                            className="profileInput"
                                             type="password"
                                             name="password"
                                             value={formData.password}
@@ -299,34 +325,35 @@ const Profile = () => {
                                         {formErrors.password && (
                                             <span className="formError">{formErrors.password}</span>
                                         )}
-                                        <button id="loginSubmit" type="submit" disabled={formErrors.email || formErrors.password}><AiFillEdit /></button>
+                                        <button id="iconBtn" type="submit" disabled={formErrors.email || formErrors.password}><AiFillEdit />Log in</button>
                                     </form>
                                 }
-                                {passwordChangeAccess && <form className="resetForm" onSubmit={handleNewPasswordSubmit}>
-                                    <input
-                                        className="resetInput"
-                                        type="password"
-                                        name='newPassword'
-                                        value={newPassword.newPassword}
-                                        placeholder='Password'
-                                        onChange={handlePasswordInput}
-                                    />
-                                    {formErrors.newPassword && (
-                                        <span className="formError">{formErrors.newPassword}</span>
-                                    )}
-                                    <input
-                                        className="resetInput"
-                                        type="password"
-                                        name='repeatNewPassword'
-                                        value={newPassword.repeatNewPassword}
-                                        placeholder='Repeat'
-                                        onChange={handlePasswordInput}
-                                    />
-                                    {formErrors.repeatNewPassword && (
-                                        <span className="formError">{formErrors.repeatNewPassword}</span>
-                                    )}
-                                    <button id="changeBtn" type="submit">Change Password</button>
-                                </form>}
+                                {passwordChangeAccess &&
+                                    <form className="passwordForm" onSubmit={handleNewPasswordSubmit}>
+                                        <input
+                                            className="profileInput"
+                                            type="password"
+                                            name='newPassword'
+                                            value={newPassword.newPassword}
+                                            placeholder='Password'
+                                            onChange={handlePasswordInput}
+                                        />
+                                        {formErrors.newPassword && (
+                                            <span className="formError">{formErrors.newPassword}</span>
+                                        )}
+                                        <input
+                                            className="profileInput"
+                                            type="password"
+                                            name='repeatNewPassword'
+                                            value={newPassword.repeatNewPassword}
+                                            placeholder='Repeat'
+                                            onChange={handlePasswordInput}
+                                        />
+                                        {formErrors.repeatNewPassword && (
+                                            <span className="formError">{formErrors.repeatNewPassword}</span>
+                                        )}
+                                        <button id='submitBtn' type="submit">Change Password</button>
+                                    </form>}
                             </div>
                         </Tab>
                         <Tab eventKey="chats" title="Chats">
