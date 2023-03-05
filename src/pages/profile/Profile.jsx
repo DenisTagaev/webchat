@@ -182,6 +182,7 @@ const Profile = () => {
     }
 
     const handleNewPasswordSubmit = () => {
+        console.log(newPassword)
         updatePassword(currentUser, newPassword.newPassword).then(() => {
             // Update successful.
         }).catch((error) => {
