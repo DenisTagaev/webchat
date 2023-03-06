@@ -98,7 +98,7 @@ const Profile = () => {
         setLoading(true);
 
         // added a task listener for uploadbytesresumable.
-        const uploadTask = uploadBytesResumable(fileRef, file);
+        const uploadTask = await uploadBytesResumable(fileRef, file);
         uploadTask.on(
             (error) => {
                 // Assessing error in case
@@ -168,7 +168,7 @@ const Profile = () => {
                     formData.email,
                     formData.password
                 );
-                reauthenticateWithCredential(currentUser, credential).then((res) => {
+                await reauthenticateWithCredential(currentUser, credential).then((res) => {
                     // User re-authenticated.
                     // Code...
                     console.log(res)
@@ -196,9 +196,9 @@ const Profile = () => {
         });
     }
 
-    const handleNewPasswordSubmit = () => {
+    const handleNewPasswordSubmit = async () => {
         console.log(formData)
-        updatePassword(currentUser, formData.newPassword).then(() => {
+        await updatePassword(currentUser, formData.newPassword).then(() => {
             alert("Password updated, please log in.")
         }).catch((error) => {
             // An error ocurred
