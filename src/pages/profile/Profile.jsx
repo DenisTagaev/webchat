@@ -11,8 +11,8 @@ import { storage } from '../../environments/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 // firestore
-import { db } from '../../environments/firebase';
-import { doc, updateDoc } from "firebase/firestore";
+// import { db } from '../../environments/firebase';
+// import { doc, updateDoc } from "firebase/firestore";
 
 // styles
 // external file styles
@@ -21,7 +21,6 @@ import './Profile.scss';
 // react icons
 import { AiFillEdit } from 'react-icons/ai';
 import { MdFileUpload } from 'react-icons/md';
-import { GrReturn } from 'react-icons/gr';
 
 import AddImg from '../../imgs/addAvatar.png';
 
@@ -74,7 +73,7 @@ const Profile = () => {
 
         return () => {
             console.log("re-rendered")
-            return unsub
+            return unsub;
         }
     }, [currentUser])
 
@@ -138,7 +137,6 @@ const Profile = () => {
         if (Object.keys(newErrors).length === 0) {
             await updateProfile(currentUser, { displayName: userName });
             console.log(currentUser)
-            setUserName('');
             setChangeNameAccess(!changeNameAccess);
         }
     }
