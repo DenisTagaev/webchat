@@ -1,5 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 
+import { useNavigate } from "react-router-dom";
+
 // auth 
 import { AuthContext } from '../../components/context/AuthContext';
 import { reauthenticateWithCredential, updateProfile, updatePassword, EmailAuthProvider } from 'firebase/auth';
@@ -23,7 +25,7 @@ import Tabs from 'react-bootstrap/Tabs';
 // react icons
 import { AiFillEdit } from 'react-icons/ai';
 import { MdFileUpload } from 'react-icons/md';
-// import { GrReturn } from 'react-icons/gr';
+import { GrReturn } from 'react-icons/gr';
 
 import AddImg from '../../imgs/addAvatar.png';
 
@@ -31,6 +33,8 @@ const Profile = () => {
 
     // User context for current user
     const { currentUser } = useContext(AuthContext);
+
+    const navigator = useNavigate();
 
     /*
         UseStates profile changes
@@ -51,8 +55,6 @@ const Profile = () => {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-    });
-    const [newPassword, setNewPassword] = useState({
         newPassword: "",
         repeatNewPassword: ""
     });
@@ -91,23 +93,31 @@ const Profile = () => {
         setPhoto(null);
     }
 
+    // async function for image upload
     const handleAvatarUpload = async (file) => {
+        // we create a reference of a file
         const fileRef = ref(storage, currentUser.uid + ".png")
+        console.log(fileRef)
         // Loading state for image upload
         setLoading(true);
 
-        uploadBytesResumable(fileRef, file)
-
-        // accessing the url of the photo
-        const photoURL = await getDownloadURL(fileRef)
-
-        await updateProfile(currentUser, { photoURL }).then(() => {
-            setLoading(false);
-            if (loading === false) {
-                console.log("File was uploaded")
-            };
-        });
-
+        // added a task listener for uploadbytesresumable.
+        const uploadTask = uploadBytesResumable(fileRef, file);
+        uploadTask.on(
+            (error) => {
+                // Assessing error in case
+                console.log(error)
+            }, () => {
+                // recieving URL of an image and then updating profile photoURL
+                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                    await updateProfile(currentUser, { photoURL: downloadURL }).then(() => {
+                        setLoading(false);
+                    });
+                });
+            }
+        )
+        //alerting about the upload finsihed
+        alert("File was uploaded")
     }
 
     // nickname input functionality
@@ -179,8 +189,8 @@ const Profile = () => {
 
     const handlePasswordInput = (event) => {
         const { name, value } = event.target;
-        setNewPassword({
-            ...newPassword,
+        setFormData({
+            ...formData,
             [name]: value,
         });
 
@@ -192,8 +202,8 @@ const Profile = () => {
     }
 
     const handleNewPasswordSubmit = () => {
-        console.log(newPassword)
-        updatePassword(currentUser, newPassword.newPassword).then(() => {
+        console.log(formData)
+        updatePassword(currentUser, formData.newPassword).then(() => {
             alert("Password updated, please log in.")
         }).catch((error) => {
             // An error ocurred
@@ -229,7 +239,7 @@ const Profile = () => {
                 errors.newPassword = "Password must be at least 6 characters";
             }
         } else if (name === "repeatNewPassword") {
-            if (value !== newPassword.password) {
+            if (value !== formData.newPassword) {
                 errors.repeatNewPassword = "Passwords do not match";
             }
         }
@@ -250,7 +260,7 @@ const Profile = () => {
     return (
         <div className="profileContainer">
             <div className="profileWrap">
-
+                <button onClick={() => navigator('/')} className="iconBtn" id='homeReturn' >Home</button>
                 <div className="profileBody">
                     <Tabs
                         defaultActiveKey="desc"
@@ -265,14 +275,14 @@ const Profile = () => {
                                     <div id='avatarInputContainer'>
                                         <span className='profileTitle'>Change Avatar Picture</span>
                                         <input type="file" id='avatarInput' onChange={handleAvatarChange} className="profileInput" />
-                                        <button disabled={loading || !photo} onClick={handleUpload} id='iconBtn'><MdFileUpload /></button>
+                                        <button disabled={loading || !photo} onClick={handleUpload} className='iconBtn'><MdFileUpload /></button>
                                     </div>
                                 </div>
                             </div>
                             <div className="profileName">
                                 {!changeNameAccess && <div>
                                     <span className='profileTitle'>{currentUser.displayName}</span>
-                                    <button id='iconBtn' onClick={() => { setChangeNameAccess(!changeNameAccess) }} ><AiFillEdit /></button>
+                                    <button className='iconBtn' onClick={() => { setChangeNameAccess(!changeNameAccess) }} ><AiFillEdit /><span>Change Nickname</span></button>
                                 </div>}
                                 {formErrors.nickname && (
                                     <span className="formError">{formErrors.nickname}</span>
@@ -287,7 +297,7 @@ const Profile = () => {
                                             placeholder="Display name"
                                             onChange={handleNameChange}
                                         />
-                                        <button id='iconBtn' type="submit" disabled={formErrors.nickname || !userName}><AiFillEdit /></button>
+                                        <button className='iconBtn' type="submit" disabled={formErrors.nickname || !userName}><AiFillEdit /></button>
                                     </form>}
                             </div>
                             <div className="profileDesc">
@@ -301,7 +311,7 @@ const Profile = () => {
                             <div className="passwordChange">
                                 <h3>Password change</h3>
                                 {!passwordChangeLoginAccess | !passwordChangeAccess &&
-                                    <button id='submitBtn' onClick={() => { setPasswordChangeLoginAccess(!passwordChangeLoginAccess); }} disabled={passwordChangeAccess}>Open form</button>
+                                    <button className='submitBtn' onClick={() => { setPasswordChangeLoginAccess(!passwordChangeLoginAccess); }} disabled={passwordChangeAccess}>Open form</button>
                                 }
                                 {passwordChangeLoginAccess &&
                                     <form className="passwordForm" onSubmit={handleFormLoginSubmit}>
@@ -325,7 +335,7 @@ const Profile = () => {
                                         {formErrors.password && (
                                             <span className="formError">{formErrors.password}</span>
                                         )}
-                                        <button id="iconBtn" type="submit" disabled={formErrors.email || formErrors.password}><AiFillEdit />Log in</button>
+                                        <button className="iconBtn" type="submit" disabled={formErrors.email || formErrors.password}><AiFillEdit />Log in</button>
                                     </form>
                                 }
                                 {passwordChangeAccess &&
@@ -334,7 +344,7 @@ const Profile = () => {
                                             className="profileInput"
                                             type="password"
                                             name='newPassword'
-                                            value={newPassword.newPassword}
+                                            value={formData.newPassword}
                                             placeholder='Password'
                                             onChange={handlePasswordInput}
                                         />
@@ -345,14 +355,14 @@ const Profile = () => {
                                             className="profileInput"
                                             type="password"
                                             name='repeatNewPassword'
-                                            value={newPassword.repeatNewPassword}
+                                            value={formData.repeatNewPassword}
                                             placeholder='Repeat'
                                             onChange={handlePasswordInput}
                                         />
                                         {formErrors.repeatNewPassword && (
                                             <span className="formError">{formErrors.repeatNewPassword}</span>
                                         )}
-                                        <button id='submitBtn' type="submit">Change Password</button>
+                                        <button className='submitBtn' type="submit">Change Password</button>
                                     </form>}
                             </div>
                         </Tab>

@@ -14,6 +14,12 @@
         width: 550px;
         position: relative;
 
+        #homeReturn {
+            align-self: flex-start;
+            margin-bottom: 10px;
+            border-bottom: 1px solid $primary;
+        }
+
         @include tableScreen {
             @include tableScreenWrap;
             height: fit-content;
@@ -26,14 +32,14 @@
                 #avatarContainer {
                     display: flex;
 
-                    #iconBtn {
+                    .iconBtn {
                         align-self: flex-end;
                     }
 
                     #avatarImage {
                         image-rendering: optimizeQuality;
-                        width: 100px;
-                        height: 85px;
+                        width: 120px;
+                        height: 105px;
                         border: 1px solid $mainDark;
                         border-radius: 20%;
                         margin: 10px;
@@ -75,7 +81,7 @@
             .profileDesc {}
 
             .passwordChange {
-                #submitBtn {
+                .submitBtn {
                     margin-bottom: 20px;
                 }
 
@@ -87,7 +93,7 @@
                         padding: 20px 10px;
                     }
 
-                    #iconBtn {
+                    .iconBtn {
                         align-self: flex-start;
                         margin: 5px
                     }
@@ -123,7 +129,7 @@
         }
     }
 
-    #iconBtn {
+    .iconBtn {
         border: none;
         outline: none;
         font-size: 20px;
@@ -132,11 +138,11 @@
         transition: ease .3s;
     }
 
-    #iconBtn:hover {
+    .iconBtn:hover {
         color: $secondary;
     }
 
-    #submitBtn {
+    .submitBtn {
         margin-bottom: -5%;
         margin-top: 0;
 
