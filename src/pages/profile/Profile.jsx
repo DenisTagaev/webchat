@@ -39,7 +39,8 @@ const Profile = () => {
     /*
         UseStates profile changes
     */
-
+    // tab state 
+    const [toggleState, setToggleState] = useState(1);
     // default avatar png       
     const [avatarUrl, setAvatarUrl] = useState(AddImg);
 
@@ -256,19 +257,31 @@ const Profile = () => {
             return errors
         }
     }
+    // tab toggle function
+    const toggleTab = (index) => {
+        setToggleState(index);
+    }
+
 
     return (
         <div className="profileContainer">
             <div className="profileWrap">
                 <button onClick={() => navigator('/')} className="iconBtn" id='homeReturn' >Home</button>
                 <div className="profileBody">
-                    <Tabs
-                        defaultActiveKey="desc"
-                        id="uncontrolled-tab-example"
-                        className="mb-3"
-                        justify
-                    >
-                        <Tab eventKey="desc" title="Profile">
+
+                    <div className="block-tabs">
+                        <div className={toggleState === 1 ? "tabs active-tabs" : "tabs"}
+                            onClick={() => toggleTab(1)}
+                        >Profile</div>
+                        <div className={toggleState === 2 ? "tabs active-tabs" : "tabs"}
+                            onClick={() => toggleTab(2)}
+                        >Authentication</div>
+                        <div className={toggleState === 3 ? "tabs active-tabs" : "tabs"}
+                            onClick={() => toggleTab(3)}
+                        >Chats</div>
+                    </div>
+                    <div className="content-tabs">
+                        <div className={toggleState === 1 ? "content active-content" : "content"}>
                             <div className="profileAvatar">
                                 <div id="avatarContainer">
                                     <img src={avatarUrl} alt="avatar" id='avatarImage' />
@@ -306,8 +319,8 @@ const Profile = () => {
                                     <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum praesentium reprehenderit earum molestiae adipisci, a consectetur expedita quos id inventore enim dolores cumque nihil, veritatis delectus laboriosam eligendi at architecto?</p>
                                 </span>
                             </div>
-                        </Tab>
-                        <Tab eventKey="auth" title="Authentication">
+                        </div>
+                        <div className={toggleState === 2 ? "content active-content" : "content"}>
                             <div className="passwordChange">
                                 <h3>Password change</h3>
                                 {!passwordChangeLoginAccess | !passwordChangeAccess &&
@@ -365,11 +378,11 @@ const Profile = () => {
                                         <button className='submitBtn' type="submit">Change Password</button>
                                     </form>}
                             </div>
-                        </Tab>
-                        <Tab eventKey="chats" title="Chats">
-                            {/*  Chats managing  */}
-                        </Tab>
-                    </Tabs>
+                        </div>
+                        {/*  Chats managing  */}
+                        <div className={toggleState === 3 ? "content active-content" : "content"}>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -10,9 +10,10 @@
     .profileWrap {
         background-color: #fff;
         padding: 70px 30px;
-        min-height: fit-content;
+        min-height: 400px;
         width: 550px;
         position: relative;
+
 
         #homeReturn {
             align-self: flex-start;
@@ -26,6 +27,31 @@
         }
 
         .profileBody {
+            .block-tabs {
+                display: flex;
+                justify-content: space-around;
+                padding: 10px;
+
+                .active-tabs {
+                    font-weight: 600;
+                    border-bottom: 1px solid $primary;
+                    padding: 0 10px;
+                }
+            }
+
+            .content {
+                background: white;
+                padding: 10px 30px;
+                width: 90%;
+                height: 90%;
+                display: none;
+            }
+
+
+            .active-content {
+                display: block;
+            }
+
 
             .profileAvatar {
 

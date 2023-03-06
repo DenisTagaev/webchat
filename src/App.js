@@ -11,7 +11,6 @@ import Home from './pages/Home';
 import './index.scss';
 
 // // react bootstrap styling 
-// import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App() {
   //getting the data about the user from the firebase
