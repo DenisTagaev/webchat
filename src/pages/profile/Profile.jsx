@@ -18,10 +18,6 @@ import { doc, updateDoc } from "firebase/firestore";
 // external file styles
 import './Profile.scss';
 
-// Reac- bootstrap components 
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
-
 // react icons
 import { AiFillEdit } from 'react-icons/ai';
 import { MdFileUpload } from 'react-icons/md';
