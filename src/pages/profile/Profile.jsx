@@ -37,7 +37,7 @@ const Profile = () => {
     // tab state 
     const [toggleState, setToggleState] = useState(1);
     // default avatar png       
-    const [avatarUrl, setAvatarUrl] = useState(AddImg);
+    const [avatarUrl, setAvatarUrl] = useState(currentUser.photoURL);
 
     // States for data changing
     const [photo, setPhoto] = useState(null);
@@ -60,21 +60,7 @@ const Profile = () => {
 
     //  useEffects for profile avatar and nickname rendering
     useEffect(() => {
-
-        const unsub = setUserName(currentUser.displayName);
-        return () => {
-            console.log("re-rendered")
-            return unsub;
-        }
-    }, [currentUser])
-
-    useEffect(() => {
-        const unsub = setAvatarUrl(currentUser.photoURL);
-
-        return () => {
-            console.log("re-rendered")
-            return unsub;
-        }
+        return (currentUser.photoURL) ? setAvatarUrl(currentUser.photoURL) : setAvatarUrl(AddImg)
     }, [currentUser])
 
 
@@ -98,7 +84,7 @@ const Profile = () => {
         setLoading(true);
 
         // added a task listener for uploadbytesresumable.
-        const uploadTask = await uploadBytesResumable(fileRef, file);
+        const uploadTask = uploadBytesResumable(fileRef, file);
         uploadTask.on(
             (error) => {
                 // Assessing error in case
@@ -121,6 +107,7 @@ const Profile = () => {
         const { name, value } = event.target;
         setUserName(value)
         const newErrors = validateFormField(name, value);
+        console.log(currentUser)
 
         setFormErrors({
             ...formErrors,
