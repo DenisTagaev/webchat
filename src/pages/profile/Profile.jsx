@@ -57,17 +57,26 @@ const Profile = () => {
 
     // Error states
     const [formErrors, setFormErrors] = useState({});
+    const [fileError, setFileError] = useState(null);
 
     //  useEffects for profile avatar and nickname rendering
     useEffect(() => {
-        return (currentUser.photoURL) ? setAvatarUrl(currentUser.photoURL) : setAvatarUrl(AddImg)
+        const fileRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
+        getDownloadURL(fileRef).then(url => {
+            setAvatarUrl(url);
+        })
     }, [currentUser])
 
 
     const handleAvatarChange = (e) => {
-        if (e.target.files[0]) {
-            setPhoto(e.target.files[0]);
+        const selectedFile = e.target.files[0];
+        if (!selectedFile.type.startsWith('image/')) {
+            setFileError('Please select an image file.');
+            setPhoto(null);
+            return;
         }
+        setFileError(null);
+        setPhoto(selectedFile);
     }
 
     const handleUpload = () => {
@@ -77,28 +86,23 @@ const Profile = () => {
 
     // async function for image upload
     const handleAvatarUpload = async (file) => {
-        // we create a reference of a file
-        const fileRef = ref(storage, currentUser.uid + ".png")
-        console.log(fileRef)
-        // Loading state for image upload
-        setLoading(true);
 
-        // added a task listener for uploadbytesresumable.
-        const uploadTask = uploadBytesResumable(fileRef, file);
-        uploadTask.on(
-            (error) => {
-                // Assessing error in case
-                console.log(error)
-            }, () => {
-                // recieving URL of an image and then updating profile photoURL
-                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                    await updateProfile(currentUser, { photoURL: downloadURL }).then(() => {
-                        setLoading(false);
-                    });
+        // we create a reference of a file
+        const avatarRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
+        try {
+            await uploadBytesResumable(avatarRef, file).then(() => {
+                getDownloadURL(avatarRef).then(url => {
+                    setAvatarUrl(url);
+                    try {
+                        updateProfile(currentUser, { photoURL: url });
+                    } catch (error) {
+                        console.error('Failed to update user profile with new avatar URL', error)
+                    };
                 });
-            }
-        )
-        //alerting about the upload finsihed
+            })
+        } catch (error) {
+            console.error('Failed to upload new avatar', error)
+        }
         alert("File was uploaded")
     }
 
