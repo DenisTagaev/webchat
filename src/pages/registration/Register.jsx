@@ -54,9 +54,9 @@ const Register = () => {
     if (Object.keys(newErrors).length === 0) {
       // call function to create user in the firebase
       await createUserWithEmailAndPassword(auth, formData.email, formData.password)
-      
-      .then((userCredential) => {
-        //get reference to the newly created user
+
+        .then((userCredential) => {
+          //get reference to the newly created user
           const user = userCredential.user;
           //create reference between the user and picture storage
           const storageRef = ref(storage, formData.nickname);
@@ -66,9 +66,9 @@ const Register = () => {
             (error) => {
               // Handle unsuccessful uploads
               setImgError(error);
-            }, 
+            },
             () => {
-              getDownloadURL(uploadTask.snapshot.ref).then( async(downloadURL) => {
+              getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
                 //on successful image upload get the link to the cloudstore
                 //and link it to the user's profile along with the nickname
                 await updateProfile(user, {
@@ -205,7 +205,7 @@ const Register = () => {
             <span className="formError">{errors.repeatPassword}</span>
           )}
           <label id="avatarInput">
-            <BiImageAdd className="regImg"/>
+            <BiImageAdd className="regImg" />
             <span>Chose avatar</span>
             {/* to customize standard input look we hide the input element and wrap it in a
                         label with desired output content */}

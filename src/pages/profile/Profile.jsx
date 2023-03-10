@@ -11,8 +11,8 @@ import { storage } from '../../environments/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 // firestore
-// import { db } from '../../environments/firebase';
-// import { doc, updateDoc } from "firebase/firestore";
+import { db } from '../../environments/firebase';
+import { doc, updateDoc } from "firebase/firestore";
 
 // styles
 // external file styles
@@ -39,12 +39,16 @@ const Profile = () => {
     // default avatar png       
     const [avatarUrl, setAvatarUrl] = useState(currentUser.photoURL);
 
+    // profile description 
+    const [desc, setDesc] = useState();
+
     // States for data changing
     const [photo, setPhoto] = useState(null);
     const [loading, setLoading] = useState(false);
     const [userName, setUserName] = useState(currentUser.displayName);
 
     const [changeNameAccess, setChangeNameAccess] = useState(false)
+    const [descriptionChangeAccess, setDescriptionChangeAccess] = useState(false);
     const [passwordChangeLoginAccess, setPasswordChangeLoginAccess] = useState(false);
     const [passwordChangeAccess, setPasswordChangeAccess] = useState(false);
 
@@ -198,6 +202,28 @@ const Profile = () => {
         });
     }
 
+    const handleDescription = (event) => {
+        setDesc(event.target.value);
+        console.log(desc)
+    }
+
+    const handleDescriptionUpdate = async (event) => {
+        event.preventDefault();
+
+        const data = {
+            profileDescription: desc,
+            // add any other user data to be updated here
+        };
+        try {
+            const documentRef = doc(db, "users", currentUser.uid);
+            await updateDoc(documentRef, data);
+            console.log("Document updated successfully")
+        } catch (error) {
+            console.error("Error updating document:", error);
+            throw error
+        }
+    }
+
     const validateFormField = (name, value) => {
         const errors = {};
 
@@ -299,10 +325,18 @@ const Profile = () => {
                                     </form>}
                             </div>
                             <div className="profileDesc">
-                                <span>
-                                    {/*  Add description part to document write functionality  */}
-                                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum praesentium reprehenderit earum molestiae adipisci, a consectetur expedita quos id inventore enim dolores cumque nihil, veritatis delectus laboriosam eligendi at architecto?</p>
-                                </span>
+                                {!descriptionChangeAccess &&
+                                    <div>
+                                        <div></div>
+                                        <button className='iconBtn' onClick={() => { setDescriptionChangeAccess(true) }}><AiFillEdit /></button>
+                                    </div>
+                                }
+                                {descriptionChangeAccess &&
+                                    <form onSubmit={handleDescriptionUpdate}>
+                                        <textarea rows={10} cols={30} onChange={handleDescription} value={desc}></textarea>
+                                        <button className='iconBtn' type='submit' onClick={() => { setDescriptionChangeAccess(false) }}><AiFillEdit /></button>
+                                    </form>
+                                }
                             </div>
                         </div>
                         <div className={toggleState === 2 ? "content active-content" : "content"}>
