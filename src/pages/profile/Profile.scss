@@ -1,0 +1,181 @@
+@import '../../index.scss';
+
+.profileContainer {
+    @include mainScreenContainer;
+
+    @include tableScreen {
+        @include tableScreenMainContainer;
+    }
+
+    .profileWrap {
+        background-color: #fff;
+        padding: 70px 30px;
+        min-height: 400px;
+        width: 550px;
+        position: relative;
+
+
+        #homeReturn {
+            align-self: flex-start;
+            margin-bottom: 10px;
+            border-bottom: 1px solid $primary;
+        }
+
+        @include tableScreen {
+            @include tableScreenWrap;
+            height: fit-content;
+        }
+
+        .profileBody {
+            .block-tabs {
+                display: flex;
+                justify-content: space-around;
+                padding: 10px;
+
+                .active-tabs {
+                    font-weight: 600;
+                    border-bottom: 1px solid $primary;
+                    padding: 0 10px;
+                }
+            }
+
+            .content {
+                background: white;
+                padding: 10px 30px;
+                width: 90%;
+                height: 90%;
+                display: none;
+            }
+
+
+            .active-content {
+                display: block;
+            }
+
+
+            .profileAvatar {
+
+                #avatarContainer {
+                    display: flex;
+
+                    .iconBtn {
+                        align-self: flex-end;
+                    }
+
+                    #avatarImage {
+                        image-rendering: optimizeQuality;
+                        width: 120px;
+                        height: 105px;
+                        border: 1px solid $mainDark;
+                        border-radius: 20%;
+                        margin: 10px;
+                        box-shadow: 0 0 15px $mainDark;
+                    }
+
+                    #avatarInputContainer {
+                        @include tableScreenTitle;
+                        flex-direction: column;
+                        margin-left: auto;
+
+                        .profileTitle {
+                            font-weight: 600;
+                            font-size: 1.2em;
+                            margin: 10px 0;
+                        }
+
+                        #avatarInput {
+                            padding: 10px;
+                            border: none;
+                            outline: none;
+                            background-color: $primary;
+                            min-height: 50px;
+                        }
+
+                    }
+                }
+            }
+
+
+            .profileName {
+                .profileTitle {
+                    font-weight: 600;
+                    font-size: 1.2em;
+                    margin: 10px 0;
+                }
+            }
+
+            .profileDesc {}
+
+            .passwordChange {
+                .submitBtn {
+                    margin-bottom: 20px;
+                }
+
+                .passwordForm {
+                    display: flex;
+                    flex-direction: column;
+
+                    .profileInput {
+                        padding: 20px 10px;
+                    }
+
+                    .iconBtn {
+                        align-self: flex-start;
+                        margin: 5px
+                    }
+                }
+            }
+        }
+
+
+        .title {
+            @include mainScreenTitles;
+
+            @include tableScreen {
+                @include tableScreenTitle;
+            }
+        }
+
+
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        @include tableScreen {
+            width: 90%;
+        }
+
+        .profileInput {
+            @include initial-inputs;
+        }
+
+        @include tableScreen {
+            justify-content: center;
+            width: 90%;
+        }
+    }
+
+    .iconBtn {
+        border: none;
+        outline: none;
+        font-size: 20px;
+        color: $primary;
+        background-color: #fff;
+        transition: ease .3s;
+    }
+
+    .iconBtn:hover {
+        color: $secondary;
+    }
+
+    .submitBtn {
+        margin-bottom: -5%;
+        margin-top: 0;
+
+        @include mainButtonForSubmission;
+    }
+
+    .formError {
+        @include errorsForm
+    }
+}
