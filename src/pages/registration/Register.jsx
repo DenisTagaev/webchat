@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, storage, db } from "../../environments/firebase";
-import { BiImageAdd } from "react-icons/bi";
+import AddImg from "../../imgs/addAvatar.png";
 import Logbar from "../../components/Logbar/Logbar";
 import "./Register.scss";
 
@@ -203,14 +203,15 @@ const Register = () => {
             <span className="formError">{errors.repeatPassword}</span>
           )}
           <label id="avatarInput">
-            {/* <img id="avatarImage" src={AddImg} alt="Chose avatar placeholder" /> */}
-            <BiImageAdd className="regImg" />
+            <img id="avatarImage" src={AddImg} alt="Chose avatar placeholder" />
             <span>Chose avatar</span>
             {/* to customize standard input look we hide the input element and wrap it in a
                         label with desired output content */}
             <input type="file" hidden={true} />
           </label>
-          {imgError && <span className="formError">{imgError}</span>}
+          {imgError && (
+            <span className="formError">{imgError}</span>
+          )}
           <button id="registerSubmit" type="submit">
             Sign up
           </button>
