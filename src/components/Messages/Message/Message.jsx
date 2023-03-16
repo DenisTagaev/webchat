@@ -7,7 +7,7 @@ export const Message = ({message}) => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
   const ref = useRef();
-  //when there's a new message from the user scroll the view to it
+
   useEffect(() => {
     ref.current?.scrollIntoView({behavior: 'smooth'})
   }, [message]);

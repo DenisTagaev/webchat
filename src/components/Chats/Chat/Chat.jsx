@@ -1,11 +1,7 @@
 import React, { useContext } from 'react'
-// import Add  from "../../../imgs/add.png";
-// import Cam  from "../../../imgs/cam.png";
-// import More  from "../../../imgs/more.png";
-import { BsPersonPlus } from 'react-icons/bs';
-import { BsCameraVideo } from "react-icons/bs";
-import { CgMore } from 'react-icons/cg';
-
+import Add  from "../../../imgs/add.png";
+import Cam  from "../../../imgs/cam.png";
+import More  from "../../../imgs/more.png";
 import Messages from '../../Messages/Messages';
 import Input from '../../Input/Input';
 
@@ -18,22 +14,17 @@ export const Chat = () => {
   return (
     <div className="chatContainer">
       <div className="chatInfo">
-        {/* show the user you are chatting with */}
         <span>{data.user?.displayName}</span>
         <div className="chatIcons">
-          {/* <img src={Cam} alt="" />
+          <img src={Cam} alt="" />
           <img src={Add} alt="" />
-          
-          <img src={More} alt="" /> */}
-          <BsCameraVideo/>
-          <BsPersonPlus />
-          <CgMore/>
+          <img src={More} alt="" />
         </div>
       </div>
-      <Messages />
-      <Input />
+      <Messages/>
+      <Input/>
     </div>
-  );
+  )
 }
 
 export default Chat;

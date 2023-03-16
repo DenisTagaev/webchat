@@ -16,7 +16,6 @@ export const Chats = () => {
     const getChats = () => {
       const unsubscribe = onSnapshot(doc(db, "userChats", currentUser.uid),
       (doc) => {
-        //get user's chats from the database
         setChats(doc.data());
       }
       );
@@ -27,27 +26,23 @@ export const Chats = () => {
   },[currentUser.uid]);
 
   const handleUserSelect = (userInfo) => {
-    //when the user is selecting another chat switch the information shown
     dispatch({type: "CHANGE_USER", payload: userInfo})
   }
 
   return (
     <div className="chatsContainer">
-      {/* For each of the dispatched chats show the avatar of the user
-      and the last message */}
-      {Object.entries(chats??{})
-      // show the chat with the latest message first
-        .sort((a, b) => b[1].date - a[1].date)
+      {Object.entries(chats ?? {})
+        ?.sort((a, b) => b[1].date - a[1].date)
         .map((chat) => (
           <div
             className="userChat"
             key={chat[0]}
             onClick={() => handleUserSelect(chat[1].userInfo)}
           >
-            <img src={chat[1].userInfo.photoURL} alt="user's avatar" />
+            <img src={chat[1]?.userInfo?.photoURL} alt="user's avatar" />
             <div className="userChatInfo">
-              <span>{chat[1].userInfo.displayName}</span>
-              <p>{chat[1].lastMessage?.text}</p>
+              <span>{chat[1]?.userInfo?.displayName}</span>
+              <p>{chat[1]?.lastMessage?.text}</p>
             </div>
           </div>
         ))}

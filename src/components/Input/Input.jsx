@@ -22,8 +22,7 @@ export const Input = () => {
   const { data } = useContext(ChatContext);
 
   const handleSendMessage = async() => {
-    //if the message contains attached image upload it to the storage
-    if (image) {
+    if(image){
       const storageRef = ref(storage, uuid());
       //upload picture to the cloud storage and get it's url
       await uploadBytesResumable(storageRef, image)
@@ -44,33 +43,32 @@ export const Input = () => {
           console.log(err);
         });
     } else {
-      //if there's no attached file send text only
       await updateDoc(doc(db, "chats", data.chatID), {
         messages: arrayUnion({
           id: uuid(),
           text,
           senderId: currentUser.uid,
           date: Timestamp.now(),
-        }),
-      });
+        })
+      })
     }
-    //update the collection of messages for the current user
+
     await updateDoc(doc(db, "userChats", currentUser.uid), {
-      [data.chatID + ".lastMessage"]: {
-        text,
+      [data.chatID + ".lastMessage"]:{
+        text
       },
-      [data.chatID + ".date"]: serverTimestamp(),
+      [data.chatID + ".date"]: serverTimestamp()
     });
-    //update the collection of messages for the target user(friend)
+
     await updateDoc(doc(db, "userChats", data.user.uid), {
       [data.chatID + ".lastMessage"]: {
         text,
       },
       [data.chatID + ".date"]: serverTimestamp(),
     });
-    // switch to default message state 
-    setText("");
-    setImage("");
+
+    setText('');
+    setImage('');
   }
 
   return (

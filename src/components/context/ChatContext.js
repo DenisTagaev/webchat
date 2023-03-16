@@ -5,8 +5,8 @@ export const ChatContext = createContext();
 
 //a provider which will share the user prop with any component it wraps
 export const ChatContextProvider = ({ children }) => {
-  const { currentUser } = useContext(AuthContext);
-  //create an id for the chat depending on the id of the users
+    const { currentUser } = useContext(AuthContext);
+
   const createGroup = (user, friend) => {
     if (user.uid > friend.uid) {
       return user.uid + friend.uid;
@@ -20,8 +20,7 @@ export const ChatContextProvider = ({ children }) => {
     chatID:"null",
     user:{}
   }
-  //create function to update the INITIAL_STATE depending
-  // on the type of the action
+  
   const chatReducer = (state, action) => {
     switch(action.type) {
         case "CHANGE_USER":

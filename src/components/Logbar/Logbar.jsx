@@ -17,7 +17,8 @@ const Logbar = () => {
   }, [location]);
 
   const navigate = useNavigate();
-  //change the page to the selected option
+  
+  
   const handleOptionChange = (event) => {
     navigate(`${event.target.value}`);
   };
