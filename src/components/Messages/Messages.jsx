@@ -7,7 +7,8 @@ import { db } from "../../environments/firebase";
 export const Messages = () => {
   const [messages, setMessages] = useState([]);
   const { data } = useContext(ChatContext);
-  
+  //when the user selects the chat upload messages from the chat
+  // if there are any 
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "chats", data.chatID),
       (doc) => {
