@@ -1,3 +1,4 @@
+
 import React, { useContext, useState, useEffect } from 'react';
 
 import { useNavigate } from "react-router-dom";
@@ -20,9 +21,10 @@ import './Profile.scss';
 
 // react icons
 import { AiFillEdit } from 'react-icons/ai';
-import { MdFileUpload } from 'react-icons/md';
 
 import AddImg from '../../imgs/addAvatar.png';
+
+import PromptingCloud from '../../components/AvatarChangeBox/AvatarChangeBox';
 
 const Profile = () => {
 
@@ -37,7 +39,7 @@ const Profile = () => {
     // tab state 
     const [toggleState, setToggleState] = useState(1);
     // default avatar png       
-    const [avatarUrl, setAvatarUrl] = useState(currentUser.photoURL);
+    const [avatarUrl, setAvatarUrl] = useState((currentUser.photoURL) ? currentUser.photoURL : AddImg);
 
     // profile description 
     const [desc, setDesc] = useState();
@@ -47,7 +49,8 @@ const Profile = () => {
     const [loading, setLoading] = useState(false);
     const [userName, setUserName] = useState(currentUser.displayName);
 
-    const [changeNameAccess, setChangeNameAccess] = useState(false)
+    const [avatarChangeAccess, setAvatarChangeAccess] = useState(false);
+    const [changeNameAccess, setChangeNameAccess] = useState(false);
     const [descriptionChangeAccess, setDescriptionChangeAccess] = useState(false);
     const [passwordChangeLoginAccess, setPasswordChangeLoginAccess] = useState(false);
     const [passwordChangeAccess, setPasswordChangeAccess] = useState(false);
@@ -77,6 +80,7 @@ const Profile = () => {
         if (!selectedFile.type.startsWith('image/')) {
             setFileError('Please select an image file.');
             setPhoto(null);
+            console.log(fileError)
             return;
         }
         setFileError(null);
@@ -86,6 +90,7 @@ const Profile = () => {
     const handleUpload = () => {
         handleAvatarUpload(photo);
         setPhoto(null);
+        setAvatarChangeAccess(!avatarChangeAccess);
     }
 
     // async function for image upload
@@ -108,6 +113,7 @@ const Profile = () => {
             console.error('Failed to upload new avatar', error)
         }
         alert("File was uploaded")
+        setLoading(false)
     }
 
     // nickname input functionality
@@ -207,6 +213,8 @@ const Profile = () => {
         console.log(desc)
     }
 
+
+    // Description update
     const handleDescriptionUpdate = async (event) => {
         event.preventDefault();
 
@@ -253,6 +261,8 @@ const Profile = () => {
         } else if (name === "repeatNewPassword") {
             if (value !== formData.newPassword) {
                 errors.repeatNewPassword = "Passwords do not match";
+
+
             }
         }
         return errors;
@@ -273,6 +283,10 @@ const Profile = () => {
         setToggleState(index);
     }
 
+    // avatarCloud access
+    const handleClose = () => {
+        setAvatarChangeAccess(!avatarChangeAccess);
+    };
 
     return (
         <div className="profileContainer">
@@ -295,11 +309,20 @@ const Profile = () => {
                         <div className={toggleState === 1 ? "content active-content" : "content"}>
                             <div className="profileAvatar">
                                 <div id="avatarContainer">
-                                    <img src={avatarUrl} alt="avatar" id='avatarImage' />
+                                    <img src={avatarUrl} alt="avatar" id='avatarImage' onClick={() => { setAvatarChangeAccess(!avatarChangeAccess) }} />
                                     <div id='avatarInputContainer'>
-                                        <span className='profileTitle'>Change Avatar Picture</span>
+                                        {/* <span className='profileTitle'>Change Avatar Picture</span>
                                         <input type="file" id='avatarInput' onChange={handleAvatarChange} className="profileInput" />
-                                        <button disabled={loading || !photo} onClick={handleUpload} className='iconBtn'><MdFileUpload /></button>
+                                        <button disabled={loading || !photo} onClick={handleUpload} className='iconBtn'><MdFileUpload /></button> */}
+                                        {!avatarChangeAccess &&
+                                            <div className="shading">
+                                                <PromptingCloud
+                                                    handleClose={handleClose}
+                                                    handleUpload={handleUpload}
+                                                    handleAvatarChange={handleAvatarChange}
+                                                />
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -325,18 +348,22 @@ const Profile = () => {
                                     </form>}
                             </div>
                             <div className="profileDesc">
-                                {!descriptionChangeAccess &&
-                                    <div>
-                                        <div></div>
-                                        <button className='iconBtn' onClick={() => { setDescriptionChangeAccess(true) }}><AiFillEdit /></button>
-                                    </div>
-                                }
-                                {descriptionChangeAccess &&
+
+                                <div hidden={!desc || descriptionChangeAccess}>
+                                    <p>{desc}</p>
+                                </div>
+                                <div hidden={descriptionChangeAccess}>
+                                    <div></div>
+                                    <button className='iconBtn' onClick={() => { setDescriptionChangeAccess(true) }}>Change info<AiFillEdit /></button>
+                                </div>
+
+                                <div hidden={!descriptionChangeAccess}>
                                     <form onSubmit={handleDescriptionUpdate}>
-                                        <textarea rows={10} cols={30} onChange={handleDescription} value={desc}></textarea>
+                                        <textarea rows={5} cols={30} onChange={handleDescription} value={desc}></textarea>
                                         <button className='iconBtn' type='submit' onClick={() => { setDescriptionChangeAccess(false) }}><AiFillEdit /></button>
                                     </form>
-                                }
+                                </div>
+
                             </div>
                         </div>
                         <div className={toggleState === 2 ? "content active-content" : "content"}>

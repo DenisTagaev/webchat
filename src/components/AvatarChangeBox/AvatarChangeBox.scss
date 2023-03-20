@@ -1,0 +1,22 @@
+.prompting-cloud {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+
+    h2 {
+        margin-top: 0;
+    }
+
+    input[type='file'] {
+        margin-bottom: 10px;
+    }
+
+    button {
+        margin-right: 10px;
+    }
+}

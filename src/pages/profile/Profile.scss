@@ -31,6 +31,8 @@
                 display: flex;
                 justify-content: space-around;
                 padding: 10px;
+                color: $primary;
+                cursor: pointer;
 
                 .active-tabs {
                     font-weight: 600;
@@ -54,12 +56,22 @@
 
 
             .profileAvatar {
+                .shading {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    z-index: 999;
+                }
 
                 #avatarContainer {
                     display: flex;
 
                     .iconBtn {
                         align-self: flex-end;
+
                     }
 
                     #avatarImage {
@@ -104,7 +116,20 @@
                 }
             }
 
-            .profileDesc {}
+            .profileDesc {
+
+                textarea {
+                    width: 50%;
+                    height: 150px;
+                    padding: 12px 20px;
+                    box-sizing: border-box;
+                    border: 2px solid $mainDark;
+                    border-radius: 4px;
+                    background-color: $mainLight;
+                    font-size: 16px;
+                    resize: none;
+                }
+            }
 
             .passwordChange {
                 .submitBtn {
@@ -162,6 +187,7 @@
         color: $primary;
         background-color: #fff;
         transition: ease .3s;
+        cursor: pointer;
     }
 
     .iconBtn:hover {
