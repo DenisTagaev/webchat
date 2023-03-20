@@ -5,7 +5,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, storage, db } from "../../environments/firebase";
 // import AddImg from "../../imgs/addAvatar.png";
-import { BiImageAdd } from 'react-icons/bi';
+import { BiImageAdd } from "react-icons/bi";
 import Logbar from "../../components/Logbar/Logbar";
 import "./Register.scss";
 
@@ -55,20 +55,16 @@ const Register = () => {
       // call function to create user in the firebase
       await createUserWithEmailAndPassword(auth, formData.email, formData.password)
 
-        .then((userCredential) => {
+        .then(async (userCredential) => {
           //get reference to the newly created user
           const user = userCredential.user;
           //create reference between the user and picture storage
           const storageRef = ref(storage, formData.nickname);
           //upload picture to the cloud storage and get it's url
-          const uploadTask = uploadBytesResumable(storageRef, avatar);
-          uploadTask.on(
-            (error) => {
-              // Handle unsuccessful uploads
-              setImgError(error);
-            },
-            () => {
-              getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+
+          await uploadBytesResumable(storageRef, avatar)
+            .then(() => {
+              getDownloadURL(storageRef).then(async (downloadURL) => {
                 //on successful image upload get the link to the cloudstore
                 //and link it to the user's profile along with the nickname
                 await updateProfile(user, {
@@ -79,22 +75,26 @@ const Register = () => {
                 //interactions with another users
                 await setDoc(doc(db, "users", user.uid), {
                   uid: user.uid,
-                  nickname: user.displayName,
+                  displayName: user.displayName,
                   email: user.email,
                   photoURL: downloadURL
                 });
                 //create a collection of chats for the user
                 await setDoc(doc(db, "userChats", user.uid), {});
-              });
-            }
-          );
 
-          //redirect user to the home page after successful registration
-          navigator("/");
+                //redirect user to the home page after successful registration
+                navigator("/");
+              });
+            }).catch(err => {
+              console.log(err);
+            });
+
           // console.log(user)
           // ...
         })
         .catch((error) => {
+          // Handle unsuccessful uploads
+          setImgError(error);
           // Error concat string to output
           console.log(`${error.code}: ${error.message}`);
         });
@@ -206,14 +206,13 @@ const Register = () => {
           )}
           <label id="avatarInput">
             <BiImageAdd className="regImg" />
+
             <span>Chose avatar</span>
             {/* to customize standard input look we hide the input element and wrap it in a
                         label with desired output content */}
             <input type="file" hidden={true} />
           </label>
-          {imgError && (
-            <span className="formError">{imgError}</span>
-          )}
+          {imgError && <span className="formError">{imgError}</span>}
           <button id="registerSubmit" type="submit">
             Sign up
           </button>

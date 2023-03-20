@@ -4,18 +4,21 @@ import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './components/context/AuthContext';
+import { ChatContextProvider } from './components/context/ChatContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   //context will share across the app if a user is logged in/exists
   <AuthContextProvider>
-    <React.StrictMode>
-      <App />
-      <footer>
-        <h3>D&D design 2023</h3>
-        <p>© All rights reserved</p>
-      </footer>
-    </React.StrictMode>
+    <ChatContextProvider>
+      <React.StrictMode>
+        <App />
+        <footer>
+          <h3>D&D design 2023</h3>
+          <p>© All rights reserved</p>
+        </footer>
+      </React.StrictMode>
+    </ChatContextProvider>
   </AuthContextProvider>
 );
 

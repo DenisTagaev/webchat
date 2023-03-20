@@ -1,22 +1,37 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { AuthContext } from "../../context/AuthContext";
+import { ChatContext } from "../../context/ChatContext";
 
-export const Message = () => {
+export const Message = ({message}) => {
   //getting the data about the user from the firebase
   const { currentUser } = useContext(AuthContext);
+  const { data } = useContext(ChatContext);
+  const ref = useRef();
+
+  useEffect(() => {
+    ref.current?.scrollIntoView({behavior: 'smooth'})
+  }, [message]);
 
   return (
-    <div className="messageContainer owner">
+    <div
+      ref={ref}
+      className={`messageContainer ${message.senderId === currentUser.uid && "owner"}`}
+      // className="message owner"
+    >
       <div className="messageInfo">
-        <img src={currentUser.photoURL} alt="profile avatar" />
+        <img
+          src={
+            message.senderId === currentUser.uid
+              ? currentUser.photoURL
+              : data.user.photoURL
+          }
+          alt="profile avatar"
+        />
         <span>Just now</span>
       </div>
       <div className="messageContent">
-        <p>Hello!</p>
-        <img
-          src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          alt="send attachment"
-        />
+        <p>{message.text}</p>
+        {message.img && <img src={message.img} alt="sent attachment" />}
       </div>
     </div>
   );
