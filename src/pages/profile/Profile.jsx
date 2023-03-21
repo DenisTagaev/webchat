@@ -13,7 +13,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 // firestore
 import { db } from '../../environments/firebase';
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 // styles
 // external file styles
@@ -22,8 +22,9 @@ import './Profile.scss';
 // react icons
 import { AiFillEdit } from 'react-icons/ai';
 
-import AddImg from '../../imgs/addAvatar.png';
+import AddImg from "../../imgs/addAvatar.png";
 
+// modal component
 import PromptingCloud from '../../components/AvatarChangeBox/AvatarChangeBox';
 
 const Profile = () => {
@@ -39,17 +40,16 @@ const Profile = () => {
     // tab state 
     const [toggleState, setToggleState] = useState(1);
     // default avatar png       
-    const [avatarUrl, setAvatarUrl] = useState((currentUser.photoURL) ? currentUser.photoURL : AddImg);
+    const [avatarUrl, setAvatarUrl] = useState(currentUser.photoURL ? currentUser.photoURL : AddImg);
 
     // profile description 
     const [desc, setDesc] = useState();
 
     // States for data changing
     const [photo, setPhoto] = useState(null);
-    const [loading, setLoading] = useState(false);
     const [userName, setUserName] = useState(currentUser.displayName);
 
-    const [avatarChangeAccess, setAvatarChangeAccess] = useState(false);
+    const [avatarChangeAccess, setAvatarChangeAccess] = useState(true);
     const [changeNameAccess, setChangeNameAccess] = useState(false);
     const [descriptionChangeAccess, setDescriptionChangeAccess] = useState(false);
     const [passwordChangeLoginAccess, setPasswordChangeLoginAccess] = useState(false);
@@ -71,7 +71,17 @@ const Profile = () => {
         const fileRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
         getDownloadURL(fileRef).then(url => {
             setAvatarUrl(url);
-        })
+        });
+
+        // const userDocRef = doc(db, "users", currentUser.uid);
+        // const userDocSnap = getDoc(userDocRef);
+        // try {
+        //     const data = userDocSnap.data
+        //     setDesc(data.profileDescription);
+        // } catch (error) {
+
+        // }
+
     }, [currentUser])
 
 
@@ -95,8 +105,8 @@ const Profile = () => {
 
     // async function for image upload
     const handleAvatarUpload = async (file) => {
-
-        // we create a reference of a file
+        file = (file === null) ? AddImg : file
+        // we create a reference for the fiile
         const avatarRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
         try {
             await uploadBytesResumable(avatarRef, file).then(() => {
@@ -113,7 +123,6 @@ const Profile = () => {
             console.error('Failed to upload new avatar', error)
         }
         alert("File was uploaded")
-        setLoading(false)
     }
 
     // nickname input functionality
@@ -348,7 +357,6 @@ const Profile = () => {
                                     </form>}
                             </div>
                             <div className="profileDesc">
-
                                 <div hidden={!desc || descriptionChangeAccess}>
                                     <p>{desc}</p>
                                 </div>

@@ -1,4 +1,6 @@
-.prompting-cloud {
+@import '../../index.scss';
+
+.promptingCloud {
     position: absolute;
     top: 30%;
     left: 50%;
@@ -7,6 +9,9 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     h2 {
         margin-top: 0;
@@ -14,6 +19,12 @@
 
     input[type='file'] {
         margin-bottom: 10px;
+    }
+
+    .btnContainer {
+        align-self: flex-end;
+        padding: 10px 10px;
+        margin-top: 10px 0;
     }
 
     button {
