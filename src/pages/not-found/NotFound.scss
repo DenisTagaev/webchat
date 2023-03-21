@@ -1,0 +1,101 @@
+@import '../../index.scss';
+
+.mainbox {
+    background-color: $mainLight;
+    margin: auto;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .err {
+        display: flex;
+        align-items: center;
+        color: $primary;
+        font-family: 'Nunito Sans', sans-serif;
+        font-size: 11rem;
+        margin-bottom: 10%;
+
+        .first {
+            animation-name: first;
+            animation-duration: 3.5s;
+            animation-iteration-count: infinite;
+
+        }
+
+        .second {
+            animation-name: second;
+            animation-duration: 3s;
+            animation-iteration-count: infinite;
+        }
+
+        .third {
+            animation-name: third;
+            animation-duration: 2.5s;
+            animation-iteration-count: infinite;
+
+        }
+    }
+
+    .msg {
+        text-align: center;
+        font-family: 'Nunito Sans', sans-serif;
+        font-size: 1.6rem;
+        width: 75%;
+        color: $primary;
+    }
+
+    a {
+        text-decoration: none;
+        color: $secondary;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+}
+
+//  animation 
+@keyframes first {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-50px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes second {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-35px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes third {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-25px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}

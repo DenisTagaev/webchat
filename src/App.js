@@ -9,6 +9,7 @@ import Profile from './pages/profile/Profile';
 import Home from './pages/Home';
 
 import './index.scss';
+import NotFound from './pages/not-found/NotFound';
 
 // // react bootstrap styling 
 
@@ -47,6 +48,7 @@ export default function App() {
           <Route path="login" element={<Login />} />
           <Route path="passReset" element={<PassReset />} />
         </Route>
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
