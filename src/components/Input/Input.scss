@@ -1,0 +1,61 @@
+@import '../../index.scss';
+
+.messageInputContainer {
+    height: 45px;
+    background-color: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+
+    @include mobileScreen {
+        height: 20px;
+    }
+
+
+    input {
+        width: 100%;
+        outline: none;
+        border: none;
+        background-color: transparent;
+        font-size: 16px;
+
+        @include mobileScreen {
+            font-size: 0.5rem;
+        }
+
+        &::placeholder {
+            color: #ccc;
+        }
+    }
+
+    .sendOptions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        img {
+            height: 24px;
+            width: 24px;
+            cursor: pointer;
+
+            @include mobileScreen {
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+        button {
+            border: none;
+            padding: 10px 15px;
+            color: $mainLight;
+            background-color: $primary;
+            cursor: pointer;
+
+            @include mobileScreen {
+                padding: 5px;
+            }
+        }
+    }
+
+}

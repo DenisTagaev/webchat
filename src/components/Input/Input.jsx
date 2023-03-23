@@ -9,6 +9,7 @@ import {
 import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/ChatContext';
 import { v4 as uuid } from "uuid";
+import './Input.scss';
 
 import addAvatar from '../../imgs/addAvatar.png';
 import attach from '../../imgs/attach.png';

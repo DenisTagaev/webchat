@@ -1,0 +1,81 @@
+@import "../../../index.scss";
+
+.messageContainer {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+
+  @include mobileScreen {
+    font-size: 0.6rem;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+
+  .messageInfo {
+    display: flex;
+    flex-direction: column;
+
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      -ms-border-radius: 50%;
+      -o-border-radius: 50%;
+      object-fit: cover;
+
+      @include mobileScreen {
+        width: 15px;
+        height: 15px;
+      }
+    }
+
+    span {
+      @include mobileScreen {
+        max-width: 18px;
+      }
+    }
+  }
+
+  .messageContent {
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    p {
+      background-color: white;
+      color: black;
+      padding: 10px 20px;
+      max-width: max-content;
+      border-radius: 0 10px 10px 10px;
+      -webkit-border-radius: 0 10px 10px 10px;
+      -moz-border-radius: 0 10px 10px 10px;
+      -ms-border-radius: 0 10px 10px 10px;
+      -o-border-radius: 0 10px 10px 10px;
+    }
+
+    img {
+      width: 50%;
+    }
+  }
+
+  &.owner {
+    flex-direction: row-reverse;
+
+    .messageContent {
+      align-items: flex-end;
+
+      p {
+        background-color: $primary;
+        color: white;
+        border-radius: 10px 0 10px 10px;
+        -webkit-border-radius: 10px 0 10px 10px;
+        -moz-border-radius: 10px 0 10px 10px;
+        -ms-border-radius: 10px 0 10px 10px;
+        -o-border-radius: 10px 0 10px 10px;
+      }
+    }
+  }
+}

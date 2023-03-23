@@ -4,6 +4,7 @@ import Cam  from "../../../imgs/cam.png";
 import More  from "../../../imgs/more.png";
 import Messages from '../../Messages/Messages';
 import Input from '../../Input/Input';
+import './Chat.scss';
 
 import { ChatContext } from "../../context/ChatContext";
 
@@ -15,6 +16,8 @@ export const Chat = () => {
     <div className="chatContainer">
       <div className="chatInfo">
         <span>{data.user?.displayName}</span>
+        {/* <span>Jane</span> */}
+
         <div className="chatIcons">
           <img src={Cam} alt="" />
           <img src={Add} alt="" />

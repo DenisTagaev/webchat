@@ -3,6 +3,8 @@ import Navbar  from '../Navbar/Navbar';
 import Search from '../Search/Search';
 import Chats from '../Chats/Chats';
 
+import './Sidebar.scss';
+
 export const Sidebar = () => {
   return (
     <div className="sidebar">
