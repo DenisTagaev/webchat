@@ -1,7 +1,7 @@
 @import '../../index.scss';
 
 @mixin profileInputs {
-    @include profileInputs()
+    @include profileInputs
 }
 
 .profileContainer {
@@ -118,6 +118,8 @@
                     font-size: 1.2em;
                     margin: 10px 0;
                 }
+
+
             }
 
             .profileDesc {
@@ -144,7 +146,7 @@
                     width: 60%;
 
                     .descInput {
-                        @include profileInputs()
+                        @include profileInputs
                     }
                 }
 
@@ -163,7 +165,7 @@
                     flex-direction: column;
 
                     .profileInput {
-                        @include profileInputs()
+                        @include profileInputs
                     }
 
                     .iconBtn {
