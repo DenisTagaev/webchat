@@ -26,6 +26,7 @@ import AddImg from "../../imgs/addAvatar.png";
 
 // modal component
 import PromptingCloud from '../../components/AvatarChangeBox/AvatarChangeBox';
+import BugForm from '../../components/BugForm/BugForm';
 
 
 const Profile = () => {
@@ -54,6 +55,7 @@ const Profile = () => {
     const [descriptionChangeAccess, setDescriptionChangeAccess] = useState(false);
     const [passwordChangeLoginAccess, setPasswordChangeLoginAccess] = useState(false);
     const [passwordChangeAccess, setPasswordChangeAccess] = useState(false);
+    const [bugFormAccess, setBugFormAccess] = useState(false);
 
     const [formData, setFormData] = useState({
         email: "",
@@ -119,7 +121,6 @@ const Profile = () => {
 
     // async function for image upload
     const handleAvatarUpload = async (file) => {
-        file = (file === null) ? AddImg : file
         // we create a reference for the fiile
         const avatarRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
         try {
@@ -332,6 +333,8 @@ const Profile = () => {
                     </div>
                     <div className="content-tabs">
                         <div className={toggleState === 1 ? "content active-content" : "content"}>
+
+
                             <div className="profileAvatar">
                                 <div id="avatarContainer">
                                     <img src={avatarUrl} alt="avatar" id='avatarImage' onClick={() => { setAvatarChangeAccess(!avatarChangeAccess) }} />
@@ -352,7 +355,7 @@ const Profile = () => {
                             <div className="profileName">
                                 {!changeNameAccess && <div>
                                     <span className='profileTitle'>{currentUser.displayName}</span>
-                                    <button className='iconBtn' onClick={() => { setChangeNameAccess(!changeNameAccess) }} ><AiFillEdit /><span>Change Nickname</span></button>
+                                    <button className='iconBtn' onClick={() => { setChangeNameAccess(!changeNameAccess) }} ><span>Change Nickname</span><AiFillEdit /></button>
                                 </div>}
                                 {formErrors.nickname && (
                                     <span className="formError">{formErrors.nickname}</span>
@@ -367,30 +370,31 @@ const Profile = () => {
                                             placeholder="Display name"
                                             onChange={handleNameChange}
                                         />
+
                                         <button className='iconBtn' type="submit" disabled={formErrors.nickname || !userName}><AiFillEdit /></button>
                                     </form>}
                             </div>
-                            <div className="profileDesc">
-                                <div hidden={!desc || descriptionChangeAccess}>
+                            <div className="profileDescContainer">
+                                <div className="profileDesc" hidden={!desc || descriptionChangeAccess}>
                                     <h3>About me</h3>
                                     <div className="profileDescDivs">
-                                        <span>Age:</span>
+                                        <span>Age</span>
                                         <p>{desc.age}</p>
                                     </div>
                                     <div className="profileDescDivs">
-                                        <span>Location:</span>
+                                        <span>Location</span>
                                         <p>{desc.location}</p>
                                     </div>
                                     <div className="profileDescDivs">
-                                        <span>Marital status:</span>
+                                        <span>Marital status</span>
                                         <p>{desc.maritalStatus}</p>
                                     </div>
                                     <div className="profileDescDivs">
-                                        <span>Career:</span>
+                                        <span>Career</span>
                                         <p>{desc.career}</p>
                                     </div>
                                     <div className="profileDescDivs">
-                                        <span>Hobbies:</span>
+                                        <span>Hobbies</span>
                                         <p>{desc.hobbies}</p>
                                     </div>
 
@@ -401,7 +405,8 @@ const Profile = () => {
                                     </div>
                                 </div>
 
-                                <div hidden={!descriptionChangeAccess}>
+                                <div className="profileDesc" hidden={!descriptionChangeAccess}>
+                                    <h3>Add something new</h3>
                                     <form onSubmit={handleDescriptionUpdate} className='descForm'>
                                         <input
                                             name='age'
@@ -456,62 +461,68 @@ const Profile = () => {
                             </div>
                         </div>
                         <div className={toggleState === 2 ? "content active-content" : "content"}>
-                            <div className="passwordChange">
-                                <h3>Password change</h3>
-                                {!passwordChangeLoginAccess | !passwordChangeAccess &&
-                                    <button className='submitBtn' onClick={() => { setPasswordChangeLoginAccess(!passwordChangeLoginAccess); }} disabled={passwordChangeAccess}>Open form</button>
-                                }
-                                {passwordChangeLoginAccess &&
-                                    <form className="passwordForm" onSubmit={handleFormLoginSubmit}>
-                                        <input
-                                            className="profileInput"
-                                            type="email"
-                                            name="email"
-                                            value={formData.email}
-                                            placeholder="Email"
-                                            onChange={handleFormLoginChange}
-                                        />
-                                        {formErrors.email && <span className="formError">{formErrors.email}</span>}
-                                        <input
-                                            className="profileInput"
-                                            type="password"
-                                            name="password"
-                                            value={formData.password}
-                                            placeholder="Password"
-                                            onChange={handleFormLoginChange}
-                                        />
-                                        {formErrors.password && (
-                                            <span className="formError">{formErrors.password}</span>
-                                        )}
-                                        <button className="iconBtn" type="submit" disabled={formErrors.email || formErrors.password}><AiFillEdit />Log in</button>
-                                    </form>
-                                }
-                                {passwordChangeAccess &&
-                                    <form className="passwordForm" onSubmit={handleNewPasswordSubmit}>
-                                        <input
-                                            className="profileInput"
-                                            type="password"
-                                            name='newPassword'
-                                            value={formData.newPassword}
-                                            placeholder='Password'
-                                            onChange={handlePasswordInput}
-                                        />
-                                        {formErrors.newPassword && (
-                                            <span className="formError">{formErrors.newPassword}</span>
-                                        )}
-                                        <input
-                                            className="profileInput"
-                                            type="password"
-                                            name='repeatNewPassword'
-                                            value={formData.repeatNewPassword}
-                                            placeholder='Repeat'
-                                            onChange={handlePasswordInput}
-                                        />
-                                        {formErrors.repeatNewPassword && (
-                                            <span className="formError">{formErrors.repeatNewPassword}</span>
-                                        )}
-                                        <button className='submitBtn' type="submit">Change Password</button>
-                                    </form>}
+                            <div className="usefulForms">
+                                <h3>Useful forms</h3>
+                                <div className="passwordChange">
+                                    {!passwordChangeLoginAccess | !passwordChangeAccess &&
+                                        <button className='iconBtn formBtn' onClick={() => { setPasswordChangeLoginAccess(!passwordChangeLoginAccess); }} disabled={passwordChangeAccess}>Change your password</button>
+                                    }
+                                    {passwordChangeLoginAccess &&
+                                        <form className="passwordForm" onSubmit={handleFormLoginSubmit}>
+                                            <input
+                                                className="profileInput"
+                                                type="email"
+                                                name="email"
+                                                value={formData.email}
+                                                placeholder="Email"
+                                                onChange={handleFormLoginChange}
+                                            />
+                                            {formErrors.email && <span className="formError">{formErrors.email}</span>}
+                                            <input
+                                                className="profileInput"
+                                                type="password"
+                                                name="password"
+                                                value={formData.password}
+                                                placeholder="Password"
+                                                onChange={handleFormLoginChange}
+                                            />
+                                            {formErrors.password && (
+                                                <span className="formError">{formErrors.password}</span>
+                                            )}
+                                            <button className="iconBtn" type="submit" disabled={formErrors.email || formErrors.password}>Log in<AiFillEdit /></button>
+                                        </form>
+                                    }
+                                    {passwordChangeAccess &&
+                                        <form className="passwordForm" onSubmit={handleNewPasswordSubmit}>
+                                            <input
+                                                className="profileInput"
+                                                type="password"
+                                                name='newPassword'
+                                                value={formData.newPassword}
+                                                placeholder='Password'
+                                                onChange={handlePasswordInput}
+                                            />
+                                            {formErrors.newPassword && (
+                                                <span className="formError">{formErrors.newPassword}</span>
+                                            )}
+                                            <input
+                                                className="profileInput"
+                                                type="password"
+                                                name='repeatNewPassword'
+                                                value={formData.repeatNewPassword}
+                                                placeholder='Repeat'
+                                                onChange={handlePasswordInput}
+                                            />
+                                            {formErrors.repeatNewPassword && (
+                                                <span className="formError">{formErrors.repeatNewPassword}</span>
+                                            )}
+                                            <button className='submitBtn' type="submit">Change Password</button>
+                                        </form>}
+                                </div>
+                                <div className="bugReportContainer">
+                                    <button className='iconBtn formBtn' onClick={() => { setBugFormAccess(!bugFormAccess) }}>Open a bug form</button>
+                                    {bugFormAccess && <BugForm currentUser={currentUser} />}
+                                </div>
                             </div>
                         </div>
                         {/*  Chats managing  */}

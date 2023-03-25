@@ -17,25 +17,26 @@
         font-family: 'Nunito Sans', sans-serif;
         font-size: 11rem;
         margin-bottom: 10%;
+        text-shadow: 24px 100px 5px $mainDark;
 
         .first {
             animation-name: first;
-            animation-duration: 3.5s;
+            animation-duration: 4s;
             animation-iteration-count: infinite;
-
         }
 
         .second {
-            animation-name: second;
-            animation-duration: 3s;
+            animation-name: first;
+            animation-duration: 4s;
             animation-iteration-count: infinite;
+            animation-delay: .3s;
         }
 
         .third {
-            animation-name: third;
-            animation-duration: 2.5s;
+            animation-name: first;
+            animation-duration: 4s;
             animation-iteration-count: infinite;
-
+            animation-delay: .6s;
         }
     }
 
@@ -64,35 +65,7 @@
     }
 
     50% {
-        transform: translateY(-50px);
-    }
-
-    100% {
-        transform: translateY(0);
-    }
-}
-
-@keyframes second {
-    0% {
-        transform: translateY(0px);
-    }
-
-    50% {
-        transform: translateY(-35px);
-    }
-
-    100% {
-        transform: translateY(0);
-    }
-}
-
-@keyframes third {
-    0% {
-        transform: translateY(0px);
-    }
-
-    50% {
-        transform: translateY(-25px);
+        transform: translateY(-30px);
     }
 
     100% {

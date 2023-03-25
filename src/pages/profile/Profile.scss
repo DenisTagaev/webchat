@@ -1,22 +1,27 @@
 @import '../../index.scss';
 
 @mixin profileInputs {
-    @include profileInputs
+
+    padding: 7px;
+    border: none;
+    background-color: $mainDark;
+    color: $mainLight;
 }
 
 .profileContainer {
     @include mainScreenContainer;
 
-    @include tableScreen {
-        @include tableScreenMainContainer;
-    }
-
     .profileWrap {
+
+        @include tableScreen {
+            padding: 70px 20px;
+        }
+
         background-color: #fff;
         padding: 70px 30px;
-        min-height: 500px;
-        min-width: 550px;
-        position: relative;
+        min-height: fit-content;
+        min-width: 350px;
+        margin: 0;
 
 
         #homeReturn {
@@ -25,39 +30,55 @@
             border-bottom: 1px solid $primary;
         }
 
-        @include tableScreen {
-            @include tableScreenWrap;
-            height: fit-content;
-        }
 
         .profileBody {
+
             .block-tabs {
                 display: flex;
+                transition: ease .3s;
+
+
+                @include tableScreen {
+                    justify-content: space-evenly;
+                    padding: 5px;
+                    font-size: 15px;
+                }
+
                 justify-content: space-around;
                 padding: 10px;
                 color: $primary;
                 cursor: pointer;
 
                 .active-tabs {
+                    @include tableScreen {
+                        padding: 0 10px;
+                    }
+
                     font-weight: 600;
                     border-bottom: 1px solid $primary;
-                    padding: 0 10px;
+                    padding: 0 15px;
                 }
             }
 
             .content {
+
+
+                @include tableScreen {
+                    padding: 6 15px;
+                }
+
                 background: white;
                 padding: 10px 30px;
-                width: 90%;
-                height: 90%;
+                width: fit-content;
+                height: inherit;
                 display: none;
             }
 
 
             .active-content {
                 display: block;
+                margin: auto;
             }
-
 
             .profileAvatar {
                 .shading {
@@ -79,11 +100,20 @@
                     }
 
                     #avatarImage {
+                        @include tableScreen {
+                            width: 90px;
+                            height: 90px;
+                            margin: 6px;
+                            box-shadow: 0 0 9px $mainDark;
+                        }
+
                         image-rendering: optimizeQuality;
+                        vertical-align: middle;
+                        object-fit: cover;
                         width: 120px;
-                        height: 105px;
+                        height: 120px;
+                        border-radius: 50%;
                         border: 1px solid $mainDark;
-                        border-radius: 20%;
                         margin: 10px;
                         box-shadow: 0 0 15px $mainDark;
                     }
@@ -122,43 +152,54 @@
 
             }
 
-            .profileDesc {
-                margin-top: 10px;
+            .profileDescContainer {
 
-                .profileDescDivs {
-                    display: flex;
-                    align-items: center;
-                    width: 60%;
-                    height: 30px;
-                    justify-content: space-between;
+                margin-top: 20px;
 
-                    span {
-                        font-weight: 600;
-                        margin: 0 5px 0 0;
-                        padding: 0;
+                .profileDesc {
+                    .profileDescDivs {
+                        @include tableScreen {
+                            width: 80%;
+                        }
+
+                        display: flex;
+                        align-items: center;
+                        width: 70%;
+                        height: min-content;
+                        justify-content: space-between;
+
+                        span {
+                            font-weight: 600;
+                            margin: 0 5px 0 0;
+                            padding: 0;
+                        }
                     }
-                }
 
-                .descForm {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 20px;
-                    width: 60%;
+                    .descForm {
 
-                    .descInput {
-                        @include profileInputs
+                        @include tableScreen {
+                            gap: 20px;
+                            width: 80%;
+                        }
+
+                        display: flex;
+                        flex-direction: column;
+                        margin-top: 10px;
+                        gap: 10px;
+                        width: 60%;
+
+                        .descInput {
+                            @include profileInputs
+                        }
                     }
                 }
 
                 button {
-                    align-self: flex-end;
+                    align-self: flex-start;
                 }
             }
 
             .passwordChange {
-                .submitBtn {
-                    margin-bottom: 20px;
-                }
 
                 .passwordForm {
                     display: flex;
@@ -174,6 +215,18 @@
                     }
                 }
             }
+
+            .usefulForms {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .bugReportContainer {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+            }
         }
 
 
@@ -185,29 +238,17 @@
             }
         }
 
-
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-
-        @include tableScreen {
-            width: 90%;
-        }
-
         .profileInput {
-            background-color: $mainDark;
-            border: none;
-            color: #fff;
-            padding: 10px;
+            @include profileInputs;
         }
 
-        @include tableScreen {
-            justify-content: center;
-            width: 90%;
-        }
     }
 
     .iconBtn {
+        @include tableScreen {
+            font-size: 16px;
+        }
+
         border: none;
         outline: none;
         font-size: 20px;
@@ -226,6 +267,25 @@
         margin-top: 0;
 
         @include mainButtonForSubmission;
+    }
+
+    .formBtn {
+
+        @include tableScreen {
+            width: 200px;
+        }
+
+        border: 1px solid $primary;
+        width: 300px;
+        margin-top: 10px;
+        padding: 5px 0;
+        transition: ease .3s;
+
+        &:hover {
+            border: none;
+            border-top: 1px solid $secondary;
+            border-bottom: 1px solid $secondary;
+        }
     }
 
     .formError {
