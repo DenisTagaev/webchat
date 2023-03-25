@@ -27,6 +27,7 @@ import AddImg from "../../imgs/addAvatar.png";
 // modal component
 import PromptingCloud from '../../components/AvatarChangeBox/AvatarChangeBox';
 
+
 const Profile = () => {
 
     // User context for current user
@@ -42,8 +43,7 @@ const Profile = () => {
     // default avatar png       
     const [avatarUrl, setAvatarUrl] = useState(currentUser.photoURL ? currentUser.photoURL : AddImg);
 
-    // profile description 
-    const [desc, setDesc] = useState();
+
 
     // States for data changing
     const [photo, setPhoto] = useState(null);
@@ -62,6 +62,15 @@ const Profile = () => {
         repeatNewPassword: ""
     });
 
+    // profile description 
+    const [desc, setDesc] = useState({
+        age: 0,
+        location: "",
+        career: "",
+        hobbies: "",
+        maritalStatus: "",
+    });
+
     // Error states
     const [formErrors, setFormErrors] = useState({});
     const [fileError, setFileError] = useState(null);
@@ -73,16 +82,21 @@ const Profile = () => {
             setAvatarUrl(url);
         });
 
-        // const userDocRef = doc(db, "users", currentUser.uid);
-        // const userDocSnap = getDoc(userDocRef);
-        // try {
-        //     const data = userDocSnap.data
-        //     setDesc(data.profileDescription);
-        // } catch (error) {
+        async function fetchDescription() {
+            const userDocRef = doc(db, "users", currentUser.uid);
+            const userDocSnap = await getDoc(userDocRef);
+            console.log(userDocSnap)
+            try {
+                const data = userDocSnap.data()
+                setDesc(data.profileDescription)
+                console.log(data)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchDescription()
+    }, [currentUser,])
 
-        // }
-
-    }, [currentUser])
 
 
     const handleAvatarChange = (e) => {
@@ -217,11 +231,15 @@ const Profile = () => {
         });
     }
 
+    // local state update
     const handleDescription = (event) => {
-        setDesc(event.target.value);
-        console.log(desc)
+        console.log(desc);
+        const { name, value } = event.target;
+        setDesc({
+            ...desc,
+            [name]: value,
+        });
     }
-
 
     // Description update
     const handleDescriptionUpdate = async (event) => {
@@ -270,8 +288,6 @@ const Profile = () => {
         } else if (name === "repeatNewPassword") {
             if (value !== formData.newPassword) {
                 errors.repeatNewPassword = "Passwords do not match";
-
-
             }
         }
         return errors;
@@ -320,11 +336,9 @@ const Profile = () => {
                                 <div id="avatarContainer">
                                     <img src={avatarUrl} alt="avatar" id='avatarImage' onClick={() => { setAvatarChangeAccess(!avatarChangeAccess) }} />
                                     <div id='avatarInputContainer'>
-                                        {/* <span className='profileTitle'>Change Avatar Picture</span>
-                                        <input type="file" id='avatarInput' onChange={handleAvatarChange} className="profileInput" />
-                                        <button disabled={loading || !photo} onClick={handleUpload} className='iconBtn'><MdFileUpload /></button> */}
                                         {!avatarChangeAccess &&
                                             <div className="shading">
+                                                {/*  Component for avatar change  */}
                                                 <PromptingCloud
                                                     handleClose={handleClose}
                                                     handleUpload={handleUpload}
@@ -358,17 +372,84 @@ const Profile = () => {
                             </div>
                             <div className="profileDesc">
                                 <div hidden={!desc || descriptionChangeAccess}>
-                                    <p>{desc}</p>
+                                    <h3>About me</h3>
+                                    <div className="profileDescDivs">
+                                        <span>Age:</span>
+                                        <p>{desc.age}</p>
+                                    </div>
+                                    <div className="profileDescDivs">
+                                        <span>Location:</span>
+                                        <p>{desc.location}</p>
+                                    </div>
+                                    <div className="profileDescDivs">
+                                        <span>Marital status:</span>
+                                        <p>{desc.maritalStatus}</p>
+                                    </div>
+                                    <div className="profileDescDivs">
+                                        <span>Career:</span>
+                                        <p>{desc.career}</p>
+                                    </div>
+                                    <div className="profileDescDivs">
+                                        <span>Hobbies:</span>
+                                        <p>{desc.hobbies}</p>
+                                    </div>
+
                                 </div>
                                 <div hidden={descriptionChangeAccess}>
-                                    <div></div>
-                                    <button className='iconBtn' onClick={() => { setDescriptionChangeAccess(true) }}>Change info<AiFillEdit /></button>
+                                    <div>
+                                        <button className='iconBtn' onClick={() => { setDescriptionChangeAccess(true) }}>Change info<AiFillEdit /></button>
+                                    </div>
                                 </div>
 
                                 <div hidden={!descriptionChangeAccess}>
-                                    <form onSubmit={handleDescriptionUpdate}>
-                                        <textarea rows={5} cols={30} onChange={handleDescription} value={desc}></textarea>
-                                        <button className='iconBtn' type='submit' onClick={() => { setDescriptionChangeAccess(false) }}><AiFillEdit /></button>
+                                    <form onSubmit={handleDescriptionUpdate} className='descForm'>
+                                        <input
+                                            name='age'
+                                            type="number"
+                                            className='descInput'
+                                            onChange={handleDescription}
+                                            value={desc.age}
+                                        />
+                                        <input
+                                            name='location'
+                                            type="text"
+                                            className='descInput'
+                                            onChange={handleDescription}
+                                            value={desc.location}
+                                        />
+                                        <select
+                                            name='maritalStatus'
+                                            className='descInput'
+                                            onChange={handleDescription}
+                                            value={desc.maritalStatus}
+                                        >
+                                            <option>Single</option>
+                                            <option>Married</option>
+                                            <option>Separated</option>
+                                            <option>Divorced</option>
+                                            <option>Widowed</option>
+                                        </select>
+                                        <input
+                                            name='career'
+                                            type="text"
+                                            className='descInput'
+                                            onChange={handleDescription}
+                                            value={desc.career}
+                                        />
+                                        <input
+                                            name='hobbies'
+                                            type="text"
+                                            className='descInput'
+                                            onChange={handleDescription}
+                                            value={desc.hobbies}
+                                            placeholder="Enter your hobbies"
+                                        />
+                                        <button className='iconBtn' type='submit' onClick={() => { setDescriptionChangeAccess(false) }}>
+                                            <span>
+                                                Submit
+                                                <AiFillEdit />
+                                            </span>
+                                        </button>
                                     </form>
                                 </div>
 

@@ -1,5 +1,9 @@
 @import '../../index.scss';
 
+@mixin profileInputs {
+    @include profileInputs()
+}
+
 .profileContainer {
     @include mainScreenContainer;
 
@@ -10,8 +14,8 @@
     .profileWrap {
         background-color: #fff;
         padding: 70px 30px;
-        min-height: 400px;
-        width: 550px;
+        min-height: 500px;
+        min-width: 550px;
         position: relative;
 
 
@@ -117,17 +121,35 @@
             }
 
             .profileDesc {
+                margin-top: 10px;
 
-                textarea {
-                    width: 50%;
-                    height: 150px;
-                    padding: 12px 20px;
-                    box-sizing: border-box;
-                    border: 2px solid $mainDark;
-                    border-radius: 4px;
-                    background-color: $mainLight;
-                    font-size: 16px;
-                    resize: none;
+                .profileDescDivs {
+                    display: flex;
+                    align-items: center;
+                    width: 60%;
+                    height: 30px;
+                    justify-content: space-between;
+
+                    span {
+                        font-weight: 600;
+                        margin: 0 5px 0 0;
+                        padding: 0;
+                    }
+                }
+
+                .descForm {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                    width: 60%;
+
+                    .descInput {
+                        @include profileInputs()
+                    }
+                }
+
+                button {
+                    align-self: flex-end;
                 }
             }
 
@@ -141,7 +163,7 @@
                     flex-direction: column;
 
                     .profileInput {
-                        padding: 20px 10px;
+                        @include profileInputs()
                     }
 
                     .iconBtn {
@@ -171,7 +193,10 @@
         }
 
         .profileInput {
-            @include initial-inputs;
+            background-color: $mainDark;
+            border: none;
+            color: #fff;
+            padding: 10px;
         }
 
         @include tableScreen {
