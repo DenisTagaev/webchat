@@ -1,0 +1,14 @@
+@import "../../index.scss";
+
+.messagesContainer {
+  background-color: $secondary;
+  padding: 10px;
+  flex: 1;
+  // height: calc(100% - 140px);
+  overflow-y: scroll;
+
+  @include mobileScreen {
+    font-size: 0.8rem;
+    padding: 1%;
+  }
+}

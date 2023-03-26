@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { AuthContext } from "../../context/AuthContext";
 import { ChatContext } from "../../context/ChatContext";
+import './Message.scss';
 
 export const Message = ({message}) => {
   //getting the data about the user from the firebase

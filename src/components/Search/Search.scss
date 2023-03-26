@@ -1,0 +1,29 @@
+@import "../../index.scss";
+
+.searchContainer {
+  border-bottom: 1px solid #000;
+
+  .searchForm {
+    padding: 5%;
+
+    @include mobileScreen {
+      padding: 1%;
+    }
+
+    input {
+      // background-color: #ccc;
+      border: none;
+      outline: none;
+      background-color: transparent;
+      color: $mainLight;
+
+      &::placeholder {
+        color: grey;
+
+        @include mobileScreen {
+          font-size: 0.5rem;
+        }
+      }
+    }
+  }
+}
