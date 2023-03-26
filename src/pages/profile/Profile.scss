@@ -164,9 +164,9 @@
 
             .profileDescContainer {
                 display: flex;
-                margin-top: 20px;
                 justify-content: space-between;
-                height: 450px;
+                margin-top: 20px;
+                height: 300px;
 
                 .profileDesc {
                     .profileDescDivs {
@@ -176,7 +176,7 @@
 
                         display: flex;
                         align-items: center;
-                        height: 55px;
+                        height: 15%;
                         justify-content: space-between;
                         border-bottom: 1px solid $mainDark ;
 
@@ -188,32 +188,36 @@
                     }
 
                     #changeDescBtn {
-                        margin-top: 50px;
+                        margin-top: 10px;
                     }
 
                     .descForm {
                         height: 80%;
 
-                        @include tableScreen {
-                            gap: 20px
-                        }
+                        @include tableScreen {}
 
                         display: flex;
                         flex-direction: column;
                         justify-content: space-evenly;
                         margin-top: 10px;
-                        gap: 10px;
-                        width: 80%;
+                        gap: 13px;
+                        width: 100%;
 
                         .descInput {
                             @include profileInputs;
-                            padding: 14px;
+                            padding: 7px;
                         }
                     }
                 }
 
                 button {
                     align-self: flex-start;
+                }
+            }
+
+            .bugLink {
+                a {
+                    text-decoration: none;
                 }
             }
 
@@ -238,12 +242,6 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-
-                .bugReportContainer {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
             }
         }
 

@@ -15,8 +15,6 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 // react icons
 import { AiFillEdit } from 'react-icons/ai';
 
-import AddImg from "../../../imgs/addAvatar.png";
-
 // custom modal
 import PromptingCloud from '../../../components/AvatarChangeBox/AvatarChangeBox'; import BugForm from '../BugForm/BugForm';
 ;
@@ -261,14 +259,16 @@ export default function ProfileTab() {
                         {desc.hobbies &&
                             <p>{desc.hobbies}</p>
                         }
-                    </div>
 
+                    </div>
                     <div hidden={descriptionChangeAccess}>
 
                         <button className='iconBtn' id='changeDescBtn' onClick={() => { setDescriptionChangeAccess(true) }}>Change info<AiFillEdit /></button>
 
                     </div>
+
                 </div>
+
 
                 <div className="profileDesc" hidden={!descriptionChangeAccess}>
                     <h3>Add something new</h3>
