@@ -67,10 +67,10 @@ const Profile = () => {
     // profile description 
     const [desc, setDesc] = useState({
         age: 0,
-        location: "",
-        career: "",
-        hobbies: "",
-        maritalStatus: "",
+        location: "Somewhere",
+        career: "Someone",
+        hobbies: "Something",
+        maritalStatus: "No idea",
     });
 
     // Error states
@@ -79,28 +79,36 @@ const Profile = () => {
 
     //  useEffects for profile avatar and nickname rendering
     useEffect(() => {
-        const fileRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
-        getDownloadURL(fileRef).then(url => {
-            setAvatarUrl(url);
-        });
+        function fetchAvatar() {
+            console.log(currentUser.uid);
+            const fileRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
+            if (fileRef) {
+                getDownloadURL(fileRef).then(url => {
+                    setAvatarUrl(url);
+                });
+            }
+        }
 
+        // description fetching function
         async function fetchDescription() {
             const userDocRef = doc(db, "users", currentUser.uid);
             const userDocSnap = await getDoc(userDocRef);
-            console.log(userDocSnap)
+
             try {
                 const data = userDocSnap.data()
-                setDesc(data.profileDescription)
-                console.log(data)
+                if (data.profileDescription) {
+                    setDesc(data.profileDescription)
+                }
             } catch (error) {
                 console.log(error);
             }
         }
-        fetchDescription()
+        fetchAvatar();
+        fetchDescription();
     }, [currentUser,])
 
 
-
+    // avatar change handler, assigns state to the file
     const handleAvatarChange = (e) => {
         const selectedFile = e.target.files[0];
         if (!selectedFile.type.startsWith('image/')) {
@@ -113,13 +121,14 @@ const Profile = () => {
         setPhoto(selectedFile);
     }
 
+    // upload handler
     const handleUpload = () => {
         handleAvatarUpload(photo);
         setPhoto(null);
         setAvatarChangeAccess(!avatarChangeAccess);
     }
 
-    // async function for image upload
+    // async function for avatar upload
     const handleAvatarUpload = async (file) => {
         // we create a reference for the fiile
         const avatarRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
@@ -379,23 +388,33 @@ const Profile = () => {
                                     <h3>About me</h3>
                                     <div className="profileDescDivs">
                                         <span>Age</span>
-                                        <p>{desc.age}</p>
+                                        {desc.age &&
+                                            <p>{desc.age}</p>
+                                        }
                                     </div>
                                     <div className="profileDescDivs">
                                         <span>Location</span>
-                                        <p>{desc.location}</p>
+                                        {desc.location &&
+                                            <p>{desc.location}</p>
+                                        }
                                     </div>
                                     <div className="profileDescDivs">
                                         <span>Marital status</span>
-                                        <p>{desc.maritalStatus}</p>
+                                        {desc.maritalStatus &&
+                                            <p>{desc.maritalStatus}</p>
+                                        }
                                     </div>
                                     <div className="profileDescDivs">
                                         <span>Career</span>
-                                        <p>{desc.career}</p>
+                                        {desc.career &&
+                                            <p>{desc.career}</p>
+                                        }
                                     </div>
                                     <div className="profileDescDivs">
                                         <span>Hobbies</span>
-                                        <p>{desc.hobbies}</p>
+                                        {desc.hobbies &&
+                                            <p>{desc.hobbies}</p>
+                                        }
                                     </div>
 
                                 </div>
