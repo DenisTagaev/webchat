@@ -42,9 +42,9 @@ const Profile = () => {
                         <div className={toggleState === "auth" ? "tabs active-tabs" : "tabs"}
                             onClick={() => toggleTab("auth")}
                         >Authentication</div>
-                        <div className={toggleState === "chats" ? "tabs active-tabs" : "tabs"}
-                            onClick={() => toggleTab("chats")}
-                        >Chats</div>
+                        <div className={toggleState === "friends" ? "tabs active-tabs" : "tabs"}
+                            onClick={() => toggleTab("friends")}
+                        >Friends</div>
                     </div>
                     <div className="content-tabs">
                         <div className={toggleState === "profile" ? "content active-content" : "content"}>
@@ -58,7 +58,7 @@ const Profile = () => {
 
                         </div>
                         {/*  Chats managing  */}
-                        <div className={toggleState === "chats" ? "content active-content" : "content"}>
+                        <div className={toggleState === "friends" ? "content active-content" : "content"}>
                         </div>
                     </div>
                 </div>
