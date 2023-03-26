@@ -16,9 +16,10 @@
       outline: none;
       background-color: transparent;
       color: $mainLight;
+      width: 100%;
 
       &::placeholder {
-        color: grey;
+        color: $mainLight;
 
         @include mobileScreen {
           font-size: 0.5rem;
