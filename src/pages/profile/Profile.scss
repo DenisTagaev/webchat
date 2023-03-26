@@ -13,6 +13,16 @@
 
     .profileWrap {
 
+        .iconBtn#homeReturn {
+            border: none;
+            background-color: #fff;
+            color: $primary;
+
+            &:hover {
+                color: $mainDark;
+            }
+        }
+
         @include tableScreen {
             padding: 70px 20px;
         }
@@ -153,18 +163,18 @@
             }
 
             .profileDescContainer {
-
+                display: flex;
                 margin-top: 20px;
 
                 .profileDesc {
                     .profileDescDivs {
                         @include tableScreen {
-                            width: 80%;
+                            width: fit-content;
                         }
 
                         display: flex;
                         align-items: center;
-                        width: 70%;
+                        width: max-content;
                         height: min-content;
                         justify-content: space-between;
 

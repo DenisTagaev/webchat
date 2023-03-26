@@ -38,7 +38,7 @@ export default function App() {
               <Home />
             </GuardRoute>
           } />
-          <Route path='/profile' element={
+          <Route path='profile' element={
             //protecting user page from being viewed if not a user
             <GuardRoute>
               <Profile />
