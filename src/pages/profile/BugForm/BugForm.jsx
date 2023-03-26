@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
-// email service
-import *  as nodemailer from 'nodemailer';
 
-// user context 
+// email
+import *  as nodemailer from 'nodemailer';
+// user context
 import { AuthContext } from '../../../components/context/AuthContext';
 
 // react icons
@@ -14,28 +14,30 @@ export default function BugForm() {
 
     const { currentUser } = useContext(AuthContext)
 
-    const [report, setReport] = useState({
-        subject: "",
-        body: ""
+    const [mailOptions, setMailOptions] = useState({
+        from: "muxamedkali@gmail.com",
+        to: "muxamedkali@gmail.com",
+        subject: `${currentUser.email}`,
+        body: "test"
     });
 
-    const sendEmail = (to, subject, body) => {
-        // creating a transporter for gmail
+    // const transporter = nodemailer.createTransport({
+    //     service: 'gmail',
+    //     auth: {
+    //         user: "muxamedkali@gmail.com",
+    //         pass: "MitiAlo8710"
+    //     }
+    // });
+
+    const sendEmail = () => {
+        // create a transporter for Gmail
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: currentUser.email,
-                pass: 'yourgmailpassword'
+                user: 'muxamedkali@gmail.com',
+                pass: 'MitiAlo8710'
             }
         });
-
-        // create the email message
-        const mailOptions = {
-            from: 'yourgmailaddress@gmail.com',
-            to: to,
-            subject: subject,
-            text: body
-        };
 
         // send the email using the transporter
         return transporter.sendMail(mailOptions)
@@ -46,36 +48,34 @@ export default function BugForm() {
                 console.error(error);
             });
     };
-
-    async function handleSendEmail(e) {
-        e.preventDefault();
-        try {
-            await sendEmailToRecipient("muxamedkali@gmail.com", "report.subject", "report.body")
-                .then(() => console.log('Email sent successfully'))
-                .catch(error => console.error(error));
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    // const sendEmail = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         await transporter.sendMail(mailOptions);
+    //         console.log('Email sent successfully!');
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
 
     const handleReport = (e) => {
         const { name, value } = e.target;
-        console.log(report)
-        setReport({
-            ...report,
+        console.log(mailOptions)
+        setMailOptions({
+            ...mailOptions,
             [name]: value,
         })
     }
 
     return (
         <div >
-            <form className="bugForm" onSubmit={handleSendEmail}>
+            <form className="bugForm" onSubmit={sendEmail}>
                 <input type="text"
-                    value={report.subject}
+                    value={mailOptions.subject}
                     onChange={handleReport}
                     name="subject" />
                 <textarea rows={8} cols={20}
-                    value={report.body}
+                    value={mailOptions.body}
                     onChange={handleReport}
                     name="body">
                 </textarea>
