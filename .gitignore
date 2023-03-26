@@ -6,8 +6,8 @@
 .pnp.js
 
 #environments
-/environments
-**/firebase.js
+# /environments
+# **/firebase.js
 
 # testing
 /coverage
@@ -25,3 +25,5 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+.vercel
