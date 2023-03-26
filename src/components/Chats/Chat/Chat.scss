@@ -10,6 +10,9 @@
     .chatInfo {
         height: 5vh;
         color: $mainLight;
+        font-weight: 600;
+        font-size: 1.2rem;
+        text-indent: 0.5rem;
         padding: 10px;
         background-color: lighten($color: $mainDark, $amount: 10);
         display: flex;
@@ -19,7 +22,6 @@
         @include mobileScreen {
             padding: 0;
             font-size: 0.8rem;
-            justify-content: space-around;
         }
 
     }
@@ -28,12 +30,12 @@
         display: flex;
         gap: 10px;
 
-        img {
-            height: 24px;
+        .chatIcon {
+            font-size: 20px;
             cursor: pointer;
 
             @include mobileScreen {
-                height: 1rem;
+                font-size: 14px;
 
             }
         }
