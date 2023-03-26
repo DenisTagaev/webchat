@@ -1,20 +1,20 @@
 import React, { useState, useContext } from 'react'
-
 // auth 
 import { AuthContext } from '../../../components/context/AuthContext';
 import { reauthenticateWithCredential, updatePassword, EmailAuthProvider } from 'firebase/auth';
-
 // react icons
 import { AiFillEdit } from 'react-icons/ai';
+// scss styles 
+import './AuthTab.scss';
 
 export default function AuthTab() {
-
     // User context for current user
     const { currentUser } = useContext(AuthContext);
 
     const [passwordChangeLoginAccess, setPasswordChangeLoginAccess] = useState(false);
     const [passwordChangeAccess, setPasswordChangeAccess] = useState(false);
 
+    // form data
     const [formData, setFormData] = useState({
         password: "",
         newPassword: "",
@@ -22,8 +22,11 @@ export default function AuthTab() {
     });
 
     // Error states
-    const [formErrors, setFormErrors] = useState({});
+    const [formErrors, setFormErrors] = useState({
 
+    });
+
+    // handling old password input
     const handleFormLoginChange = (event) => {
         const { name, value } = event.target;
 
@@ -40,6 +43,7 @@ export default function AuthTab() {
         });
     };
 
+    // Auth function to access password change form
     const handleFormLoginSubmit = async (event) => {
         event.preventDefault();
         const newErrors = validateFormField(formData);
@@ -51,10 +55,12 @@ export default function AuthTab() {
                     currentUser.email,
                     formData.password
                 );
+                // authenticating the user 
                 await reauthenticateWithCredential(currentUser, credential).then((res) => {
                     // User re-authenticated.
                     // Code...
                     console.log(res)
+                    alert("Please, enter the new password");
                     setPasswordChangeAccess(!passwordChangeAccess);
                     setPasswordChangeLoginAccess(!passwordChangeLoginAccess);
                 });
@@ -80,7 +86,6 @@ export default function AuthTab() {
     }
 
     const handleNewPasswordSubmit = async (e) => {
-        e.preventDefault();
 
         if (formData.newPassword) {
             await updatePassword(currentUser, formData.newPassword).then(() => {
@@ -128,7 +133,7 @@ export default function AuthTab() {
                 <h3>Useful forms</h3>
                 <div className="passwordChange">
                     <button
-                        className='iconBtn formBtn'
+                        className=' formBtn'
                         onClick={() => { setPasswordChangeLoginAccess(!passwordChangeLoginAccess); }}
                         hidden={passwordChangeLoginAccess || passwordChangeAccess}>
                         Change your password

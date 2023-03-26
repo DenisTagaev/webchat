@@ -1,30 +1,26 @@
 import React, { useContext, useState, useEffect } from 'react';
-
 // auth 
 import { AuthContext } from '../../../components/context/AuthContext';
 import { updateProfile } from 'firebase/auth';
-
 // storage
 import { storage } from '../../../environments/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-
 // firestore
 import { db } from '../../../environments/firebase';
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-
 // react icons
 import { AiFillEdit } from 'react-icons/ai';
-
 // custom modal
 import PromptingCloud from '../../../components/AvatarChangeBox/AvatarChangeBox'; import BugForm from '../BugForm/BugForm';
-;
+// scss styles 
+import './ProfileTab.scss';
 
 export default function ProfileTab() {
 
     const { currentUser } = useContext(AuthContext);
 
     // default avatar png       
-    const [avatarUrl, setAvatarUrl] = useState();
+    const [avatarUrl, setAvatarUrl] = useState(currentUser.photoURL);
 
     // States for data changing
     const [photo, setPhoto] = useState(null);
@@ -50,7 +46,6 @@ export default function ProfileTab() {
     //  useEffects for profile avatar and nickname rendering
     useEffect(() => {
         (async function () {
-            console.log(currentUser.uid);
             try {
                 const fileRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
                 if (fileRef) {
@@ -223,7 +218,6 @@ export default function ProfileTab() {
                             placeholder="Display name"
                             onChange={handleNameChange}
                         />
-
                         <button className='iconBtn' type="submit" disabled={nameError || !userName}><AiFillEdit /></button>
                     </form>}
             </div>
@@ -259,17 +253,11 @@ export default function ProfileTab() {
                         {desc.hobbies &&
                             <p>{desc.hobbies}</p>
                         }
-
                     </div>
                     <div hidden={descriptionChangeAccess}>
-
                         <button className='iconBtn' id='changeDescBtn' onClick={() => { setDescriptionChangeAccess(true) }}>Change info<AiFillEdit /></button>
-
                     </div>
-
                 </div>
-
-
                 <div className="profileDesc" hidden={!descriptionChangeAccess}>
                     <h3>Add something new</h3>
                     <form onSubmit={handleDescriptionUpdate} className='descForm'>

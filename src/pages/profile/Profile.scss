@@ -1,7 +1,6 @@
-@import '../../index.scss';
+@import "../../index.scss";
 
 @mixin profileInputs {
-
     padding: 7px;
     border: none;
     background-color: $mainDark;
@@ -12,7 +11,6 @@
     @include mainScreenContainer;
 
     .profileWrap {
-
         .iconBtn#homeReturn {
             border: none;
             background-color: #fff;
@@ -33,20 +31,16 @@
         min-width: 350px;
         margin: 0;
 
-
         #homeReturn {
             align-self: flex-start;
             margin-bottom: 10px;
             border-bottom: 1px solid $primary;
         }
 
-
         .profileBody {
-
             .block-tabs {
                 display: flex;
-                transition: ease .3s;
-
+                transition: ease 0.3s;
 
                 @include tableScreen {
                     justify-content: space-evenly;
@@ -71,8 +65,6 @@
             }
 
             .content {
-
-
                 @include tableScreen {
                     padding: 6 15px;
                 }
@@ -84,167 +76,11 @@
                 display: none;
             }
 
-
             .active-content {
                 display: block;
                 margin: auto;
             }
-
-            .profileAvatar {
-                .shading {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba(0, 0, 0, 0.5);
-                    z-index: 999;
-                }
-
-                #avatarContainer {
-                    display: flex;
-
-                    .iconBtn {
-                        align-self: flex-end;
-
-                    }
-
-                    #avatarImage {
-                        @include tableScreen {
-                            width: 90px;
-                            height: 90px;
-                            margin: 6px;
-                            box-shadow: 0 0 9px $mainDark;
-                        }
-
-                        image-rendering: optimizeQuality;
-                        vertical-align: middle;
-                        object-fit: cover;
-                        width: 120px;
-                        height: 120px;
-                        border-radius: 50%;
-                        border: 1px solid $mainDark;
-                        margin: 10px;
-                        box-shadow: 0 0 15px $mainDark;
-                    }
-
-                    #avatarInputContainer {
-                        @include tableScreenTitle;
-                        flex-direction: column;
-                        margin-left: auto;
-
-                        .profileTitle {
-                            font-weight: 600;
-                            font-size: 1.2em;
-                            margin: 10px 0;
-                        }
-
-                        #avatarInput {
-                            padding: 10px;
-                            border: none;
-                            outline: none;
-                            background-color: $primary;
-                            min-height: 50px;
-                        }
-
-                    }
-                }
-            }
-
-
-            .profileName {
-                .profileTitle {
-                    font-weight: 600;
-                    font-size: 1.2em;
-                    margin: 10px 0;
-                }
-
-
-            }
-
-            .profileDescContainer {
-                display: flex;
-                justify-content: space-between;
-                margin-top: 20px;
-                height: 300px;
-
-                .profileDesc {
-                    .profileDescDivs {
-                        @include tableScreen {
-                            width: fit-content;
-                        }
-
-                        display: flex;
-                        align-items: center;
-                        height: 15%;
-                        justify-content: space-between;
-                        border-bottom: 1px solid $mainDark ;
-
-                        span {
-                            font-weight: 600;
-                            margin: 0 5px 0 0;
-                            padding: 0;
-                        }
-                    }
-
-                    #changeDescBtn {
-                        margin-top: 10px;
-                    }
-
-                    .descForm {
-                        height: 80%;
-
-                        @include tableScreen {}
-
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: space-evenly;
-                        margin-top: 10px;
-                        gap: 13px;
-                        width: 100%;
-
-                        .descInput {
-                            @include profileInputs;
-                            padding: 7px;
-                        }
-                    }
-                }
-
-                button {
-                    align-self: flex-start;
-                }
-            }
-
-            .bugLink {
-                a {
-                    text-decoration: none;
-                }
-            }
-
-            .passwordChange {
-
-                .passwordForm {
-                    display: flex;
-                    flex-direction: column;
-
-                    .profileInput {
-                        @include profileInputs
-                    }
-
-                    .iconBtn {
-                        align-self: flex-start;
-                        margin: 5px
-                    }
-                }
-            }
-
-            .usefulForms {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
         }
-
 
         .title {
             @include mainScreenTitles;
@@ -257,7 +93,6 @@
         .profileInput {
             @include profileInputs;
         }
-
     }
 
     .iconBtn {
@@ -270,41 +105,15 @@
         font-size: 20px;
         color: $primary;
         background-color: #fff;
-        transition: ease .3s;
+        transition: ease 0.3s;
         cursor: pointer;
-    }
-
-    .iconBtn:hover {
-        color: $secondary;
-    }
-
-    .submitBtn {
-        margin-bottom: -5%;
-        margin-top: 0;
-
-        @include mainButtonForSubmission;
-    }
-
-    .formBtn {
-
-        @include tableScreen {
-            width: 200px;
-        }
-
-        border: 1px solid $primary;
-        width: 300px;
-        margin-top: 10px;
-        padding: 5px 0;
-        transition: ease .3s;
 
         &:hover {
-            border: none;
-            border-top: 1px solid $secondary;
-            border-bottom: 1px solid $secondary;
+            color: $secondary;
         }
     }
 
     .formError {
-        @include errorsForm
+        @include errorsForm;
     }
 }
