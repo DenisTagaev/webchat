@@ -90,7 +90,9 @@ export const Input = () => {
             onChange={(e) => setImage(e.target.files[0])}
           />
         </label>
-        <button onClick={handleSendMessage}>Send</button>
+        <button 
+          disabled={!text.trim()}
+          onClick={handleSendMessage}>Send</button>
       </div>
     </div>
   );
