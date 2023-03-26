@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { onSnapshot, doc } from 'firebase/firestore';
-import { db } from '../../environments/firebase';
+import React, { useState, useEffect, useContext } from "react";
+import { onSnapshot, doc } from "firebase/firestore";
+import { db } from "../../environments/firebase";
 import { AuthContext } from "../context/AuthContext";
-import { ChatContext } from '../context/ChatContext';
+import { ChatContext } from "../context/ChatContext";
 
+import './Chats.scss';
 
 export const Chats = () => {
   const { currentUser } = useContext(AuthContext);
@@ -11,23 +12,24 @@ export const Chats = () => {
   //set user's chats to display
   const [chats, setChats] = useState([]);
 
-  //on load fetch realtime data from the user's chats collection 
+  //on load fetch realtime data from the user's chats collection
   useEffect(() => {
     const getChats = () => {
-      const unsubscribe = onSnapshot(doc(db, "userChats", currentUser.uid),
-      (doc) => {
-        setChats(doc.data());
-      }
+      const unsubscribe = onSnapshot(
+        doc(db, "userChats", currentUser.uid),
+        (doc) => {
+          setChats(doc.data());
+        }
       );
       return () => unsubscribe();
-    }
+    };
     //set chats array only if there's a user
     currentUser.uid && getChats();
-  },[currentUser.uid]);
+  }, [currentUser.uid]);
 
   const handleUserSelect = (userInfo) => {
-    dispatch({type: "CHANGE_USER", payload: userInfo})
-  }
+    dispatch({ type: "CHANGE_USER", payload: userInfo });
+  };
 
   return (
     <div className="chatsContainer">
@@ -48,6 +50,6 @@ export const Chats = () => {
         ))}
     </div>
   );
-}
+};
 
 export default Chats;
