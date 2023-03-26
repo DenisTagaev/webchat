@@ -1,7 +1,5 @@
 import React, { useState, useContext } from 'react';
 
-// email
-import *  as nodemailer from 'nodemailer';
 // user context
 import { AuthContext } from '../../../components/context/AuthContext';
 
@@ -21,45 +19,9 @@ export default function BugForm() {
         body: "test"
     });
 
-    // const transporter = nodemailer.createTransport({
-    //     service: 'gmail',
-    //     auth: {
-    //         user: "muxamedkali@gmail.com",
-    //         pass: "MitiAlo8710"
-    //     }
-    // });
-
-    const sendEmail = () => {
-        // create a transporter for Gmail
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'muxamedkali@gmail.com',
-                pass: 'MitiAlo8710'
-            }
-        });
-
-        // send the email using the transporter
-        return transporter.sendMail(mailOptions)
-            .then(() => {
-                console.log('Email sent successfully!');
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    };
-    // const sendEmail = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         await transporter.sendMail(mailOptions);
-    //         console.log('Email sent successfully!');
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
-
-    const handleReport = (e) => {
+    const handleMailOptions = (e) => {
         const { name, value } = e.target;
+        // console.log(name + ":" + value)
         console.log(mailOptions)
         setMailOptions({
             ...mailOptions,
@@ -69,20 +31,23 @@ export default function BugForm() {
 
     return (
         <div >
-            <form className="bugForm" onSubmit={sendEmail}>
+            <h3>Send us your feedback</h3>
+            <form className="bugForm">
+                <span>Please add the</span>
                 <input type="text"
                     value={mailOptions.subject}
-                    onChange={handleReport}
-                    name="subject" />
-                <textarea rows={8} cols={20}
+                    onChange={handleMailOptions}
+                    name="subject"
+                    className="bugInput"
+                />
+                <textarea
                     value={mailOptions.body}
-                    onChange={handleReport}
-                    name="body">
+                    onChange={handleMailOptions}
+                    name="body"
+                >
                 </textarea>
-                <button className="iconBtn" type="submit">
-                    Submit Report <AiFillEdit />
-                </button>
             </form>
+            <a href={`mailto:${mailOptions.to}?subject=${mailOptions.subject}&body=${mailOptions.body}`}>Send</a>
         </div>
     )
 }

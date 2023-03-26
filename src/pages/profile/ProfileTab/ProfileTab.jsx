@@ -26,7 +26,7 @@ export default function ProfileTab() {
     const { currentUser } = useContext(AuthContext);
 
     // default avatar png       
-    const [avatarUrl, setAvatarUrl] = useState(AddImg);
+    const [avatarUrl, setAvatarUrl] = useState();
 
     // States for data changing
     const [photo, setPhoto] = useState(null);
@@ -53,20 +53,25 @@ export default function ProfileTab() {
     useEffect(() => {
         (async function () {
             console.log(currentUser.uid);
-            const fileRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
-            if (fileRef) {
-                await getDownloadURL(fileRef).then(url => {
-                    setAvatarUrl(url);
-                });
+            try {
+                const fileRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
+                if (fileRef) {
+                    await getDownloadURL(fileRef).then(url => {
+                        setAvatarUrl(url);
+                    });
+                }
+            } catch (error) {
+                console.log(error);
             }
         })();
 
         // description fetching function
         (async function () {
-            const userDocRef = doc(db, "users", currentUser.uid);
-            const userDocSnap = await getDoc(userDocRef);
+
 
             try {
+                const userDocRef = doc(db, "users", currentUser.uid);
+                const userDocSnap = await getDoc(userDocRef);
                 const data = userDocSnap.data()
                 if (data.profileDescription) {
                     setDesc(data.profileDescription)
@@ -260,7 +265,7 @@ export default function ProfileTab() {
 
                     <div hidden={descriptionChangeAccess}>
 
-                        <button className='iconBtn' onClick={() => { setDescriptionChangeAccess(true) }}>Change info<AiFillEdit /></button>
+                        <button className='iconBtn' id='changeDescBtn' onClick={() => { setDescriptionChangeAccess(true) }}>Change info<AiFillEdit /></button>
 
                     </div>
                 </div>
