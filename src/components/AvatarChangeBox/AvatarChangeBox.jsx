@@ -7,7 +7,7 @@ import { MdCancel } from 'react-icons/md';
 
 const PromptingCloud = ({ handleClose, handleAvatarChange, handleUpload }) => {
     return (
-        <div className="promptingCloud">
+        <div className="promptingAvatarChangeCloud">
             <h2>Upload New Avatar</h2>
             <label>
                 <BiImageAdd className="imageInput" />

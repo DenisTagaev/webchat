@@ -79,18 +79,18 @@ const Profile = () => {
 
     //  useEffects for profile avatar and nickname rendering
     useEffect(() => {
-        function fetchAvatar() {
+        (async function () {
             console.log(currentUser.uid);
             const fileRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
             if (fileRef) {
-                getDownloadURL(fileRef).then(url => {
+                await getDownloadURL(fileRef).then(url => {
                     setAvatarUrl(url);
                 });
             }
-        }
+        })();
 
         // description fetching function
-        async function fetchDescription() {
+        (async function () {
             const userDocRef = doc(db, "users", currentUser.uid);
             const userDocSnap = await getDoc(userDocRef);
 
@@ -102,10 +102,8 @@ const Profile = () => {
             } catch (error) {
                 console.log(error);
             }
-        }
-        fetchAvatar();
-        fetchDescription();
-    }, [currentUser,])
+        })();
+    }, [currentUser.uid])
 
 
     // avatar change handler, assigns state to the file
@@ -133,11 +131,11 @@ const Profile = () => {
         // we create a reference for the fiile
         const avatarRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
         try {
-            await uploadBytesResumable(avatarRef, file).then(() => {
-                getDownloadURL(avatarRef).then(url => {
+            await uploadBytesResumable(avatarRef, file).then(async () => {
+                await getDownloadURL(avatarRef).then(async url => {
                     setAvatarUrl(url);
                     try {
-                        updateProfile(currentUser, { photoURL: url });
+                        await updateProfile(currentUser, { photoURL: url });
                     } catch (error) {
                         console.error('Failed to update user profile with new avatar URL', error)
                     };
