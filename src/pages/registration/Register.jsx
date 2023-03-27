@@ -54,16 +54,17 @@ const Register = () => {
     if (Object.keys(newErrors).length === 0) {
       // call function to create user in the firebase
       await createUserWithEmailAndPassword(auth, formData.email, formData.password)
-      
-      .then(async(userCredential) => {
-        //get reference to the newly created user
+
+        .then(async (userCredential) => {
+          //get reference to the newly created user
           const user = userCredential.user;
           //create reference between the user and picture storage
           const storageRef = ref(storage, formData.nickname);
           //upload picture to the cloud storage and get it's url
+
           await uploadBytesResumable(storageRef, avatar)
             .then(() => {
-              getDownloadURL(storageRef).then( async(downloadURL) => {
+              getDownloadURL(storageRef).then(async (downloadURL) => {
                 //on successful image upload get the link to the cloudstore
                 //and link it to the user's profile along with the nickname
                 await updateProfile(user, {
@@ -80,7 +81,7 @@ const Register = () => {
                 });
                 //create a collection of chats for the user
                 await setDoc(doc(db, "userChats", user.uid), {});
-                
+
                 //redirect user to the home page after successful registration
                 navigator("/");
               });
@@ -205,7 +206,7 @@ const Register = () => {
           )}
           <label id="avatarInput">
             <BiImageAdd className="regImg" />
-            {/* <img id="avatarImage" src={AddImg} alt="Chose avatar placeholder" /> */}
+
             <span>Chose avatar</span>
             {/* to customize standard input look we hide the input element and wrap it in a
                         label with desired output content */}

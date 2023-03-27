@@ -1,0 +1,51 @@
+@import "../../../index.scss";
+@import "../Profile.scss";
+
+.usefulForms {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .passwordChange {
+        .formBtn {
+            @include tableScreen {
+                width: 200px;
+            }
+
+            background-color: $mainDark;
+            border: 1px solid $mainDark;
+            color: $mainLight;
+            width: 300px;
+            padding: 5px 0;
+            transition: ease 0.3s;
+
+            &:hover {
+                background-color: $primary;
+                border: none;
+                border-top: 1px solid $secondary;
+                border-bottom: 1px solid $secondary;
+            }
+        }
+
+        .passwordForm {
+            display: flex;
+            flex-direction: column;
+
+            .profileInput {
+                @include profileInputs;
+            }
+
+            .iconBtn {
+                align-self: flex-start;
+                margin: 5px;
+            }
+
+            .submitBtn {
+                margin-bottom: -5%;
+                margin-top: 0;
+
+                @include mainButtonForSubmission;
+            }
+        }
+    }
+}

@@ -74,7 +74,8 @@ const Login = () => {
 
   //check if there are any errors in the form and if none trigger
   //login to the firebase
-  const handleSubmit = async(event) => {
+  const handleSubmit = async (event) => {
+    const invalidPasswordErr = {}
     event.preventDefault();
     const newErrors = validateFormData(formData);
     setErrors(newErrors);
@@ -93,6 +94,12 @@ const Login = () => {
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorCode, errorMessage);
+          if (error.code === "auth/wrong-password") {
+            invalidPasswordErr.password = "Incorrect password"
+          }
+          if (error.code === "auth/too-many-requests")
+            invalidPasswordErr.password = "Too many requests, please wait or reset your password"
+          setErrors(invalidPasswordErr);
         });
     }
   };

@@ -1,0 +1,121 @@
+@import "../../index.scss";
+
+@mixin profileInputs {
+    padding: 7px;
+    border: none;
+    background-color: $mainDark;
+    color: $mainLight;
+}
+
+.profileContainer {
+    @include mainScreenContainer;
+
+    .profileWrap {
+        .iconBtn#homeReturn {
+            border: none;
+            background-color: #fff;
+            color: $primary;
+
+            &:hover {
+                color: $mainDark;
+            }
+        }
+
+        @include tableScreen {
+            padding: 70px 20px;
+        }
+
+        background-color: #fff;
+        padding: 70px 30px;
+        min-height: fit-content;
+        min-width: 350px;
+        margin: 0;
+
+        #homeReturn {
+            align-self: flex-start;
+            margin-bottom: 10px;
+            margin-left: 20px;
+            border-bottom: 1px solid $primary;
+            border: none;
+        }
+
+        .profileBody {
+            .block-tabs {
+                display: flex;
+                transition: ease 0.3s;
+
+                @include tableScreen {
+                    justify-content: space-evenly;
+                    padding: 5px;
+                    font-size: 15px;
+                }
+
+                justify-content: space-around;
+                padding: 10px;
+                color: $primary;
+                cursor: pointer;
+
+                .active-tabs {
+                    @include tableScreen {
+                        padding: 0 10px;
+                    }
+
+                    font-weight: 600;
+                    border-bottom: 1px solid $primary;
+                    padding: 0 15px;
+                }
+            }
+
+            .content {
+                @include tableScreen {
+                    padding: 6 15px;
+                }
+
+                background: white;
+                padding: 10px 30px;
+                width: fit-content;
+                height: inherit;
+                display: none;
+            }
+
+            .active-content {
+                display: block;
+                margin: auto;
+            }
+        }
+
+        .title {
+            @include mainScreenTitles;
+
+            @include tableScreen {
+                @include tableScreenTitle;
+            }
+        }
+
+        .profileInput {
+            @include profileInputs;
+        }
+    }
+
+    .iconBtn {
+        @include tableScreen {
+            font-size: 16px;
+        }
+
+        border: none;
+        outline: none;
+        font-size: 20px;
+        color: $primary;
+        background-color: #fff;
+        transition: ease 0.3s;
+        cursor: pointer;
+
+        &:hover {
+            color: $secondary;
+        }
+    }
+
+    .formError {
+        @include errorsForm;
+    }
+}

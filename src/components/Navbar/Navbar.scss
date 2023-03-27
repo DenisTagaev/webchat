@@ -29,6 +29,21 @@
     display: flex;
     align-items: center;
 
+    .userProfile {
+      display: flex;
+      align-items: center;
+
+      .userName {
+        margin-left: 5%;
+
+        p {
+          color: $mainLight;
+          padding: 0;
+          margin: 0;
+        }
+      }
+    }
+
     @include tableScreen {
       gap: 10px;
     }
@@ -61,8 +76,9 @@
       border: 1px solid white;
       border-radius: 5px;
       margin-left: 3%;
-      margin-right:2%;
-      padding: calc(5px + (10 - 5) * ((100vw - 320px) / (1024 - 320)));;
+      margin-right: 2%;
+      padding: calc(5px + (10 - 5) * ((100vw - 320px) / (1024 - 320)));
+      ;
       color: $mainLight;
       font-size: calc(8px + (12 - 8) * ((100vw - 320px) / (1024 - 320)));
       font-weight: 600;
