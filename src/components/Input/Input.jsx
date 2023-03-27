@@ -11,8 +11,8 @@ import { ChatContext } from '../context/ChatContext';
 import { v4 as uuid } from "uuid";
 import './Input.scss';
 
-import addAvatar from '../../imgs/addAvatar.png';
-import attach from '../../imgs/attach.png';
+import {MdAddPhotoAlternate} from 'react-icons/md'
+import {BsPaperclip} from 'react-icons/bs'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 
 export const Input = () => {
@@ -81,16 +81,18 @@ export const Input = () => {
         onChange={(e) => setText(e.target.value)}
       />
       <div className="sendOptions">
-        <img src={attach} alt="" />
+        <div className="sendIcon"><BsPaperclip/></div>
         <label>
-          <img src={addAvatar} alt="" />
+        <div className="sendIcon"><MdAddPhotoAlternate/></div>
           <input
             type="file"
             hidden={true}
             onChange={(e) => setImage(e.target.files[0])}
           />
         </label>
-        <button onClick={handleSendMessage}>Send</button>
+        <button 
+          disabled={!text.trim()}
+          onClick={handleSendMessage}>Send</button>
       </div>
     </div>
   );

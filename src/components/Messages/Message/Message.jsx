@@ -44,7 +44,7 @@ export const Message = ({ message }) => {
           }
           alt="profile avatar"
         />
-        <span>{getMessageTime(message)}</span>
+        <span className="messageTime">{getMessageTime(message)}</span>
       </div>
       <div className="messageContent">
         <p>{message.text}</p>

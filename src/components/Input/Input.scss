@@ -34,14 +34,13 @@
         align-items: center;
         gap: 8px;
 
-        img {
-            height: 24px;
-            width: 24px;
+        .sendIcon {
+            font-size: 20px;
+            color: $primary;
             cursor: pointer;
 
             @include mobileScreen {
-                width: 12px;
-                height: 12px;
+                font-size: 14px;
             }
         }
 
@@ -55,6 +54,9 @@
             @include mobileScreen {
                 padding: 5px;
             }
+        }
+        button:disabled{
+            opacity: 0.8;
         }
     }
 

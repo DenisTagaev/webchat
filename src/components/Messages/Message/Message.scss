@@ -31,7 +31,8 @@
       }
     }
 
-    span {
+    .messageTime {
+      color: $mainDark;
       @include mobileScreen {
         max-width: 18px;
       }
