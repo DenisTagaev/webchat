@@ -6,7 +6,7 @@
 .pnp.js
 
 #environments
-/environments
+/environments/**
 **/firebase.js
 
 # testing
