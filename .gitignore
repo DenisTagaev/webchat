@@ -7,7 +7,7 @@
 
 #environments
 /environments/**
-**/firebase.js
+src/environments/firebase.js
 
 # testing
 /coverage
