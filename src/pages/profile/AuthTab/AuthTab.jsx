@@ -27,7 +27,7 @@ export default function AuthTab() {
     });
 
     // handling old password input
-    const handleFormLoginChange = (event) => {
+    const handlePasswordChange = (event) => {
         const { name, value } = event.target;
 
         setFormData({
@@ -44,7 +44,7 @@ export default function AuthTab() {
     };
 
     // Auth function to access password change form
-    const handleFormLoginSubmit = async (event) => {
+    const handlePasswordSubmit = async (event) => {
         event.preventDefault();
         const newErrors = validateFormField(formData);
         setFormErrors(newErrors);
@@ -60,12 +60,11 @@ export default function AuthTab() {
                     // User re-authenticated.
                     // Code...
                     console.log(res)
-                    alert("Please, enter the new password");
                     setPasswordChangeAccess(!passwordChangeAccess);
                     setPasswordChangeLoginAccess(!passwordChangeLoginAccess);
                 });
             } catch (error) {
-                console.log(error.message);
+                alert("Wrong password input");
             }
         }
 
@@ -89,7 +88,6 @@ export default function AuthTab() {
 
         if (formData.newPassword) {
             await updatePassword(currentUser, formData.newPassword).then(() => {
-                alert("Password updated, please log in.")
             }).catch((error) => {
                 // An error ocurred
                 console.log(error)
@@ -140,14 +138,14 @@ export default function AuthTab() {
                     </button>
 
                     {passwordChangeLoginAccess &&
-                        <form className="passwordForm" onSubmit={handleFormLoginSubmit}>
+                        <form className="passwordForm" onSubmit={handlePasswordSubmit}>
                             <input
                                 className="profileInput"
                                 type="password"
                                 name="password"
                                 value={formData.password}
                                 placeholder="Enter current password"
-                                onChange={handleFormLoginChange}
+                                onChange={handlePasswordChange}
                             />
                             {formErrors.password && (
                                 <span className="formError">{formErrors.password}</span>

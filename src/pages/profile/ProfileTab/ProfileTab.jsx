@@ -20,7 +20,7 @@ export default function ProfileTab() {
     const { currentUser } = useContext(AuthContext);
 
     // default avatar png       
-    const [avatarUrl, setAvatarUrl] = useState(currentUser.photoURL);
+    const [avatarUrl, setAvatarUrl] = useState();
 
     // States for data changing
     const [photo, setPhoto] = useState(null);
@@ -34,7 +34,7 @@ export default function ProfileTab() {
     const [fileError, setFileError] = useState(null);
     const [nameError, setNameError] = useState();
 
-    // profile description 
+    // profile description from the db doc 
     const [desc, setDesc] = useState({
         age: 0,
         location: "Somewhere",
@@ -43,11 +43,20 @@ export default function ProfileTab() {
         maritalStatus: "No idea",
     });
 
+    // form input description
+    const [formDesc, setFormDesc] = useState({
+        age: 0,
+        location: "",
+        career: "",
+        hobbies: "",
+        maritalStatus: "",
+    })
+
     //  useEffects for profile avatar and nickname rendering
     useEffect(() => {
         (async function () {
             try {
-                const fileRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
+                const fileRef = ref(storage, `${currentUser.uid}`);
                 if (fileRef) {
                     await getDownloadURL(fileRef).then(url => {
                         setAvatarUrl(url);
@@ -58,22 +67,24 @@ export default function ProfileTab() {
             }
         })();
 
-        // description fetching function
         (async function () {
-
-
             try {
                 const userDocRef = doc(db, "users", currentUser.uid);
-                const userDocSnap = await getDoc(userDocRef);
-                const data = userDocSnap.data()
-                if (data.profileDescription) {
-                    setDesc(data.profileDescription)
-                }
+                getDoc(userDocRef)
+                    .then((userDocSnap) => {
+                        const data = userDocSnap.data();
+                        if (data.profileDescription) {
+                            setDesc(data.profileDescription);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             } catch (error) {
                 console.log(error);
             }
         })();
-    }, [currentUser.uid])
+    },)
 
 
     // avatar change handler, assigns state to the file
@@ -82,7 +93,7 @@ export default function ProfileTab() {
         if (!selectedFile.type.startsWith('image/')) {
             setFileError('Please select an image file.');
             setPhoto(null);
-            console.log(fileError)
+            alert(fileError)
             return;
         }
         setFileError();
@@ -99,7 +110,7 @@ export default function ProfileTab() {
     // async function for avatar upload
     const handleAvatarUpload = async (file) => {
         // we create a reference for the fiile
-        const avatarRef = ref(storage, `avatars/${currentUser.uid}/avatar.jpg`);
+        const avatarRef = ref(storage, `${currentUser.uid}`);
         try {
             await uploadBytesResumable(avatarRef, file).then(async () => {
                 await getDownloadURL(avatarRef).then(async url => {
@@ -119,22 +130,14 @@ export default function ProfileTab() {
 
 
 
-    // local description state update
-    const handleDescription = (event) => {
-        console.log(desc);
-        const { name, value } = event.target;
-        setDesc({
-            ...desc,
-            [name]: value,
-        });
-    }
+
 
     // Description update
     const handleDescriptionUpdate = async (event) => {
         event.preventDefault();
 
         const data = {
-            profileDescription: desc,
+            profileDescription: formDesc,
             // add any other user data to be updated here
         };
         try {
@@ -151,7 +154,15 @@ export default function ProfileTab() {
         setAvatarChangeAccess(!avatarChangeAccess);
     };
 
-
+    // local description state update
+    const handleDescription = (event) => {
+        console.log(formDesc);
+        const { name, value } = event.target;
+        setFormDesc({
+            ...formDesc,
+            [name]: value,
+        });
+    }
     // nickname input functionality
     const handleNameChange = (event) => {
         const { name, value } = event.target;
@@ -266,20 +277,22 @@ export default function ProfileTab() {
                             type="number"
                             className='descInput'
                             onChange={handleDescription}
-                            value={desc.age}
+                            value={formDesc.age}
+                            placeholder={desc.age}
                         />
                         <input
                             name='location'
                             type="text"
                             className='descInput'
                             onChange={handleDescription}
-                            value={desc.location}
+                            value={formDesc.location}
+                            placeholder={desc.location}
                         />
                         <select
                             name='maritalStatus'
                             className='descInput'
                             onChange={handleDescription}
-                            value={desc.maritalStatus}
+                            value={formDesc.maritalStatus}
                         >
                             <option>Single</option>
                             <option>Married</option>
@@ -292,15 +305,16 @@ export default function ProfileTab() {
                             type="text"
                             className='descInput'
                             onChange={handleDescription}
-                            value={desc.career}
+                            value={formDesc.career}
+                            placeholder={desc.career}
                         />
                         <input
                             name='hobbies'
                             type="text"
                             className='descInput'
                             onChange={handleDescription}
-                            value={desc.hobbies}
-                            placeholder="Enter your hobbies"
+                            value={formDesc.hobbies}
+                            placeholder={desc.hobbies}
                         />
                         <button className='iconBtn' type='submit' onClick={() => { setDescriptionChangeAccess(false) }}>
                             <span>

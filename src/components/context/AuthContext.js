@@ -6,7 +6,7 @@ import { auth } from "../../environments/firebase";
 export const AuthContext = createContext();
 
 //a provider which will share the user prop with any component it wraps
-export const AuthContextProvider = ({children}) => {
+export const AuthContextProvider = ({ children }) => {
     //setting the prop
     const [currentUser, setCurrentUser] = useState({});
     //looking for any changes with authentication
@@ -22,7 +22,7 @@ export const AuthContextProvider = ({children}) => {
     }, []);
     //returning the JSX wrapper
     return (
-        <AuthContext.Provider value={{currentUser}}>
+        <AuthContext.Provider value={{ currentUser }}>
             {children}
         </AuthContext.Provider>
     )
