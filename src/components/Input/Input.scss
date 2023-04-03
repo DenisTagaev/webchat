@@ -18,14 +18,14 @@
         outline: none;
         border: none;
         background-color: transparent;
-        font-size: 16px;
+        font-size: 20px;
 
         @include mobileScreen {
             font-size: 0.5rem;
         }
 
         &::placeholder {
-            color: #ccc;
+            color: #a3a3a3;
         }
     }
 
@@ -35,7 +35,7 @@
         gap: 8px;
 
         .sendIcon {
-            font-size: 20px;
+            font-size: 24px;
             color: $primary;
             cursor: pointer;
 
@@ -54,10 +54,14 @@
             @include mobileScreen {
                 padding: 5px;
             }
+
+            &:disabled {
+                background-color: #E9EBF5;
+                color: #A6ACCD;
+                cursor: default;
+            }
         }
-        button:disabled{
-            opacity: 0.8;
-        }
+
     }
 
 }
