@@ -9,12 +9,6 @@ import './Chat.scss';
 
 import { ChatContext } from '../../context/ChatContext';
 
-function warning() {
-  const popupWindow = window.open('', 'warning', 'width=400,height=300');
-  popupWindow.document.write('<p>This functionality is still in development.</p>');
-}
-
-
 export const Chat = () => {
   const { data } = useContext(ChatContext);
 
@@ -25,13 +19,13 @@ export const Chat = () => {
         {/* <span>Jane</span> */}
 
         <div className='chatIcons'>
-          <div className='chatIcon' onClick={warning}>
+          <div className='chatIcon'>
             <FaVideo />
           </div>
-          <div className='chatIcon' onClick={warning}>
+          <div className='chatIcon'>
             <BsFillPersonPlusFill />
           </div>
-          <div className='chatIcon' onClick={warning}>
+          <div className='chatIcon'>
             <BsThreeDots />
           </div>
         </div>
