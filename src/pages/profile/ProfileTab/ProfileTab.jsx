@@ -1,38 +1,28 @@
 import React, { useContext, useState, useEffect } from 'react';
-// auth 
 import { AuthContext } from '../../../components/context/AuthContext';
 import { updateProfile } from 'firebase/auth';
-// storage
 import { storage } from '../../../environments/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-// firestore
 import { db } from '../../../environments/firebase';
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-// react icons
 import { AiFillEdit } from 'react-icons/ai';
-// custom modal
-import PromptingCloud from '../../../components/AvatarChangeBox/AvatarChangeBox'; import BugForm from '../BugForm/BugForm';
-// scss styles 
+import PromptingCloud from '../../../components/AvatarChangeBox/AvatarChangeBox';
+import BugForm from '../BugForm/BugForm';
 import './ProfileTab.scss';
 
 export default function ProfileTab() {
-
     const { currentUser } = useContext(AuthContext);
 
-    // default avatar png       
-    const [avatarUrl, setAvatarUrl] = useState();
-
-    // States for data changing
+    // Avatar state
+    const [avatarUrl, setAvatarUrl] = useState(null);
     const [photo, setPhoto] = useState(null);
-    const [userName, setUserName] = useState(currentUser.displayName);
-
-    const [avatarChangeAccess, setAvatarChangeAccess] = useState(true);
-    const [changeNameAccess, setChangeNameAccess] = useState(false);
-    const [descriptionChangeAccess, setDescriptionChangeAccess] = useState(false);
-
-    // error state
     const [fileError, setFileError] = useState(null);
-    const [nameError, setNameError] = useState();
+    const [avatarChangeAccess, setAvatarChangeAccess] = useState(true);
+
+    // User info state
+    const [userName, setUserName] = useState(currentUser.displayName);
+    const [nameError, setNameError] = useState(null);
+    const [changeNameAccess, setChangeNameAccess] = useState(false);
 
     // profile description from the db doc 
     const [desc, setDesc] = useState({
@@ -42,7 +32,7 @@ export default function ProfileTab() {
         hobbies: "Something",
         maritalStatus: "No idea",
     });
-
+    const [descriptionChangeAccess, setDescriptionChangeAccess] = useState(false);
     // form input description
     const [formDesc, setFormDesc] = useState({
         age: 0,
@@ -102,10 +92,16 @@ export default function ProfileTab() {
 
     // upload handler
     const handleUpload = async () => {
-        await handleAvatarUpload(photo);
-        setPhoto(null);
-        setAvatarChangeAccess(!avatarChangeAccess);
+        try {
+            await handleAvatarUpload(photo);
+            setPhoto(null);
+            setAvatarChangeAccess(!avatarChangeAccess);
+        } catch (error) {
+            console.error('Failed to upload new avatar', error);
+        }
+        alert("File was uploaded")
     }
+
 
     // async function for avatar upload
     const handleAvatarUpload = async (file) => {
