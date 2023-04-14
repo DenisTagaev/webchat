@@ -6,18 +6,16 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db } from '../../../environments/firebase';
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { AiFillEdit } from 'react-icons/ai';
-import PromptingCloud from '../../../components/AvatarChangeBox/AvatarChangeBox';
-import BugForm from '../BugForm/BugForm';
+import { BiImageAdd } from 'react-icons/bi';
 import './ProfileTab.scss';
 
 export default function ProfileTab() {
     const { currentUser } = useContext(AuthContext);
 
     // Avatar state
-    const [avatarUrl, setAvatarUrl] = useState(null);
+    const [avatarUrl, setAvatarUrl] = useState(currentUser?.photoURL);
     const [photo, setPhoto] = useState(null);
     const [fileError, setFileError] = useState(null);
-    const [avatarChangeAccess, setAvatarChangeAccess] = useState(true);
 
     // User info state
     const [userName, setUserName] = useState(currentUser.displayName);
@@ -46,11 +44,8 @@ export default function ProfileTab() {
     useEffect(() => {
         (async function () {
             try {
-                const fileRef = ref(storage, `${currentUser.uid}`);
-                if (fileRef) {
-                    await getDownloadURL(fileRef).then(url => {
-                        setAvatarUrl(url);
-                    });
+                if (currentUser.photoURL) {
+                    setAvatarUrl(currentUser.photoURL);
                 }
             } catch (error) {
                 console.log(error);
@@ -82,8 +77,8 @@ export default function ProfileTab() {
         const selectedFile = e.target.files[0];
         if (!selectedFile.type.startsWith('image/')) {
             setFileError('Please select an image file.');
-            setPhoto(null);
             alert(fileError)
+            setPhoto(null);
             return;
         }
         setFileError();
@@ -93,9 +88,9 @@ export default function ProfileTab() {
     // upload handler
     const handleUpload = async () => {
         try {
+            // invoking avatar upload function
             await handleAvatarUpload(photo);
             setPhoto(null);
-            setAvatarChangeAccess(!avatarChangeAccess);
         } catch (error) {
             console.error('Failed to upload new avatar', error);
         }
@@ -106,7 +101,7 @@ export default function ProfileTab() {
     // async function for avatar upload
     const handleAvatarUpload = async (file) => {
         // we create a reference for the fiile
-        const avatarRef = ref(storage, `${currentUser.uid}`);
+        const avatarRef = ref(storage, `${currentUser.uid}/profile/avatar`);
         try {
             await uploadBytesResumable(avatarRef, file).then(async () => {
                 await getDownloadURL(avatarRef).then(async url => {
@@ -120,13 +115,9 @@ export default function ProfileTab() {
             })
         } catch (error) {
             console.error('Failed to upload new avatar', error)
+            alert(error.message)
         }
-        alert("File was uploaded")
     }
-
-
-
-
 
     // Description update
     const handleDescriptionUpdate = async (event) => {
@@ -145,10 +136,6 @@ export default function ProfileTab() {
             throw error
         }
     }
-
-    const handleClose = () => {
-        setAvatarChangeAccess(!avatarChangeAccess);
-    };
 
     // local description state update
     const handleDescription = (event) => {
@@ -192,19 +179,14 @@ export default function ProfileTab() {
         <>
             <div className="profileAvatar">
                 <div id="avatarContainer">
-                    <img src={avatarUrl} alt="avatar" id='avatarImage' onClick={() => { setAvatarChangeAccess(!avatarChangeAccess) }} />
-                    <div id='avatarInputContainer'>
-                        {!avatarChangeAccess &&
-                            <div className="shading">
-                                {/*  Component for avatar change  */}
-                                <PromptingCloud
-                                    handleClose={handleClose}
-                                    handleUpload={handleUpload}
-                                    handleAvatarChange={handleAvatarChange}
-                                />
-                            </div>
-                        }
-                    </div>
+
+                    <label id="avatarInput">
+                        <img src={avatarUrl} alt="avatar" id='avatarImage' />
+                        <input type="file" hidden={true} onChange={handleAvatarChange} />
+                    </label>
+                    {photo !== null &&
+                        <button onClick={handleUpload} className='iconBtn'><BiImageAdd /></button>
+                    }
                 </div>
             </div>
             <div className="profileName">
@@ -320,7 +302,10 @@ export default function ProfileTab() {
                         </button>
                     </form>
                 </div>
-                <BugForm />
+                <div className='bugLink' >
+                    <h3>Send us your feedback</h3>
+                    <a className='iconBtn' href='mailto:muxamedkali@gmail.com?'>Send an Email</a>
+                </div>
             </div>
         </>
     )

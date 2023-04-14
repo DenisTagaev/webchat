@@ -59,7 +59,7 @@ const Register = () => {
           //get reference to the newly created user
           const user = userCredential.user;
           //create reference between the user and picture storage
-          const storageRef = ref(storage, formData.nickname);
+          const storageRef = ref(storage, `${user.uid}/profile/avatar`);
           //upload picture to the cloud storage and get it's url
 
           await uploadBytesResumable(storageRef, avatar)
@@ -207,7 +207,7 @@ const Register = () => {
           <label id="avatarInput">
             <BiImageAdd className="regImg" />
 
-            <span>Chose avatar</span>
+            <span>Choose avatar</span>
             {/* to customize standard input look we hide the input element and wrap it in a
                         label with desired output content */}
             <input type="file" hidden={true} />
