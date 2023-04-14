@@ -81,9 +81,8 @@ export const Input = () => {
         onChange={(e) => setText(e.target.value)}
       />
       <div className="sendOptions">
-        <div className="sendIcon"><BsPaperclip/></div>
         <label>
-        <div className="sendIcon"><MdAddPhotoAlternate/></div>
+        <div className="sendIcon"><BsPaperclip/></div>
           <input
             type="file"
             hidden={true}
