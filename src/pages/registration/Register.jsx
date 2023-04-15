@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { auth, storage, db } from "../../environments/firebase";
 // import AddImg from "../../imgs/addAvatar.png";
 import { BiImageAdd } from "react-icons/bi";
@@ -59,6 +59,7 @@ const Register = () => {
           //get reference to the newly created user
           const user = userCredential.user;
           //create reference between the user and picture storage
+          // change path before production
           const storageRef = ref(storage, `${user.uid}/profile/avatar`);
           //upload picture to the cloud storage and get it's url
 

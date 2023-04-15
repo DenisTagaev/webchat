@@ -4,7 +4,7 @@ import { updateProfile } from 'firebase/auth';
 import { storage } from '../../../environments/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db } from '../../../environments/firebase';
-import { doc, onSnapshot, updateDoc, getDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { AiFillEdit } from 'react-icons/ai';
 import { BiImageAdd } from 'react-icons/bi';
 import './ProfileTab.scss';
@@ -42,7 +42,7 @@ export default function ProfileTab() {
         const unsub = () => {
             if (currentUser.photoURL) {
                 setAvatarUrl(currentUser.photoURL);
-            } else { setAvatarUrl(null) }
+            } else { setAvatarUrl("") }
         }
         return unsub()
     }, [currentUser.photoURL])
@@ -87,6 +87,7 @@ export default function ProfileTab() {
     // async function for avatar upload
     const handleAvatarUpload = async (file) => {
         // we create a reference for the fiile
+        //change before production
         const avatarRef = ref(storage, `${currentUser.uid}/profile/avatar`);
         try {
             await uploadBytesResumable(avatarRef, file).then(async () => {

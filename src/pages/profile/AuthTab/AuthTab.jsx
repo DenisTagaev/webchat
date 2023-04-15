@@ -59,7 +59,6 @@ export default function AuthTab() {
                 setPasswordChangeAccess(!passwordChangeAccess);
             }).catch((error) => { alert(error.message) });
         }
-
     }
 
     const handlePasswordInput = (event) => {
@@ -134,7 +133,7 @@ export default function AuthTab() {
                         {formErrors.password && (
                             <span className="formError">{formErrors.password}</span>
                         )}
-                        <button className="iconBtn" type="submit" disabled={formErrors.email || formErrors.password}>Log in<AiFillEdit /></button>
+                        <button className="iconBtn" type="submit" disabled={formErrors.password}>Log in<AiFillEdit /></button>
                     </form>
                     {passwordChangeAccess &&
                         <form className="passwordForm" onSubmit={handleNewPasswordSubmit}>
