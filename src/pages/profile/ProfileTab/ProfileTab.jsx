@@ -31,7 +31,7 @@ export default function ProfileTab() {
         maritalStatus: "",
     })
 
-    const [desc, setDesc] = useState(formDesc);
+    const [desc, setDesc] = useState({});
     const [descriptionChangeAccess, setDescriptionChangeAccess] = useState(false);
     // form input description
 
@@ -51,7 +51,7 @@ export default function ProfileTab() {
             const unsub = getDoc(doc(db, "users", currentUser.uid)).then((doc) => {
                 const data = doc.data();
                 setUserName(data.displayName)
-                setDesc(data.profileDescription ? data.profileDescription : formDesc);
+                data.profileDescription ? setDesc(data.profileDescription) : setDesc(formDesc);
             });
             return () => unsub();
         };
