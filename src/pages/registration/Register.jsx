@@ -60,9 +60,9 @@ const Register = () => {
           const user = userCredential.user;
           //create reference between the user and picture storage
           // change path before production
-          const storageRef = ref(storage, `${user.uid}/profile/avatar`);
+          // const storageRef = ref(storage, `${user.uid}/profile/avatar`);          
+          const storageRef = ref(storage, `avatars/${user.uid}/avatar`);
           //upload picture to the cloud storage and get it's url
-
           await uploadBytesResumable(storageRef, avatar)
             .then(() => {
               getDownloadURL(storageRef).then(async (downloadURL) => {

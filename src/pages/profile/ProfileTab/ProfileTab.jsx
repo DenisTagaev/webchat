@@ -88,7 +88,9 @@ export default function ProfileTab() {
     const handleAvatarUpload = async (file) => {
         // we create a reference for the fiile
         //change before production
-        const avatarRef = ref(storage, `${currentUser.uid}/profile/avatar`);
+        // const avatarRef = ref(storage, `${currentUser.uid}/profile/avatar`);
+
+        const avatarRef = ref(storage, `avatars/${currentUser.uid}/avatar`);
         try {
             await uploadBytesResumable(avatarRef, file).then(async () => {
                 await getDownloadURL(avatarRef).then(async url => {
