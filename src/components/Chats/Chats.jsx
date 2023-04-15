@@ -119,12 +119,6 @@ export const Chats = () => {
               <span>{chat[1]?.userInfo?.displayName}</span>
               {/* <span>{chat[1]?.userInfo?.isOnline ? "Online" : "Offline"}</span> */}
               <p>{chat[1]?.lastMessage?.text}</p>
-              {chat[1]?.userInfo?.online && (
-                <span className="onlineStatus">Online</span>
-              )}
-              {!chat[1]?.userInfo?.online && (
-                <span className="onlineStatus">offline</span>
-              )}
             </div>
           </div>
         ))}
