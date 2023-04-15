@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../environments/firebase";
 import { AuthContext } from "../context/AuthContext";
+import { ChatContext } from "../context/ChatContext";
 import "./Search.scss";
 
 export const Search = () => {
@@ -20,6 +21,9 @@ export const Search = () => {
   const [username, setUsername] = useState("");
   const [foundUser, setFoundUser] = useState("");
   const [err, setErr] = useState("");
+
+  const { dispatch } = useContext(ChatContext);
+
 
   const startSearch = async () => {
     //search for the user in the firebase database
@@ -77,6 +81,8 @@ export const Search = () => {
     } catch (err) {
       alert(err.message);
     }
+
+    dispatch({ type: "CHANGE_USER", payload: foundUser });
 
     setFoundUser("");
     setUsername("");
