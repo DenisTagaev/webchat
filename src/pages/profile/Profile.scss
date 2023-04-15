@@ -5,6 +5,7 @@
     border: none;
     background-color: $mainDark;
     color: $mainLight;
+    font-size: calc(12px + 2 * ((100vw - 320px) / 680));
 }
 
 .profileContainer {
@@ -15,16 +16,21 @@
     width: 100%;
     gap: 2%;
 
+    @include tableScreen {
+        @include tableScreenMainContainer;
+        @include tableScreenWrap;
+        margin-top: 0;
+        margin-left: 50px;
+    }
+
     .profileWrap {
         background-color: #fff;
         padding: 90px 30px;
-        min-height: fit-content;
         width: calc(100vw - 130px);
         max-width: 550px;
         margin: 0;
 
         #homeReturn {
-
             background-color: #fff;
             color: $primary;
             transition: ease .2s;
@@ -38,10 +44,6 @@
             }
         }
 
-        @include tableScreen {
-            padding: 70px 20px;
-        }
-
         .profileBody {
             .block-tabs {
                 display: flex;
@@ -50,7 +52,8 @@
                 @include tableScreen {
                     justify-content: space-evenly;
                     padding: 5px;
-                    font-size: 15px;
+                    font-size: calc(12px + 2 * ((100vw - 320px) / 680));
+                    display: none;
                 }
 
                 justify-content: space-around;
@@ -58,20 +61,30 @@
                 color: $primary;
                 cursor: pointer;
 
+                .tabs {
+                    background-color: $mainLight;
+                    width: 140px;
+                    padding: 7px 15px;
+                    border-radius: 15px;
+                    box-shadow: 0px 0px 3px $mainDark;
+                    text-align: center;
+                }
+
                 .active-tabs {
                     @include tableScreen {
-                        padding: 0 10px;
+                        padding: 4px 10px;
                     }
 
+                    background-color: $mainDark;
+                    color: $mainLight;
                     font-weight: 600;
-                    border-bottom: 1px solid $primary;
-                    padding: 0 15px;
                 }
             }
 
             .content {
                 @include tableScreen {
                     padding: 6 15px;
+                    display: flex;
                 }
 
                 background: white;
@@ -86,27 +99,15 @@
             }
         }
 
-        .title {
-            @include mainScreenTitles;
-
-            @include tableScreen {
-                @include tableScreenTitle;
-            }
-        }
-
         .profileInput {
             @include profileInputs;
         }
     }
 
     .iconBtn {
-        @include tableScreen {
-            font-size: 16px;
-        }
-
+        font-size: calc(12px + 2 * ((100vw - 320px) / 680));
         border: none;
         outline: none;
-        font-size: 20px;
         color: $primary;
         background-color: #fff;
         transition: ease 0.3s;

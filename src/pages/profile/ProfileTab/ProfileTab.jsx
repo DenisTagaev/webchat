@@ -177,8 +177,8 @@ export default function ProfileTab() {
             </div>
             <div className="profileName">
                 {!changeNameAccess && <div>
-                    <span className='profileTitle'>{currentUser.displayName}</span>
-                    <button className='iconBtn' onClick={() => { setChangeNameAccess(!changeNameAccess) }} ><span>Change Nickname</span><AiFillEdit /></button>
+                    <span style={{ fontWeight: 600 }} className='profileTitle'>{currentUser.displayName}</span>
+                    <button className='iconBtn' onClick={() => { setChangeNameAccess(!changeNameAccess) }} ><span>Change</span><span><AiFillEdit /></span></button>
                 </div>}
                 {nameError && (
                     <span className="formError">{nameError}</span>
@@ -198,7 +198,7 @@ export default function ProfileTab() {
             </div>
             <div className="profileDescContainer">
                 <div className="profileDesc" hidden={!desc || descriptionChangeAccess}>
-                    <h3>About me</h3>
+                    <h4>About me</h4>
                     <div className="profileDescDivs">
                         <span>Age</span>
                         {desc.age &&
@@ -234,7 +234,7 @@ export default function ProfileTab() {
                     </div>
                 </div>
                 <div className="profileDesc" hidden={!descriptionChangeAccess}>
-                    <h3>Add something new</h3>
+                    <h4>Add something new</h4>
                     <form onSubmit={handleDescriptionUpdate} className='descForm'>
                         <input
                             name='age'
@@ -289,7 +289,7 @@ export default function ProfileTab() {
                     </form>
                 </div>
                 <div className='bugLink' >
-                    <h3>Send us your feedback</h3>
+                    <h4>Send us your feedback</h4>
                     <a className='iconBtn' href='mailto:muxamedkali@gmail.com?'>Send an Email</a>
                 </div>
             </div>

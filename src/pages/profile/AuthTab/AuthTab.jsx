@@ -120,7 +120,7 @@ export default function AuthTab() {
     return (
         <>
             <div className="usefulForms">
-                <h3>Change your password</h3>
+                <h4>Change your password</h4>
                 <div className="passwordChange">
                     <form className="passwordForm" onSubmit={handlePasswordSubmit} hidden={passwordChangeAccess}>
                         <input

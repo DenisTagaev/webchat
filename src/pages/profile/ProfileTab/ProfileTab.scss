@@ -6,7 +6,6 @@
 
         .iconBtn {
             align-self: flex-end;
-
         }
 
         #avatarImage {
@@ -36,14 +35,15 @@
         }
 
         .profileName {
-            .profileTitle span {
+            .profileTitle {
                 font-weight: 600;
                 margin: 10px 0;
+                font-size: calc(15px + 2 * ((100vw - 320px) / 680));
 
-                // @include tableScreen {
-                //     font-size: 1em;
-                //     margin: 7px;
-                // }
+                @include tableScreen {
+                    font-size: 1em;
+                    margin: 7px;
+                }
             }
         }
 
@@ -66,6 +66,7 @@
         .profileDescDivs {
             @include tableScreen {
                 width: fit-content;
+                height: 15%;
             }
 
             display: flex;

@@ -10,7 +10,7 @@ import ProfileTab from './ProfileTab/ProfileTab';
 import AuthTab from './AuthTab/AuthTab';
 
 
-const Profile = ({ themeSwitcher }) => {
+const Profile = () => {
 
     // User context for current user
 
@@ -30,7 +30,6 @@ const Profile = ({ themeSwitcher }) => {
         <div className="profileContainer">
             <div className="profileWrap">
                 <button onClick={() => navigator('/')} className="iconBtn"><span id='homeReturn'>Back to Main</span></button>
-                <button onClick={themeSwitcher}>Toggle Dark Mode</button>
                 <div className="profileBody">
 
                     <div className="block-tabs">
