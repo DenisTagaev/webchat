@@ -18,8 +18,6 @@ import "./Search.scss";
 export const Search = () => {
   const { currentUser } = useContext(AuthContext);
 
-  const { dispatch } = useContext(ChatContext);
-
   const [username, setUsername] = useState("");
   const [foundUser, setFoundUser] = useState("");
   const [err, setErr] = useState("");
