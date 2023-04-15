@@ -12,10 +12,13 @@ import {
 } from "firebase/firestore";
 import { db } from "../../environments/firebase";
 import { AuthContext } from "../context/AuthContext";
+import { ChatContext } from "../context/ChatContext";
 import "./Search.scss";
 
 export const Search = () => {
   const { currentUser } = useContext(AuthContext);
+
+  const { dispatch } = useContext(ChatContext);
 
   const [username, setUsername] = useState("");
   const [foundUser, setFoundUser] = useState("");
@@ -78,6 +81,8 @@ export const Search = () => {
       alert(err.message);
     }
 
+    dispatch({ type: "CHANGE_USER", payload: foundUser });
+
     setFoundUser("");
     setUsername("");
   };
@@ -116,7 +121,7 @@ export const Search = () => {
           </div>
         </div>
       )}
-      
+
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { onSnapshot, doc } from "firebase/firestore";
+import { onSnapshot, doc, getDoc } from "firebase/firestore";
 import { db } from "../../environments/firebase";
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
@@ -12,9 +12,9 @@ export const Chats = () => {
   //set user's chats to display
   const [chats, setChats] = useState([]);
 
-  //on load fetch realtime data from the user's chats collection
+  // on load fetch realtime data from the user's chats collection
   useEffect(() => {
-    const getChats = () => {
+    const getChats = async () => {
       const unsubscribe = onSnapshot(
         doc(db, "userChats", currentUser.uid),
         (doc) => {
@@ -23,14 +23,37 @@ export const Chats = () => {
       );
       return () => unsubscribe();
     };
-    //set chats array only if there's a user
+    // set chats array only if there's a user
     currentUser.uid && getChats();
   }, [currentUser.uid]);
+
+  // for each chat, check if the user is online and update their user info accordingly
+  useEffect(() => {
+    chats &&
+      Object.entries(chats).forEach((chat) => {
+        checkOnline(chat[1].userInfo);
+      });
+  }, [chats]);
 
   const handleUserSelect = (userInfo) => {
     dispatch({ type: "CHANGE_USER", payload: userInfo });
   };
 
+  // define a function to update a chat's user info with the online status
+  const checkOnline = async (userInfo) => {
+    const userDoc = await getDoc(doc(db, "users", userInfo.uid));
+    if (userDoc.exists) {
+      setChats((prevChats) => {
+        const updatedChats = { ...prevChats };
+        Object.entries(updatedChats ?? {}).forEach((chat) => {
+          if (chat[1].userInfo.uid === userInfo.uid) {
+            chat[1].userInfo.isOnline = userDoc.data().online;
+          }
+        });
+        return updatedChats;
+      });
+    }
+  };
   return (
     <div className="chatsContainer">
       {Object.entries(chats ?? {})
@@ -45,6 +68,12 @@ export const Chats = () => {
             <div className="userChatInfo">
               <span>{chat[1]?.userInfo?.displayName}</span>
               <p>{chat[1]?.lastMessage?.text}</p>
+              {chat[1]?.userInfo?.online && (
+                <span className="onlineStatus">Online</span>
+              )}
+              {!chat[1]?.userInfo?.online && (
+                <span className="onlineStatus">offline</span>
+              )}
             </div>
           </div>
         ))}

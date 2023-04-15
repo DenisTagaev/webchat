@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, storage, db } from "../../environments/firebase";
 // import AddImg from "../../imgs/addAvatar.png";
 import { BiImageAdd } from "react-icons/bi";
@@ -77,7 +77,15 @@ const Register = () => {
                   uid: user.uid,
                   displayName: user.displayName,
                   email: user.email,
-                  photoURL: downloadURL
+                  photoURL: downloadURL,
+                  online: true,
+                  profileDescription: {
+                    age: 0,
+                    location: "Somewhere",
+                    career: "Someone",
+                    hobbies: "Something",
+                    maritalStatus: "No idea"
+                  }
                 });
                 //create a collection of chats for the user
                 await setDoc(doc(db, "userChats", user.uid), {});

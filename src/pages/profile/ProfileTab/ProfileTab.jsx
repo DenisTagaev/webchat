@@ -4,7 +4,7 @@ import { updateProfile } from 'firebase/auth';
 import { storage } from '../../../environments/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db } from '../../../environments/firebase';
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc, getDoc } from "firebase/firestore";
 import { AiFillEdit } from 'react-icons/ai';
 import { BiImageAdd } from 'react-icons/bi';
 import './ProfileTab.scss';
@@ -14,24 +14,16 @@ export default function ProfileTab() {
 
     // Avatar state
     const [avatarUrl, setAvatarUrl] = useState(currentUser?.photoURL);
-    const [photo, setPhoto] = useState(null);
     const [fileError, setFileError] = useState(null);
 
     // User info state
     const [userName, setUserName] = useState(currentUser.displayName);
-    const [nameError, setNameError] = useState(null);
     const [changeNameAccess, setChangeNameAccess] = useState(false);
+    const [nameError, setNameError] = useState(null);
 
     // profile description from the db doc 
-    const [desc, setDesc] = useState({
-        age: 0,
-        location: "Somewhere",
-        career: "Someone",
-        hobbies: "Something",
-        maritalStatus: "No idea",
-    });
-    const [descriptionChangeAccess, setDescriptionChangeAccess] = useState(false);
-    // form input description
+
+    const [photo, setPhoto] = useState(null);
     const [formDesc, setFormDesc] = useState({
         age: 0,
         location: "",
@@ -40,36 +32,31 @@ export default function ProfileTab() {
         maritalStatus: "",
     })
 
-    //  useEffects for profile avatar and nickname rendering
-    useEffect(() => {
-        (async function () {
-            try {
-                if (currentUser.photoURL) {
-                    setAvatarUrl(currentUser.photoURL);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        })();
+    const [desc, setDesc] = useState({});
+    const [descriptionChangeAccess, setDescriptionChangeAccess] = useState(false);
+    // form input description
 
-        (async function () {
-            try {
-                const userDocRef = doc(db, "users", currentUser.uid);
-                getDoc(userDocRef)
-                    .then((userDocSnap) => {
-                        const data = userDocSnap.data();
-                        if (data.profileDescription) {
-                            setDesc(data.profileDescription);
-                        }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            } catch (error) {
-                console.log(error);
-            }
-        })();
-    },)
+    //  useEffects for profile avatar and nickname rendering
+
+    useEffect(() => {
+        const unsub = () => {
+            if (currentUser.photoURL) {
+                setAvatarUrl(currentUser.photoURL);
+            } else { setAvatarUrl(null) }
+        }
+        return unsub()
+    }, [currentUser.photoURL])
+
+    useEffect(() => {
+        const getUserDesc = async () => {
+            const unsub = getDoc(doc(db, "users", currentUser.uid)).then((doc) => {
+                const data = doc.data();
+                setDesc(data.profileDescription);
+            });
+            return () => unsub();
+        };
+        currentUser.uid && getUserDesc();
+    }, [currentUser.uid])
 
 
     // avatar change handler, assigns state to the file
@@ -78,11 +65,10 @@ export default function ProfileTab() {
         if (!selectedFile.type.startsWith('image/')) {
             setFileError('Please select an image file.');
             alert(fileError)
-            setPhoto(null);
-            return;
+            return setPhoto(null);
         }
-        setFileError();
         setPhoto(selectedFile);
+        setFileError(null);
     }
 
     // upload handler
@@ -160,8 +146,9 @@ export default function ProfileTab() {
         event.preventDefault();
 
         if (!nameError) {
-            await updateProfile(currentUser, { displayName: userName });
-            console.log(currentUser)
+            await updateDoc(doc(db, "users", currentUser.uid), { displayName: userName });
+            await updateProfile(currentUser, { displayName: userName })
+            console.log(currentUser.displayName + "document updated")
             setChangeNameAccess(!changeNameAccess);
         }
     }
@@ -176,10 +163,9 @@ export default function ProfileTab() {
         };
     }
     return (
-        <>
+        <div>
             <div className="profileAvatar">
                 <div id="avatarContainer">
-
                     <label id="avatarInput">
                         <img src={avatarUrl} alt="avatar" id='avatarImage' />
                         <input type="file" hidden={true} onChange={handleAvatarChange} />
@@ -307,6 +293,6 @@ export default function ProfileTab() {
                     <a className='iconBtn' href='mailto:muxamedkali@gmail.com?'>Send an Email</a>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
