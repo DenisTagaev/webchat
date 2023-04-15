@@ -147,7 +147,6 @@ export default function ProfileTab() {
 
         if (!nameError) {
             await updateDoc(doc(db, "users", currentUser.uid), { displayName: userName });
-            await updateProfile(currentUser, { displayName: userName })
             console.log(currentUser.displayName + "document updated")
             setChangeNameAccess(!changeNameAccess);
         }
