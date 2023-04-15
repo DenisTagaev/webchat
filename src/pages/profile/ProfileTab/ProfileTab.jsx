@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../../components/context/AuthContext';
-import { updateProfile } from 'firebase/auth';
 import { storage } from '../../../environments/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db } from '../../../environments/firebase';
@@ -19,7 +18,7 @@ export default function ProfileTab() {
     // User info state
     const [userName, setUserName] = useState(currentUser.displayName);
     const [changeNameAccess, setChangeNameAccess] = useState(false);
-    const [nameError, setNameError] = useState(null);
+    const [nameError, setNameError] = useState(null)
 
     // profile description from the db doc 
 
@@ -51,6 +50,7 @@ export default function ProfileTab() {
         const getUserDesc = async () => {
             const unsub = getDoc(doc(db, "users", currentUser.uid)).then((doc) => {
                 const data = doc.data();
+                setUserName(data.displayName)
                 setDesc(data.profileDescription);
             });
             return () => unsub();
@@ -94,7 +94,9 @@ export default function ProfileTab() {
                 await getDownloadURL(avatarRef).then(async url => {
                     setAvatarUrl(url);
                     try {
-                        await updateProfile(currentUser, { photoURL: url });
+                        await updateDoc(doc(db, "user", currentUser.uid), {
+                            photoURL: url,
+                        })
                     } catch (error) {
                         console.error('Failed to update user profile with new avatar URL', error)
                     };
@@ -177,7 +179,7 @@ export default function ProfileTab() {
             </div>
             <div className="profileName">
                 {!changeNameAccess && <div>
-                    <span style={{ fontWeight: 600 }} className='profileTitle'>{currentUser.displayName}</span>
+                    <span style={{ fontWeight: 600 }} className='profileTitle'>{userName}</span>
                     <button className='iconBtn' onClick={() => { setChangeNameAccess(!changeNameAccess) }} ><span>Change</span><span><AiFillEdit /></span></button>
                 </div>}
                 {nameError && (
