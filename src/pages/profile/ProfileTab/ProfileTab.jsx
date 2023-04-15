@@ -31,7 +31,7 @@ export default function ProfileTab() {
         maritalStatus: "",
     })
 
-    const [desc, setDesc] = useState({});
+    const [desc, setDesc] = useState(formDesc);
     const [descriptionChangeAccess, setDescriptionChangeAccess] = useState(false);
     // form input description
 
@@ -51,7 +51,7 @@ export default function ProfileTab() {
             const unsub = getDoc(doc(db, "users", currentUser.uid)).then((doc) => {
                 const data = doc.data();
                 setUserName(data.displayName)
-                setDesc(data.profileDescription);
+                setDesc(data.profileDescription ? data.profileDescription : formDesc);
             });
             return () => unsub();
         };
@@ -205,33 +205,23 @@ export default function ProfileTab() {
                     <h4>About me</h4>
                     <div className="profileDescDivs">
                         <span>Age</span>
-                        {desc.age &&
-                            <p>{desc.age}</p>
-                        }
+                        <p>{desc?.age}</p>
                     </div>
                     <div className="profileDescDivs">
                         <span>Location</span>
-                        {desc.location &&
-                            <p>{desc.location}</p>
-                        }
+                        <p>{desc?.location}</p>
                     </div>
                     <div className="profileDescDivs">
                         <span>Marital status</span>
-                        {desc.maritalStatus &&
-                            <p>{desc.maritalStatus}</p>
-                        }
+                        <p>{desc?.maritalStatus}</p>
                     </div>
                     <div className="profileDescDivs">
                         <span>Career</span>
-                        {desc.career &&
-                            <p>{desc.career}</p>
-                        }
+                        <p>{desc?.career}</p>
                     </div>
                     <div className="profileDescDivs">
                         <span>Hobbies</span>
-                        {desc.hobbies &&
-                            <p>{desc.hobbies}</p>
-                        }
+                        <p>{desc?.hobbies}</p>
                     </div>
                     <div hidden={descriptionChangeAccess}>
                         <button className='iconBtn' id='changeDescBtn' onClick={() => { setDescriptionChangeAccess(true) }}>Change info<AiFillEdit /></button>
