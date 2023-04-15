@@ -97,20 +97,6 @@ export const Chats = () => {
   };
 
   // define a function to update a chat's user info with the online status
-  const checkOnline = async (userInfo) => {
-    const userDoc = await getDoc(doc(db, "users", userInfo.uid));
-    if (userDoc.exists) {
-      setChats((prevChats) => {
-        const updatedChats = { ...prevChats };
-        Object.entries(updatedChats ?? {}).forEach((chat) => {
-          if (chat[1].userInfo.uid === userInfo.uid) {
-            chat[1].userInfo.isOnline = userDoc.data().online;
-          }
-        });
-        return updatedChats;
-      });
-    }
-  };
   return (
     <div className="chatsContainer">
       {Object.entries(chats ?? {})
