@@ -4,7 +4,7 @@ import { auth, db } from '../../environments/firebase';
 import { AuthContext } from '../context/AuthContext';
 import './Navbar.scss';
 import { useNavigate } from 'react-router-dom';
-import { updateDoc, doc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 
 export const Navbar = () => {
   //getting the data about the user from the firebase
@@ -26,10 +26,9 @@ export const Navbar = () => {
         <button onClick={async () => {
           await updateDoc(doc(db, "users", currentUser.uid), {
             online: false,
-          })
-          signOut(auth)
-        }
-        }>Logout</button>
+          });
+          signOut(auth);
+        }}>Logout</button>
       </div>
     </div>
   );

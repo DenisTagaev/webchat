@@ -24,6 +24,9 @@ export const Search = () => {
   const [foundUser, setFoundUser] = useState("");
   const [err, setErr] = useState("");
 
+  const { dispatch } = useContext(ChatContext);
+
+
   const startSearch = async () => {
     //search for the user in the firebase database
     const fb_query = query(

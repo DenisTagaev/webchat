@@ -12,6 +12,22 @@ export const Chats = () => {
   //set user's chats to display
   const [chats, setChats] = useState([]);
 
+  // define a function to update a chat's user info with the online status
+  const checkOnline = async (userInfo) => {
+    const userDoc = await getDoc(doc(db, "users", userInfo.uid));
+    if (userDoc.exists) {
+      setChats((prevChats) => {
+        const updatedChats = { ...prevChats };
+        Object.entries(updatedChats ?? {}).forEach((chat) => {
+          if (chat[1].userInfo.uid === userInfo.uid) {
+            chat[1].userInfo.isOnline = userDoc.data().online;
+          }
+        });
+        return updatedChats;
+      });
+    }
+  };
+
   // on load fetch realtime data from the user's chats collection
   useEffect(() => {
     const getChats = async () => {
@@ -34,6 +50,47 @@ export const Chats = () => {
         checkOnline(chat[1].userInfo);
       });
   }, [chats]);
+
+  // useEffect(() => {
+  //   const getChats = async () => {
+  //     const unsubscribe = onSnapshot(
+  //       doc(db, "userChats", currentUser.uid),
+  //       async (res) => {
+  //         const tempData = res.data();
+  //         const updatedChats = await Promise.all(
+  //           Object.entries(tempData ?? {}).map(async (user) => {
+  //             const userDoc = await getDoc(
+  //               doc(db, "users", user[1].userInfo.uid)
+  //             );
+  //             const updatedUser = { ...user[1].userInfo };
+  //             updatedUser.isOnline = userDoc.data()?.online ?? false;
+  //             return { ...user[1], userInfo: updatedUser };
+  //           })
+  //         );
+  //         setChats(updatedChats);
+  //       }
+  //     );
+  //     return () => unsubscribe();
+  //   };
+  //   currentUser.uid && getChats();
+  // }, [currentUser.uid]);
+
+  //try running function on load for each user, set online status inside the chats array
+  // const checkOnline = async(userInfo) => {
+  //   await getDoc(doc(db, "users", userInfo.uid)).then((doc) => {
+  //     if (doc.exists) {
+  //       console.log("Found user:", doc.data().online);
+  //       Object.entries(chats ?? {}).forEach(chat => {
+  //         if (chat[1].userInfo.uid === userInfo.uid) {
+  //           chat[1].userInfo.isOnline = doc.data().online;
+  //         }
+  //         console.log(chat)
+  //       });
+  //     } else {
+  //       console.log("User not found");
+  //     }
+  //   });
+  // }
 
   const handleUserSelect = (userInfo) => {
     dispatch({ type: "CHANGE_USER", payload: userInfo });
@@ -62,11 +119,19 @@ export const Chats = () => {
           <div
             className="userChat"
             key={chat[0]}
-            onClick={() => handleUserSelect(chat[1].userInfo)}
+            onClick={() => {
+              handleUserSelect(chat[1].userInfo);
+            }}
           >
-            <img src={chat[1]?.userInfo?.photoURL} alt="user's avatar" />
+            <img
+              src={chat[1]?.userInfo?.photoURL}
+              alt="user's avatar"
+              className={`userAvatar ${chat[1]?.userInfo?.isOnline ? "online" : "offline"
+                }`}
+            />
             <div className="userChatInfo">
               <span>{chat[1]?.userInfo?.displayName}</span>
+              {/* <span>{chat[1]?.userInfo?.isOnline ? "Online" : "Offline"}</span> */}
               <p>{chat[1]?.lastMessage?.text}</p>
               {chat[1]?.userInfo?.online && (
                 <span className="onlineStatus">Online</span>
