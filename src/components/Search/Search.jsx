@@ -111,14 +111,8 @@ export const Search = () => {
       {foundUser && (
         <div className="userChat" onClick={handleSelect}>
           <img src={foundUser.photoURL} alt="user's profile" />
-          {/* <img
-            src="https://upload.wikimedia.org/wikipedia/en/a/a0/Grogu_%28Star_Wars%29.jpg"
-            alt="user's profile"
-          /> */}
           <div className="userChatInfo">
             <span>{foundUser.displayName}</span>
-            {/* <span>Jane</span> */}
-            {/* <p>Hello</p> */}
           </div>
         </div>
       )}

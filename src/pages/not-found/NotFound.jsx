@@ -1,9 +1,5 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-
-//react icons
-
-
 import './NotFound.scss';
 
 export default function NotFound() {

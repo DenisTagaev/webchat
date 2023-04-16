@@ -11,7 +11,6 @@ import { ChatContext } from '../context/ChatContext';
 import { v4 as uuid } from "uuid";
 import './Input.scss';
 
-import {MdAddPhotoAlternate} from 'react-icons/md'
 import {BsPaperclip} from 'react-icons/bs'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 

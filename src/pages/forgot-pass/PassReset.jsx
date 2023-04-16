@@ -16,7 +16,6 @@ const PassReset = () => {
         const value = event.target.value;
         setEmail(value);
         //after user input validate that field matches the requirements
-
         setError(validateField(value));
     };
 
@@ -27,7 +26,6 @@ const PassReset = () => {
         } else if (!/\S+@\S+\.\S+/.test(value)) {
             return 'Email is invalid';
         }
-
         return '';
     };
 
@@ -39,12 +37,11 @@ const PassReset = () => {
         if (newError.length === 0) {
             // call submit function
             sendPasswordResetEmail(auth, email)
-                .then(() => {
-                    alert('Restore Letter has been send');
-                    navigator('/login');
-                },
-                    err => alert(err.message))
-                .catch(err => console.log(err));
+            .then(() => {
+                alert('Restore Letter has been send');
+                navigator('/login');
+            }, err => alert(err.message))
+            .catch(err => console.log(err));
         }
     }
 

@@ -3,10 +3,7 @@
 .homeContainer {
   background-color: $primary;
   height: calc(100vh - 75px);
-  // min-height: 300px;
-  // min-width: 300px;
   @include flex-centered;
-
   @include tableScreen {
     height: 100vh;
   }

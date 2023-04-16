@@ -110,7 +110,6 @@ const Login = () => {
       <div className="loginWrap">
         <span className="title">WebChat Login</span>
         <form className="loginForm" onSubmit={handleSubmit}>
-          {/* <span className="loginIcon"><HiOutlineMail /></span> */}
           <input
             className="loginInput"
             type="email"
@@ -120,7 +119,6 @@ const Login = () => {
             onChange={handleChange}
           />
           {errors.email && <span className="formError">{errors.email}</span>}
-          {/* <span className="loginIcon"><HiKey /></span> */}
           <input
             className="loginInput"
             type="password"
