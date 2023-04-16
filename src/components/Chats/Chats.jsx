@@ -108,13 +108,19 @@ export const Chats = () => {
               handleUserSelect(chat[1].userInfo);
             }}
           >
-            <img
+            {/* <img
               src={chat[1]?.userInfo?.photoURL}
               alt="user's avatar"
               className={`userAvatar ${
                 chat[1]?.userInfo?.isOnline ? "online" : "offline"
               }`}
-            />
+            /> */}
+            <div className="userAvatarWrapper">
+              <img src={chat[1]?.userInfo?.photoURL} alt="user's avatar" />
+              {chat[1]?.userInfo?.isOnline && (
+                <div className="userStatusIndicator"></div>
+              )}
+            </div>
             <div className="userChatInfo">
               <span>{chat[1]?.userInfo?.displayName}</span>
               {/* <span>{chat[1]?.userInfo?.isOnline ? "Online" : "Offline"}</span> */}

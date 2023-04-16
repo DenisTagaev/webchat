@@ -12,30 +12,20 @@
   &:hover {
     background-color: darken($color: $mainDark, $amount: 5);
   }
-
-  .userAvatar {
+  
+  .userAvatarWrapper {
     position: relative;
     display: inline-block;
-    overflow: hidden;
   }
 
-  .userAvatar::after {
-    content: '';
+  .userStatusIndicator {
     position: absolute;
     bottom: 0;
     right: 0;
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    z-index: 9999;
-  }
-
-  .userAvatar.online::after {
     background-color: green;
-  }
-
-  .userAvatar.offline::after {
-    background-color: gray;
   }
 
   img {
