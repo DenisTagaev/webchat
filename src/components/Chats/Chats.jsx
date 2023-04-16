@@ -96,6 +96,7 @@ export const Chats = () => {
     dispatch({ type: "CHANGE_USER", payload: userInfo });
   };
 
+  // define a function to update a chat's user info with the online status
   return (
     <div className="chatsContainer">
       {Object.entries(chats ?? {})

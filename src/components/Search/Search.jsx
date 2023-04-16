@@ -122,7 +122,7 @@ export const Search = () => {
           </div>
         </div>
       )}
-      
+
     </div>
   );
 };

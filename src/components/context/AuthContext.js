@@ -17,7 +17,7 @@ export const AuthContextProvider = ({ children }) => {
         //trigger updates across all components
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setCurrentUser(user);
-            if(user) {
+            if (user) {
                 await updateDoc(doc(db, "users", user.uid), {
                     online: true,
                 });

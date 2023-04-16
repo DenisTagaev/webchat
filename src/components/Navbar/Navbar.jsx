@@ -23,9 +23,9 @@ export const Navbar = () => {
             <p>Profile</p>
           </div>
         </div>
-        <button onClick={async() => {
+        <button onClick={async () => {
           await updateDoc(doc(db, "users", currentUser.uid), {
-              online: false,
+            online: false,
           });
           signOut(auth);
         }}>Logout</button>
