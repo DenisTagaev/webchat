@@ -2,29 +2,25 @@
 @import "../Profile.scss";
 
 .profileAvatar {
-    .shading {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-    }
-
     #avatarContainer {
-        display: flex;
 
         .iconBtn {
             align-self: flex-end;
         }
 
         #avatarImage {
+            transition: ease .2s;
+
             @include tableScreen {
                 width: 90px;
                 height: 90px;
                 margin: 6px;
                 box-shadow: 0 0 9px $mainDark;
+            }
+
+            &:hover {
+                box-shadow: 0px 0px 15px $primary;
+                transform: scale(1.05);
             }
 
             image-rendering: optimizeQuality;
@@ -38,46 +34,39 @@
             box-shadow: 0 0 15px $mainDark;
         }
 
-        #avatarInputContainer {
-            @include tableScreenTitle;
-            flex-direction: column;
-            margin-left: auto;
-
+        .profileName {
             .profileTitle {
                 font-weight: 600;
-                font-size: 1.2em;
                 margin: 10px 0;
-            }
+                font-size: calc(15px + 2 * ((100vw - 320px) / 680));
 
-            #avatarInput {
-                padding: 10px;
-                border: none;
-                outline: none;
-                background-color: $primary;
-                min-height: 50px;
+                @include tableScreen {
+                    font-size: 1em;
+                    margin: 7px;
+                }
             }
         }
-    }
-}
 
-.profileName {
-    .profileTitle {
-        font-weight: 600;
-        font-size: 1.2em;
-        margin: 10px 0;
     }
 }
 
 .profileDescContainer {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
-    height: 300px;
+    margin-top: -8px;
+    height: calc(100% - 50px);
+
+    @include tableScreen {
+        flex-direction: column;
+    }
 
     .profileDesc {
+        @include tableScreen {}
+
         .profileDescDivs {
             @include tableScreen {
                 width: fit-content;
+                height: 15%;
             }
 
             display: flex;
@@ -100,13 +89,15 @@
         .descForm {
             height: 80%;
 
-            @include tableScreen {}
+            @include tableScreen {
+                width: 60%;
+            }
 
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
             margin-top: 10px;
-            gap: 13px;
+            gap: 8px;
             width: 100%;
 
             .descInput {

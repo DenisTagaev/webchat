@@ -11,7 +11,6 @@ export default function AuthTab() {
     // User context for current user
     const { currentUser } = useContext(AuthContext);
 
-    const [passwordChangeLoginAccess, setPasswordChangeLoginAccess] = useState(false);
     const [passwordChangeAccess, setPasswordChangeAccess] = useState(false);
 
     // form data
@@ -22,9 +21,7 @@ export default function AuthTab() {
     });
 
     // Error states
-    const [formErrors, setFormErrors] = useState({
-
-    });
+    const [formErrors, setFormErrors] = useState({});
 
     // handling old password input
     const handlePasswordChange = (event) => {
@@ -50,24 +47,18 @@ export default function AuthTab() {
         setFormErrors(newErrors);
         if (Object.keys(newErrors).length === 0) {
             // call login function
-            try {
-                const credential = EmailAuthProvider.credential(
-                    currentUser.email,
-                    formData.password
-                );
-                // authenticating the user 
-                await reauthenticateWithCredential(currentUser, credential).then((res) => {
-                    // User re-authenticated.
-                    // Code...
-                    console.log(res)
-                    setPasswordChangeAccess(!passwordChangeAccess);
-                    setPasswordChangeLoginAccess(!passwordChangeLoginAccess);
-                });
-            } catch (error) {
-                alert("Wrong password input");
-            }
+            const credential = EmailAuthProvider.credential(
+                currentUser.email,
+                formData.password
+            );
+            // authenticating the user 
+            await reauthenticateWithCredential(currentUser, credential).then((res) => {
+                // User re-authenticated.
+                console.log(res)
+                // opening the input fields
+                setPasswordChangeAccess(!passwordChangeAccess);
+            }).catch((error) => { alert(error.message) });
         }
-
     }
 
     const handlePasswordInput = (event) => {
@@ -128,31 +119,22 @@ export default function AuthTab() {
     return (
         <>
             <div className="usefulForms">
-                <h3>Useful forms</h3>
+                <h4>Change your password</h4>
                 <div className="passwordChange">
-                    <button
-                        className=' formBtn'
-                        onClick={() => { setPasswordChangeLoginAccess(!passwordChangeLoginAccess); }}
-                        hidden={passwordChangeLoginAccess || passwordChangeAccess}>
-                        Change your password
-                    </button>
-
-                    {passwordChangeLoginAccess &&
-                        <form className="passwordForm" onSubmit={handlePasswordSubmit}>
-                            <input
-                                className="profileInput"
-                                type="password"
-                                name="password"
-                                value={formData.password}
-                                placeholder="Enter current password"
-                                onChange={handlePasswordChange}
-                            />
-                            {formErrors.password && (
-                                <span className="formError">{formErrors.password}</span>
-                            )}
-                            <button className="iconBtn" type="submit" disabled={formErrors.email || formErrors.password}>Log in<AiFillEdit /></button>
-                        </form>
-                    }
+                    <form className="passwordForm" onSubmit={handlePasswordSubmit} hidden={passwordChangeAccess}>
+                        <input
+                            className="profileInput"
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            placeholder="Enter current password"
+                            onChange={handlePasswordChange}
+                        />
+                        {formErrors.password && (
+                            <span className="formError">{formErrors.password}</span>
+                        )}
+                        <button className="iconBtn" type="submit" disabled={formErrors.password}>Log in<AiFillEdit /></button>
+                    </form>
                     {passwordChangeAccess &&
                         <form className="passwordForm" onSubmit={handleNewPasswordSubmit}>
                             <input

@@ -38,10 +38,7 @@ const Profile = () => {
                         >Profile</div>
                         <div className={tabState === "auth" ? "tabs active-tabs" : "tabs"}
                             onClick={() => changeTab("auth")}
-                        >Authentication</div>
-                        <div className={tabState === "friends" ? "tabs active-tabs" : "tabs"}
-                            onClick={() => changeTab("friends")}
-                        >Friends</div>
+                        >Password change</div>
                     </div>
                     <div className="content-tabs">
                         <div className={tabState === "profile" ? "content active-content" : "content"}>
@@ -53,9 +50,6 @@ const Profile = () => {
 
                             <AuthTab />
 
-                        </div>
-                        {/*  Chats managing  */}
-                        <div className={tabState === "friends" ? "content active-content" : "content"}>
                         </div>
                     </div>
                 </div>

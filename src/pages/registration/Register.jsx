@@ -59,9 +59,10 @@ const Register = () => {
           //get reference to the newly created user
           const user = userCredential.user;
           //create reference between the user and picture storage
-          const storageRef = ref(storage, formData.nickname);
+          // change path before production
+          // const storageRef = ref(storage, `${user.uid}/profile/avatar`);          
+          const storageRef = ref(storage, `avatars/${user.uid}/avatar`);
           //upload picture to the cloud storage and get it's url
-
           await uploadBytesResumable(storageRef, avatar)
             .then(() => {
               getDownloadURL(storageRef).then(async (downloadURL) => {
@@ -77,7 +78,15 @@ const Register = () => {
                   uid: user.uid,
                   displayName: user.displayName,
                   email: user.email,
-                  photoURL: downloadURL
+                  photoURL: downloadURL,
+                  online: true,
+                  profileDescription: {
+                    age: 0,
+                    location: "Somewhere",
+                    career: "Someone",
+                    hobbies: "Something",
+                    maritalStatus: "No idea"
+                  }
                 });
                 //create a collection of chats for the user
                 await setDoc(doc(db, "userChats", user.uid), {});
@@ -207,7 +216,7 @@ const Register = () => {
           <label id="avatarInput">
             <BiImageAdd className="regImg" />
 
-            <span>Chose avatar</span>
+            <span>Choose avatar</span>
             {/* to customize standard input look we hide the input element and wrap it in a
                         label with desired output content */}
             <input type="file" hidden={true} />

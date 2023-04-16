@@ -96,6 +96,7 @@ export const Chats = () => {
     dispatch({ type: "CHANGE_USER", payload: userInfo });
   };
 
+  // define a function to update a chat's user info with the online status
   return (
     <div className="chatsContainer">
       {Object.entries(chats ?? {})
@@ -111,9 +112,8 @@ export const Chats = () => {
             <img
               src={chat[1]?.userInfo?.photoURL}
               alt="user's avatar"
-              className={`userAvatar ${
-                chat[1]?.userInfo?.isOnline ? "online" : "offline"
-              }`}
+              className={`userAvatar ${chat[1]?.userInfo?.isOnline ? "online" : "offline"
+                }`}
             />
             <div className="userChatInfo">
               <span>{chat[1]?.userInfo?.displayName}</span>

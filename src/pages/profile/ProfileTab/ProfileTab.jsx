@@ -1,49 +1,28 @@
 import React, { useContext, useState, useEffect } from 'react';
-// auth 
 import { AuthContext } from '../../../components/context/AuthContext';
-import { updateProfile } from 'firebase/auth';
-// storage
 import { storage } from '../../../environments/firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-// firestore
 import { db } from '../../../environments/firebase';
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-// react icons
+import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { AiFillEdit } from 'react-icons/ai';
-// custom modal
-import PromptingCloud from '../../../components/AvatarChangeBox/AvatarChangeBox'; import BugForm from '../BugForm/BugForm';
-// scss styles 
+import { BiImageAdd } from 'react-icons/bi';
 import './ProfileTab.scss';
 
 export default function ProfileTab() {
-
     const { currentUser } = useContext(AuthContext);
 
-    // default avatar png       
-    const [avatarUrl, setAvatarUrl] = useState();
-
-    // States for data changing
-    const [photo, setPhoto] = useState(null);
-    const [userName, setUserName] = useState(currentUser.displayName);
-
-    const [avatarChangeAccess, setAvatarChangeAccess] = useState(true);
-    const [changeNameAccess, setChangeNameAccess] = useState(false);
-    const [descriptionChangeAccess, setDescriptionChangeAccess] = useState(false);
-
-    // error state
+    // Avatar state
+    const [avatarUrl, setAvatarUrl] = useState(currentUser?.photoURL);
     const [fileError, setFileError] = useState(null);
-    const [nameError, setNameError] = useState();
+
+    // User info state
+    const [userName, setUserName] = useState(currentUser.displayName);
+    const [changeNameAccess, setChangeNameAccess] = useState(false);
+    const [nameError, setNameError] = useState(null)
 
     // profile description from the db doc 
-    const [desc, setDesc] = useState({
-        age: 0,
-        location: "Somewhere",
-        career: "Someone",
-        hobbies: "Something",
-        maritalStatus: "No idea",
-    });
 
-    // form input description
+    const [photo, setPhoto] = useState(null);
     const [formDesc, setFormDesc] = useState({
         age: 0,
         location: "",
@@ -52,39 +31,32 @@ export default function ProfileTab() {
         maritalStatus: "",
     })
 
-    //  useEffects for profile avatar and nickname rendering
-    useEffect(() => {
-        (async function () {
-            try {
-                const fileRef = ref(storage, `${currentUser.uid}`);
-                if (fileRef) {
-                    await getDownloadURL(fileRef).then(url => {
-                        setAvatarUrl(url);
-                    });
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        })();
+    const [desc, setDesc] = useState({});
+    const [descriptionChangeAccess, setDescriptionChangeAccess] = useState(false);
+    // form input description
 
-        (async function () {
-            try {
-                const userDocRef = doc(db, "users", currentUser.uid);
-                getDoc(userDocRef)
-                    .then((userDocSnap) => {
-                        const data = userDocSnap.data();
-                        if (data.profileDescription) {
-                            setDesc(data.profileDescription);
-                        }
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            } catch (error) {
-                console.log(error);
-            }
-        })();
-    },)
+    //  useEffects for profile avatar and nickname rendering
+
+    useEffect(() => {
+        const unsub = () => {
+            if (currentUser.photoURL) {
+                setAvatarUrl(currentUser.photoURL);
+            } else { setAvatarUrl("") }
+        }
+        return unsub()
+    }, [currentUser.photoURL])
+
+    useEffect(() => {
+        const getUserDesc = async () => {
+            const unsub = getDoc(doc(db, "users", currentUser.uid)).then((doc) => {
+                const data = doc.data();
+                setUserName(data.displayName)
+                data.profileDescription ? setDesc(data.profileDescription) : setDesc(formDesc);
+            });
+            return () => unsub();
+        };
+        currentUser.uid && getUserDesc();
+    }, [currentUser.uid])
 
 
     // avatar change handler, assigns state to the file
@@ -92,31 +64,41 @@ export default function ProfileTab() {
         const selectedFile = e.target.files[0];
         if (!selectedFile.type.startsWith('image/')) {
             setFileError('Please select an image file.');
-            setPhoto(null);
             alert(fileError)
-            return;
+            return setPhoto(null);
         }
-        setFileError();
         setPhoto(selectedFile);
+        setFileError(null);
     }
 
     // upload handler
     const handleUpload = async () => {
-        await handleAvatarUpload(photo);
-        setPhoto(null);
-        setAvatarChangeAccess(!avatarChangeAccess);
+        try {
+            // invoking avatar upload function
+            await handleAvatarUpload(photo);
+            setPhoto(null);
+        } catch (error) {
+            console.error('Failed to upload new avatar', error);
+        }
+        alert("File was uploaded")
     }
+
 
     // async function for avatar upload
     const handleAvatarUpload = async (file) => {
         // we create a reference for the fiile
-        const avatarRef = ref(storage, `${currentUser.uid}`);
+        //change before production
+        // const avatarRef = ref(storage, `${currentUser.uid}/profile/avatar`);
+
+        const avatarRef = ref(storage, `avatars/${currentUser.uid}/avatar`);
         try {
             await uploadBytesResumable(avatarRef, file).then(async () => {
                 await getDownloadURL(avatarRef).then(async url => {
                     setAvatarUrl(url);
                     try {
-                        await updateProfile(currentUser, { photoURL: url });
+                        await updateDoc(doc(db, "user", currentUser.uid), {
+                            photoURL: url,
+                        })
                     } catch (error) {
                         console.error('Failed to update user profile with new avatar URL', error)
                     };
@@ -124,13 +106,9 @@ export default function ProfileTab() {
             })
         } catch (error) {
             console.error('Failed to upload new avatar', error)
+            alert(error.message)
         }
-        alert("File was uploaded")
     }
-
-
-
-
 
     // Description update
     const handleDescriptionUpdate = async (event) => {
@@ -149,10 +127,6 @@ export default function ProfileTab() {
             throw error
         }
     }
-
-    const handleClose = () => {
-        setAvatarChangeAccess(!avatarChangeAccess);
-    };
 
     // local description state update
     const handleDescription = (event) => {
@@ -177,8 +151,8 @@ export default function ProfileTab() {
         event.preventDefault();
 
         if (!nameError) {
-            await updateProfile(currentUser, { displayName: userName });
-            console.log(currentUser)
+            await updateDoc(doc(db, "users", currentUser.uid), { displayName: userName });
+            console.log(currentUser.displayName + "document updated")
             setChangeNameAccess(!changeNameAccess);
         }
     }
@@ -193,28 +167,22 @@ export default function ProfileTab() {
         };
     }
     return (
-        <>
+        <div>
             <div className="profileAvatar">
                 <div id="avatarContainer">
-                    <img src={avatarUrl} alt="avatar" id='avatarImage' onClick={() => { setAvatarChangeAccess(!avatarChangeAccess) }} />
-                    <div id='avatarInputContainer'>
-                        {!avatarChangeAccess &&
-                            <div className="shading">
-                                {/*  Component for avatar change  */}
-                                <PromptingCloud
-                                    handleClose={handleClose}
-                                    handleUpload={handleUpload}
-                                    handleAvatarChange={handleAvatarChange}
-                                />
-                            </div>
-                        }
-                    </div>
+                    <label id="avatarInput">
+                        <img src={avatarUrl} alt="avatar" id='avatarImage' />
+                        <input type="file" hidden={true} onChange={handleAvatarChange} />
+                    </label>
+                    {photo !== null &&
+                        <button onClick={handleUpload} className='iconBtn'><BiImageAdd /></button>
+                    }
                 </div>
             </div>
             <div className="profileName">
                 {!changeNameAccess && <div>
-                    <span className='profileTitle'>{currentUser.displayName}</span>
-                    <button className='iconBtn' onClick={() => { setChangeNameAccess(!changeNameAccess) }} ><span>Change Nickname</span><AiFillEdit /></button>
+                    <span style={{ fontWeight: 600 }} className='profileTitle'>{userName}</span>
+                    <button className='iconBtn' onClick={() => { setChangeNameAccess(!changeNameAccess) }} ><span>Change</span><span><AiFillEdit /></span></button>
                 </div>}
                 {nameError && (
                     <span className="formError">{nameError}</span>
@@ -234,43 +202,33 @@ export default function ProfileTab() {
             </div>
             <div className="profileDescContainer">
                 <div className="profileDesc" hidden={!desc || descriptionChangeAccess}>
-                    <h3>About me</h3>
+                    <h4>About me</h4>
                     <div className="profileDescDivs">
                         <span>Age</span>
-                        {desc.age &&
-                            <p>{desc.age}</p>
-                        }
+                        <p>{desc?.age}</p>
                     </div>
                     <div className="profileDescDivs">
                         <span>Location</span>
-                        {desc.location &&
-                            <p>{desc.location}</p>
-                        }
+                        <p>{desc?.location}</p>
                     </div>
                     <div className="profileDescDivs">
                         <span>Marital status</span>
-                        {desc.maritalStatus &&
-                            <p>{desc.maritalStatus}</p>
-                        }
+                        <p>{desc?.maritalStatus}</p>
                     </div>
                     <div className="profileDescDivs">
                         <span>Career</span>
-                        {desc.career &&
-                            <p>{desc.career}</p>
-                        }
+                        <p>{desc?.career}</p>
                     </div>
                     <div className="profileDescDivs">
                         <span>Hobbies</span>
-                        {desc.hobbies &&
-                            <p>{desc.hobbies}</p>
-                        }
+                        <p>{desc?.hobbies}</p>
                     </div>
                     <div hidden={descriptionChangeAccess}>
                         <button className='iconBtn' id='changeDescBtn' onClick={() => { setDescriptionChangeAccess(true) }}>Change info<AiFillEdit /></button>
                     </div>
                 </div>
                 <div className="profileDesc" hidden={!descriptionChangeAccess}>
-                    <h3>Add something new</h3>
+                    <h4>Add something new</h4>
                     <form onSubmit={handleDescriptionUpdate} className='descForm'>
                         <input
                             name='age'
@@ -324,8 +282,11 @@ export default function ProfileTab() {
                         </button>
                     </form>
                 </div>
-                <BugForm />
+                <div className='bugLink' >
+                    <h4>Send us your feedback</h4>
+                    <a className='iconBtn' href='mailto:muxamedkali@gmail.com?'>Send an Email</a>
+                </div>
             </div>
-        </>
+        </div>
     )
 }
